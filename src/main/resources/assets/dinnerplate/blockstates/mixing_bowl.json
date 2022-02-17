@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"mix_pos=0": {
+			"model": "dinnerplate:block/mixing_bowl_0"
+		},
+		"mix_pos=1": {
+			"model": "dinnerplate:block/mixing_bowl_1"
+		},
+		"mix_pos=2": {
+			"model": "dinnerplate:block/mixing_bowl_2"
+		}
+	}
+}

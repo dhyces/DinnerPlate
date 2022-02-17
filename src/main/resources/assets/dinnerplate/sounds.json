@@ -1,0 +1,15 @@
+{
+	"plate_placed": {
+		"subtitle": "dinnerplate.subtitle.plate_placed",
+		"sounds": [
+			"dinnerplate:plate_placed", 
+			"dinnerplate:plate_placed_alternate"
+		]
+	},
+	"plate_step": {
+		"subtitle": "dinnerplate.subtitle.plate_step",
+		"sounds": [
+			"dinnerplate:plate_step"
+		]
+	}
+}
