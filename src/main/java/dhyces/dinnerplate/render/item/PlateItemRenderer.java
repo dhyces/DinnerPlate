@@ -11,6 +11,7 @@ import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.util.BlockHelper;
+import dhyces.dinnerplate.util.ResourceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -41,7 +42,7 @@ public class PlateItemRenderer extends SimpleItemRenderer {
 		pPoseStack.popPose();
 		if (hasItem) {
 			var platedItem = ItemStack.of(BlockHelper.getBlockEntityTag(pStack).getCompound(Constants.TAG_SINGLE_ITEM));
-			var platedItemModel = Minecraft.getInstance().getItemRenderer().getModel(platedItem, (Level)null, (LivingEntity)null, 0);
+			var platedItemModel = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(platedItem.getItem().getRegistryName()));
 			var vertexConsumer1 = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(platedItem, true), true, false);
 			
 			pPoseStack.pushPose();
