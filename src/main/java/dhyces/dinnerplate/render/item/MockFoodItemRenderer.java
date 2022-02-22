@@ -142,6 +142,8 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		RenderSystem.applyModelViewMatrix();
 	}
 	
+	/** This is a method that generates a "builtin/generated" type item model, due to the inability to generate one outside of the model bakery
+	 *  with vanilla and the broken state of the forge version. Right now, this does make a quad for pixel per pixel.*/
 	private BakedModel testGen(BakedModel baseModel, TextureAtlasSprite template, TextureAtlasSprite sprite, NativeImage img) {
 		var builder = ItemMultiLayerBakedModel.builder(StandaloneModelConfiguration.INSTANCE, baseModel.getParticleIcon(), baseModel.getOverrides(), PerspectiveMapWrapper.getTransforms(baseModel.getTransforms()));
 		builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemModel.genStandardItem(img, sprite, 0));
