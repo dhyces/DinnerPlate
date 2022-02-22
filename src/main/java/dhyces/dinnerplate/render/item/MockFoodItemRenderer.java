@@ -29,7 +29,8 @@ import com.mojang.math.Transformation;
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.render.util.ItemModel;
-import dhyces.dinnerplate.util.ModelHelper;
+import dhyces.dinnerplate.render.util.RenderTypes;
+import dhyces.dinnerplate.util.ResourceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -64,6 +65,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.ForgeRenderTypes;
 import net.minecraftforge.client.model.ItemLayerModel;
 import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 import net.minecraftforge.client.model.ItemTextureQuadConverter;
@@ -101,15 +103,15 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			} else if (testGen) {
 				var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
 				
-				var biteMaskAtlasRL = atlasitemTextureRL(biteMaskRL);
-				var biteMaskResourceRL = resourceItemTextureRL(biteMaskAtlasRL);
+				var biteMaskAtlasRL = ResourceHelper.atlasitemTextureRL(biteMaskRL);
+				var biteMaskResourceRL = ResourceHelper.resourceItemTextureRL(biteMaskAtlasRL);
 				
 				
 				if (generatedModels.get(bittenModelRL) == null) {
 					var modelQuads = model.getQuads(null, null, null, null);
 					if (!modelQuads.isEmpty()) {
 						var itemAtlasRL = modelQuads.get(0).getSprite().getName();
-						var itemResourceRL = resourceItemTextureRL(itemAtlasRL);
+						var itemResourceRL = ResourceHelper.resourceItemTextureRL(itemAtlasRL);
 						
 						Optional<NativeImage> itemImage = tryGetStaticImage(itemResourceRL), maskImage = tryGetStaticImage(biteMaskResourceRL);
 						if (itemImage.isPresent() && maskImage.isPresent()) {
@@ -124,12 +126,13 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			}
 		}
 		pPoseStack.pushPose();
-		/** TODO: need to modify the model with a mask*/
-		pPoseStack.translate(0.5, 0.5, 0.5);
 		var flag = pTransformType == TransformType.GUI && !model.usesBlockLight();
 		if (flag)
 			Lighting.setupForFlatItems();
-		Minecraft.getInstance().getItemRenderer().render(realStack, pTransformType, false, pPoseStack, pBuffer, pPackedLight, pPackedOverlay, model);
+		var consumer = pBuffer.getBuffer(ItemLayerModel.getLayerRenderType(testGen));
+		for (BakedQuad q : model.getQuads(null, null, null, null)) {
+			consumer.putBulkData(pPoseStack.last(), q, 1f, 1f, 1f, pPackedLight, pPackedOverlay);
+		}
 
 		Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
 		RenderSystem.enableDepthTest();
@@ -161,15 +164,6 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		builder.addQuads(ItemLayerModel.getLayerRenderType(false), realList);
 		
 		return builder.build();
-	}
-	
-	private ResourceLocation atlasitemTextureRL(ResourceLocation registryRL) {
-		return new ResourceLocation(registryRL.getNamespace(), "item/" + registryRL.getPath());
-	}
-	
-	
-	private ResourceLocation resourceItemTextureRL(ResourceLocation atlasRL) {
-		return new ResourceLocation(atlasRL.getNamespace(), "textures/" + atlasRL.getPath() + ".png");
 	}
 	
 	private Resource getResource(ResourceLocation resourceRL) throws Exception {
