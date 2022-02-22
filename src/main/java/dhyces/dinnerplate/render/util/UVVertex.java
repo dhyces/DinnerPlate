@@ -1,23 +1,10 @@
 package dhyces.dinnerplate.render.util;
 
-import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 
-public class UVVertex extends Vec3 {
-	
-	private final double u;
-	private final double v;
+public class UVVertex extends AbstractVertex {
 
-	public UVVertex(double pX, double pY, double pZ, double u, double v) {
-		super(pX, pY, pZ);
-		this.u = u;
-		this.v = v;
-	}
-	
-	public double getU() {
-		return u;
-	}
-
-	public double getV() {
-		return v;
+	public UVVertex(float u, float v) {
+		super(VertexFormatElement.Usage.UV, u, v, 0f, 1f);
 	}
 }
