@@ -28,6 +28,8 @@ import com.mojang.math.Transformation;
 
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
+import dhyces.dinnerplate.render.util.ItemModel;
+import dhyces.dinnerplate.util.ModelHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -73,7 +75,8 @@ import net.minecraftforge.common.extensions.IForgePackResources;
 @OnlyIn(Dist.CLIENT)
 public class MockFoodItemRenderer extends SimpleItemRenderer {
 
-	private Map<ResourceLocation, BakedModel> generatedModels = new ConcurrentHashMap<>();
+	private static final boolean testGen = false;
+	private Map<ResourceLocation, BakedModel> generatedModels = testGen ? new ConcurrentHashMap<>() : null;
 	boolean written = false;
 	
 	@SuppressWarnings("deprecation")
@@ -89,43 +92,43 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		var biteCount = capability.get().getBiteCount();
 		if (biteCount > 0) {
 			var itemRL = realStack.getItem().getRegistryName();
+			var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath() + "_" + (biteCount-1));
 			
-			var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
-			
-			var biteMaskAtlasRL = atlasitemTextureRL(biteMaskRL);
-			var biteMaskResourceRL = resourceItemTextureRL(biteMaskAtlasRL);
-			
-			var dynModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath() + "_" + (biteCount-1));
-			if (generatedModels.get(dynModelRL) == null) {
-				var modelQuads = model.getQuads(null, null, null, null);
-				if (!modelQuads.isEmpty()) {
-					var itemAtlasRL = modelQuads.get(0).getSprite().getName();
-					var itemResourceRL = resourceItemTextureRL(itemAtlasRL);
+			var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
+			var bittenModel = Minecraft.getInstance().getModelManager().getModel(bittenInvRL);
+			if (!bittenModel.equals(Minecraft.getInstance().getModelManager().getMissingModel())) {
+				model = bittenModel;
+			} else if (testGen) {
+				var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
 				
-					Optional<NativeImage> itemImage = tryGetStaticImage(itemResourceRL), maskImage = tryGetStaticImage(biteMaskResourceRL);
-					if (itemImage.isPresent() && maskImage.isPresent()) {
-						var atlas = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS);
-						var sprite = atlas.apply(itemAtlasRL);
-						var mask = atlas.apply(biteMaskAtlasRL);
-						generatedModels.put(dynModelRL, generateModel(model, mask, new VirtualSprite(sprite, combineImages(itemImage.get(), maskImage.get()))));
+				var biteMaskAtlasRL = atlasitemTextureRL(biteMaskRL);
+				var biteMaskResourceRL = resourceItemTextureRL(biteMaskAtlasRL);
+				
+				
+				if (generatedModels.get(bittenModelRL) == null) {
+					var modelQuads = model.getQuads(null, null, null, null);
+					if (!modelQuads.isEmpty()) {
+						var itemAtlasRL = modelQuads.get(0).getSprite().getName();
+						var itemResourceRL = resourceItemTextureRL(itemAtlasRL);
+						
+						Optional<NativeImage> itemImage = tryGetStaticImage(itemResourceRL), maskImage = tryGetStaticImage(biteMaskResourceRL);
+						if (itemImage.isPresent() && maskImage.isPresent()) {
+							var atlas = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS);
+							var sprite = atlas.apply(itemAtlasRL);
+							var mask = atlas.apply(biteMaskAtlasRL);
+							generatedModels.put(bittenModelRL, testGen(model, mask, sprite, combineImages(itemImage.get(), maskImage.get())));
+						}
 					}
 				}
+				model = generatedModels.get(bittenModelRL);
 			}
-			model = generatedModels.get(dynModelRL);
-			
-			System.out.println(model.getLayerModels(pStack, false));
 		}
 		pPoseStack.pushPose();
 		/** TODO: need to modify the model with a mask*/
-		pPoseStack.translate(0.5, 1, 0.5);
+		pPoseStack.translate(0.5, 0.5, 0.5);
 		var flag = pTransformType == TransformType.GUI && !model.usesBlockLight();
 		if (flag)
 			Lighting.setupForFlatItems();
-//		var vb = pBuffer.getBuffer(ItemLayerModel.getLayerRenderType(false));
-//		for (BakedQuad quad : model.getQuads(null, null, null, null)) {
-//			vb.putBulkData(pPoseStack.last(), quad, 1.0f, 1.0f, 1.0f, pPackedLight, pPackedOverlay);
-//		}
-//		vb.endVertex();
 		Minecraft.getInstance().getItemRenderer().render(realStack, pTransformType, false, pPoseStack, pBuffer, pPackedLight, pPackedOverlay, model);
 
 		Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
@@ -134,6 +137,14 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			Lighting.setupFor3DItems();
 		pPoseStack.popPose();
 		RenderSystem.applyModelViewMatrix();
+	}
+	
+	private BakedModel testGen(BakedModel baseModel, TextureAtlasSprite template, TextureAtlasSprite sprite, NativeImage img) {
+		var builder = ItemMultiLayerBakedModel.builder(StandaloneModelConfiguration.INSTANCE, baseModel.getParticleIcon(), baseModel.getOverrides(), PerspectiveMapWrapper.getTransforms(baseModel.getTransforms()));
+		builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemModel.genStandardItem(img, sprite, 0));
+		builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemTextureQuadConverter.convertTexture(Transformation.identity(), template, sprite, 7.498f / 16f, Direction.NORTH, 0xFFFFFFFF, 1));
+		builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemTextureQuadConverter.convertTexture(Transformation.identity(), template, sprite, 8.502f / 16f, Direction.SOUTH, 0xFFFFFFFF, 1));
+		return builder.build();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -174,7 +185,6 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		try {
 			return Optional.of(NativeImage.read(getResource(resourceRL).getInputStream()));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return Optional.empty();
@@ -193,16 +203,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 					var itemRGBA = maskedBase.getPixelRGBA(j, i);
 					
 					maskedBase.setPixelRGBA(j, i, isAlpha ? maskRGBA : itemRGBA);
-					System.out.println(~(maskRGBA>>24) +" "+ itemRGBA);
 				}
-			}
-			// TODO: Remember to remove this
-			try {
-				File f = new File("C:\\Users\\pokmo\\OneDrive\\Desktop\\new_file.png");
-				if (!f.exists())
-					maskedBase.writeToFile("C:\\Users\\pokmo\\OneDrive\\Desktop\\new_file.png");
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 			Minecraft.getInstance().getProfiler().pop();
 			return maskedBase;
