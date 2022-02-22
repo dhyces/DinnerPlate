@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.render.util;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -15,7 +13,7 @@ import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 
 public class ItemModel {
-	
+
 	private static final float DEPTH_0 = 0.46875F;
 	private static final float DEPTH_1 = 0.53125F;
 	private static final float ONE_PIXEL = 0.0625F;
@@ -46,7 +44,7 @@ public class ItemModel {
 		}
 		return quads;
 	}
-	
+
 	/** side really only determines where the pixel color is derived from.
 	 *  down means its generating for the affected pixel's bottom face, and the same goes for all of them*/
 	private static BakedQuad genSideQuad(TextureAtlasSprite sprite, Direction side, float u, float v) {
@@ -73,15 +71,15 @@ public class ItemModel {
 		default:
 			break;
 		}
-		
+
 		putVertex(builder, side, x0, y0, z0, sprite.getU(aU), sprite.getV(aV), 0, 0);
 		putVertex(builder, side, x1, y1, z0, sprite.getU(aU + 1), sprite.getV(aV + 1), 0, 0);
 		putVertex(builder, side, x1, y1, z1, sprite.getU(aU + 1), sprite.getV(aV + 1), 0, 0);
 		putVertex(builder, side, x0, y0, z1, sprite.getU(aU), sprite.getV(aV), 0, 0);
-		
+
 		return builder.build();
 	}
-	
+
 	private static BakedQuadBuilder builder(TextureAtlasSprite sprite, Direction side, int tint, boolean diffuse) {
 		var builder = new BakedQuadBuilder(sprite);
 		builder.setQuadTint(tint);
@@ -89,7 +87,7 @@ public class ItemModel {
 		builder.setApplyDiffuseLighting(diffuse);
 		return builder;
 	}
-	
+
 	private static BakedQuad genQuad(TextureAtlasSprite sprite, Direction side, int tint, boolean diffuse,
 			float x0, float y0, float z0, float u0, float v0,
 			float x1, float y1, float z1, float u1, float v1,
@@ -102,7 +100,7 @@ public class ItemModel {
 		putVertex(builder, side, x3, y3, z3, sprite.getU(u3), sprite.getV(v3), 0, 0);
 		return builder.build();
 	}
-	
+
 	private static void putVertex(IVertexConsumer consumer, Direction side, float x, float y, float z, float u, float v, int uLight, int vLight) {
 		var format = consumer.getVertexFormat();
 		for (int e = 0; e < format.getElements().size(); e++) {

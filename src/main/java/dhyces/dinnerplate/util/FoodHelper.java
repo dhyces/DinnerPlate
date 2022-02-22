@@ -2,7 +2,6 @@ package dhyces.dinnerplate.util;
 
 import com.mojang.datafixers.util.Pair;
 
-import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.bite.IBite;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public class FoodHelper {
-	
+
 	public static void playerStaticEatBite(Level level, Player player, ItemStack stack, IBite bite) {
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
 		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
@@ -28,21 +27,21 @@ public class FoodHelper {
 			}
 		}
 	}
-	
+
 	public static void addEffect(LivingEntity entity, MobEffectInstance instance) {
 		var activeEffect = entity.getActiveEffectsMap().get(instance.getEffect());
 		if (activeEffect != null)
 			instance.update(combineEffects(instance, activeEffect));
 		entity.addEffect(instance);
 	}
-	
+
 	public static MobEffectInstance combineEffects(MobEffectInstance instance, MobEffectInstance otherInstance) {
 		if (instance.getEffect().equals(otherInstance.getEffect()) && instance.getAmplifier() == otherInstance.getAmplifier()) {
 			return new MobEffectInstance(instance.getEffect(), instance.getDuration() + otherInstance.getDuration(), instance.getAmplifier());
 		}
 		return instance;
 	}
-	
+
 	/** This doesn't actually do anything with replenishing hunger, saturation, or effects, it just plays the sound, awards a stat for the item, and triggers criteria*/
 	public static void playerStaticEat(Level level, Player player, ItemStack stack) {
 		player.awardStat(Stats.ITEM_USED.get(stack.getItem()));

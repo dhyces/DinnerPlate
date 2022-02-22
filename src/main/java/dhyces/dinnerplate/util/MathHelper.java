@@ -7,5 +7,5 @@ public class MathHelper {
 		var ret = value - max;
 		return ret > 0 ? ret : 0;
 	}
-	
+
 }

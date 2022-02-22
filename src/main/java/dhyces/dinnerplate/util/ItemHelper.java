@@ -4,14 +4,12 @@ import java.util.Optional;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowlFoodItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.alchemy.Potion;
 
 public class ItemHelper {
-	
+
 	// The first stack is the one that is merged into and otherStack is the stack that is returned with the amount left over;
 	public static ItemStack mergeStacks(ItemStack stack, ItemStack otherStack) {
 		if (!ItemStack.isSame(stack, otherStack))
@@ -24,13 +22,13 @@ public class ItemHelper {
 		otherStack.setCount(overFlow);
 		return otherStack;
 	}
-	
+
 	public static ItemStack shrinkIfNotCreative(Player player, ItemStack stack) {
 		if (!player.getAbilities().instabuild)
 			stack.shrink(1);
 		return stack;
 	}
-	
+
 	/** Hard coded helper method to get an item that should be returned when the given itemstack is used*/
 	public static ItemStack returnedItem(ItemStack stack) {
 		var compItem = stack.getItem();
@@ -44,11 +42,11 @@ public class ItemHelper {
 		}
 		return ItemStack.EMPTY;
 	}
-	
+
 	private static Optional<ItemStack> getContainerItem(ItemStack stack) {
 		if (stack.hasContainerItem())
 			return Optional.of(stack.getContainerItem());
 		return Optional.empty();
 	}
-	
+
 }

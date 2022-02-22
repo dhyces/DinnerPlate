@@ -2,16 +2,15 @@ package dhyces.dinnerplate.render.util;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
-import oshi.util.tuples.Quartet;
 
 public class RectPrism {
 
 	private final Vec3[] points;
-	
+
 	public RectPrism(Vec3 start, Vec3 end) {
 		this(start, end.x-start.x, end.y-start.y, end.z-start.z);
 	}
-	
+
 	public RectPrism(Vec3 start, double width, double height, double length) {
 		//length, height, width
 		var c000 = start;
@@ -24,11 +23,11 @@ public class RectPrism {
 		var c111 = c100.add(width, height, 0);
 		points = new Vec3[] {c000, c001, c010, c011, c100, c101, c110, c111};
 	}
-	
+
 	public static RectPrism.Builder from(double x, double y, double z) {
 		return new Builder(x, y, z);
 	}
-	
+
 	public static RectPrism.Builder fromPixel(double x, double y, double z) {
 		return new Builder(x/16.0, y/16.0, z/16.0);
 	}
@@ -47,12 +46,12 @@ public class RectPrism {
 		var b = (i & 0b010) >> 1;
 		var b_not = b ^ 1;
 		var c = i & 0b001;
-		
+
 		var a_and_c = a & c;
 		var b_and_c = b & c;
 		var a_not_or_c = a_not | c;
 		var a_not_and_b_not_and_c = a_not & b_not & c;
-		
+
 		var A3 = a | b_not | c;
 		var B3 = a | b | c;
 		var C3 = a_not_or_c | b;
@@ -71,23 +70,23 @@ public class RectPrism {
 		var bottomLeft = A0 << 2 | B0 << 1 | C0;
 		return new QuadFace(points[bottomLeft], points[bottomRight], points[topLeft], points[topRight]);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Start: " + this.points[0] + " End: " + this.points[this.points.length-1];
 	}
-	
+
 	public static class Builder {
 		Vec3 v;
-		
+
 		Builder(double x, double y, double z) {
 			v = new Vec3(x, y, z);
 		}
-		
+
 		public RectPrism to(double x, double y, double z) {
 			return new RectPrism(v, new Vec3(x, y, z));
 		}
-		
+
 		public RectPrism toPixel(double x, double y, double z) {
 			return new RectPrism(v, new Vec3(x/16.0, y/16.0, z/16.0));
 		}

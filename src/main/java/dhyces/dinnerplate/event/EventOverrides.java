@@ -25,7 +25,7 @@ public class EventOverrides {
 			e.setCanceled(true);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void shiftRightClick(final PlayerInteractEvent.RightClickBlock e) {
 		var blockState = e.getWorld().getBlockState(e.getPos());

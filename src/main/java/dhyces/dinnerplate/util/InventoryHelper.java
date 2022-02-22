@@ -13,8 +13,8 @@ public class InventoryHelper {
 		inv.add(slot, stack);
 		return true;
 	}
-	
-	/** We prefer slots with the same item, but if we can't insert into any of those or if one is not found, we prefer the selected slot if 
+
+	/** We prefer slots with the same item, but if we can't insert into any of those or if one is not found, we prefer the selected slot if
 	 *  it doesn't have an item, otherwise we want to insert into any free slot*/
 	public static int getPreferredSlot(Inventory inv, ItemStack stack) {
 		var slot = inv.getSlotWithRemainingSpace(stack);
@@ -22,7 +22,7 @@ public class InventoryHelper {
 			slot = inv.selected;
 		return slot == -1 ? inv.getFreeSlot() : slot;
 	}
-	
+
 	public static boolean insertItemHeld(Inventory inv, ItemStack stack) {
 		if (Inventory.isHotbarSlot(inv.selected) && inv.getSelected().isEmpty()) {
 			inv.setItem(inv.selected, stack);

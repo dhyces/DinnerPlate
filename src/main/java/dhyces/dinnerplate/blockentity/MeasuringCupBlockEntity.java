@@ -17,7 +17,7 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity {
 
 	protected ListenedTank tank = new ListenedTank(FluidHelper.BUCKET);
 	private final LazyOptional<IFluidHandler> tankLazy = LazyOptional.of(() -> tank);
-	
+
 	public MeasuringCupBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(BEntityRegistry.MEASURING_CUP_ENTITY.get(), pWorldPosition, pBlockState);
 	}
@@ -39,17 +39,17 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity {
 			return tankLazy.cast();
 		return super.getCapability(cap, side);
 	}
-	
+
 	class ListenedTank extends FluidTank {
 
 		public ListenedTank(int capacity) {
 			super(capacity);
 		}
-		
+
 		@Override
 		protected void onContentsChanged() {
 			MeasuringCupBlockEntity.this.setChanged();
 		}
-		
+
 	}
 }

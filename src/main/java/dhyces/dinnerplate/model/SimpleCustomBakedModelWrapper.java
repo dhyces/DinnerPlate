@@ -14,7 +14,7 @@ public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel>
 	public SimpleCustomBakedModelWrapper(BakedModel originalModel) {
 		super(originalModel);
 	}
-	
+
 //	@Override
 //	public boolean doesHandlePerspectives() {
 //		return false;
@@ -24,7 +24,7 @@ public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel>
 	public boolean isCustomRenderer() {
 		return true;
 	}
-	
+
 	@Override
 	public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack poseStack) {
 		super.handlePerspective(cameraTransformType, poseStack);

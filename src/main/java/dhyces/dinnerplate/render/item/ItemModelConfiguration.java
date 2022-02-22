@@ -10,11 +10,11 @@ public class ItemModelConfiguration implements IModelConfiguration {
 
 	private boolean isSideLit;
 	public static final ItemModelConfiguration INSTANCE = new ItemModelConfiguration(false);
-	
+
 	public ItemModelConfiguration(boolean isSideLit) {
 		this.isSideLit = isSideLit;
 	}
-	
+
 	@Override
 	public UnbakedModel getOwnerModel() {
 		return null;

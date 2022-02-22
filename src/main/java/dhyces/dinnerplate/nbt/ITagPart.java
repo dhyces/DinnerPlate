@@ -8,5 +8,5 @@ public interface ITagPart<T extends Tag> {
 
 	/** this method would be used to quickly put the held data into the given compound tag*/
 	public void addTo(CompoundTag tag);
-	
+
 }

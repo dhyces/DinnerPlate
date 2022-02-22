@@ -12,11 +12,11 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface IBite extends INBTSerializable<CompoundTag> {
 
 	public int getNutrition();
-	
+
 	public float getSaturationModifier();
-	
+
 	public List<Pair<MobEffectInstance, Float>> getEffects();
-	
+
 	public List<IBite> splitInto(FoodProperties propertiesToSplit, int amount);
-	
+
 }

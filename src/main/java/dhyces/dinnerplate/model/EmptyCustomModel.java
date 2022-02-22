@@ -15,22 +15,22 @@ public class EmptyCustomModel extends BakedModelWrapper<BakedModel> {
 	public EmptyCustomModel() {
 		super(Minecraft.getInstance().getModelManager().getMissingModel());
 	}
-	
+
 	@Override
 	public boolean isGui3d() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean doesHandlePerspectives() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isCustomRenderer() {
 		return true;
 	}
-	
+
 	@Override
 	public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack poseStack) {
 		return this;

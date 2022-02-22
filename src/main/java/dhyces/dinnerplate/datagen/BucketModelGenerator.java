@@ -18,7 +18,7 @@ public class BucketModelGenerator extends ItemModelProvider {
 	protected void registerModels() {
 		bucket("mushroom_stew", FluidRegistry.MUSHROOM_STEW_FLUID.get(), true, true, false, false);
 	}
-	
+
 	public ItemModelBuilder bucket(String name, Fluid fluid, boolean tint, boolean mask, boolean flip, boolean luminosity) {
 		return DynamicBucketModelBuilder.begin(this.getBuilder(name), existingFileHelper)
 										.applyTint(tint)

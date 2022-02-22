@@ -47,7 +47,7 @@ public class MeasuringCupItem extends BlockItem implements IForkedInteractAdapte
 			Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		return InteractionResult.PASS;
 	}
-	
+
 	@Override
 	public InteractionResult useOn(UseOnContext pContext) {
 		var level = pContext.getLevel();
@@ -66,11 +66,11 @@ public class MeasuringCupItem extends BlockItem implements IForkedInteractAdapte
 		}
 		return super.useOn(pContext);
 	}
-	
+
 	private BlockHitResult fromContext(UseOnContext context) {
 		return new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
 	}
-	
+
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
 		return new FluidHandlerItemStack(stack, 1000);

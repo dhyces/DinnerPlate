@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 public class BitableItem extends Item implements IBitable {
 
 	protected final BitableProperties biteProperties;
-	
+
 	public BitableItem(BitableProperties biteProperties, Properties pProperties) {
 		super(pProperties.food(biteProperties.toFoodProperties()));
 		this.biteProperties = biteProperties;

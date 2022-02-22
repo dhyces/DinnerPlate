@@ -4,21 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.DinnerPlate;
-import dhyces.dinnerplate.blockentity.api.IFluidHolder;
-import dhyces.dinnerplate.blockentity.api.IItemHolder;
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import dhyces.dinnerplate.util.FluidHelper;
-import dhyces.dinnerplate.util.ItemHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,31 +28,32 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	private int usedSize = 0;
 	private Stack<ItemStack> itemInventory;
 	private Stack<FluidStack> fluidInventory;
-	
+
 	public MixedInventory(int sizeIn) {
 		size = sizeIn;
 		itemInventory = makeStackWithCapacity(sizeIn);
 		fluidInventory = makeStackWithCapacity(sizeIn);
 	}
-	
+
 	private <T> Stack<T> makeStackWithCapacity(int cap) {
 		var stack = new Stack<T>();
 		stack.ensureCapacity(cap);
 		return stack;
 	}
-	
+
+	@Override
 	public Stream<FlutemStack> mixedStream() {
 		Stream.Builder<FlutemStack> builder = Stream.builder();
 		itemInventory.stream().map(FlutemStack::new).forEach(builder::add);
 		fluidInventory.stream().map(FlutemStack::new).forEach(builder::add);
 		return builder.build();
 	}
-	
+
 	@Override
 	public int getItemSize() {
 		return itemInventory.size();
 	}
-	
+
 	@Override
 	public boolean hasItem() {
 		return itemInventory.size() > 0;
@@ -73,7 +68,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	public boolean containsItem(Item item) {
 		return itemInventory.stream().anyMatch(p -> p.is(item));
 	}
-	
+
 	@Override
 	public ItemStack getLastItem() {
 		return itemInventory.peek();
@@ -109,12 +104,12 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		}
 		return stack;
 	}
-	
+
 	@Override
 	public int getFluidSize() {
 		return fluidInventory.size();
 	}
-	
+
 	@Override
 	public int getFluidSizeScaled() {
 		return getFluidSize() * 100;
@@ -139,12 +134,12 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	public FluidStack getLastFluid() {
 		return fluidInventory.peek();
 	}
-	
+
 	@Override
 	public FluidStack getFluidStack(int index) {
 		return fluidInventory.get(index);
 	}
-	
+
 	public Optional<FluidStack> getMatching(FluidStack stack) {
 		for (FluidStack invStack : fluidInventory) {
 			if (invStack.isFluidEqual(stack))
@@ -176,19 +171,19 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		}
 		return stack;
 	}
-	
+
 	@Override
 	public FluidStack setFluid(int index, FluidStack stack) {
 		var ret = fluidInventory.get(index) == null ? FluidStack.EMPTY : fluidInventory.get(index);
 		fluidInventory.set(index, stack);
 		return ret;
 	}
-	
+
 	@Override
 	public int getUsed() {
 		return usedSize;
 	}
-	
+
 	public List<FluidStack> getFluids() {
 		if (fluidInventory.isEmpty())
 			return List.of();
@@ -196,7 +191,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		fluidInventory.copyInto(array);
 		return Arrays.asList(array);
 	}
-	
+
 	public List<ItemStack> getItems() {
 		if (itemInventory.isEmpty())
 			return List.of();
@@ -228,7 +223,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		if (pCount == 0) {
 			throw new IllegalStateException("count cannot equal zero");
 		}
-		
+
 		var stack = itemInventory.get(pIndex);
 		var count = Math.min(stack.getCount(), pCount);
 		var copy = stack.copy();
@@ -253,7 +248,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 
 	@Override
 	public void setChanged() {
-		
+
 	}
 
 	@Override
@@ -304,7 +299,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 			clearContent();
 			return;
 		}
-		var fluidsTag = tag.getList(Constants.TAG_FLUIDS, ListTag.TAG_COMPOUND);
+		var fluidsTag = tag.getList(Constants.TAG_FLUIDS, Tag.TAG_COMPOUND);
 		if (!fluidsTag.isEmpty()) {
 			for (Tag compoundTag : fluidsTag) {
 				var slot = ((CompoundTag)compoundTag).getInt(Constants.TAG_SLOT);
@@ -315,7 +310,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 					fluidInventory.set(slot, fluid);
 			}
 		}
-		var itemsTag = tag.getList(Constants.TAG_ITEMS, ListTag.TAG_COMPOUND);
+		var itemsTag = tag.getList(Constants.TAG_ITEMS, Tag.TAG_COMPOUND);
 		if (!itemsTag.isEmpty()) {
 			for (Tag compoundTag : itemsTag) {
 				var slot = ((CompoundTag)compoundTag).getInt(Constants.TAG_SLOT);

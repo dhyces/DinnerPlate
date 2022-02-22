@@ -2,21 +2,16 @@ package dhyces.dinnerplate.block;
 
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
-import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.util.FluidHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -25,19 +20,18 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> {
-	
+
 	private static final IntegerProperty MIX_POSITION = IntegerProperty.create("mix_pos", 0, 2);
 
 	public MixingBowlBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(this.stateDefinition.any().setValue(MIX_POSITION, 0));
 	}
-	
+
 	@Override
 	public InteractionResult rightClick(BlockState state, MixingBowlBlockEntity bEntity, Level level,
 			BlockPos pos, Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
@@ -71,7 +65,7 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 		}
 		return super.rightClick(state, bEntity, level, pos, player, hand, res, isClient);
 	}
-	
+
 	@Override
 	public InteractionResult shiftRightClick(BlockState state, MixingBowlBlockEntity bEntity, Level level,
 			BlockPos pos, Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
@@ -87,18 +81,18 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 		}
 		return super.shiftRightClick(state, bEntity, level, pos, player, hand, res, isClient);
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		return Shapes.box(0.125, 0, 0.125, 0.875, 0.4375, 0.875);
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		super.createBlockStateDefinition(pBuilder);
 		pBuilder.add(MIX_POSITION);
 	}
-	
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return new MixingBowlBlockEntity(pPos, pState);

@@ -11,9 +11,6 @@ import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,12 +22,12 @@ public class MixingBowlBlockEntity extends AbstractDinnerBlockEntity implements 
 
 	private MixedInventory inventory;
 	private byte mixes = 0;
-	
+
 	public MixingBowlBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(BEntityRegistry.MIXING_BOWL_ENTITY.get(), pWorldPosition, pBlockState);
 		inventory = new MixedInventory(9);
 	}
-	
+
 	public boolean mix() {
 		mixes++;
 		// TODO: change max mixes to be set in the config
@@ -54,12 +51,12 @@ public class MixingBowlBlockEntity extends AbstractDinnerBlockEntity implements 
 		inventory.deserializeNBT(tag);
 		mixes = tag.getByte(Constants.TAG_MIX_STATE);
 	}
-	
+
 	@Override
 	public void craft() {
-		
+
 	}
-	
+
 	@Override
 	public boolean hasRecipe() {
 		return true;
@@ -185,7 +182,7 @@ public class MixingBowlBlockEntity extends AbstractDinnerBlockEntity implements 
 			setChanged();
 		return ret;
 	}
-	
+
 	@Override
 	public FluidStack setFluid(int index, FluidStack stack) {
 		var ret = inventory.setFluid(index, stack);
@@ -212,7 +209,7 @@ public class MixingBowlBlockEntity extends AbstractDinnerBlockEntity implements 
 	public int getFluidSizeScaled() {
 		return inventory.getFluidSizeScaled();
 	}
-	
+
 	@Override
 	public int getItemSize() {
 		return inventory.getItemSize();

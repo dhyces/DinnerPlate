@@ -19,34 +19,34 @@ public class BitableProperties {
 	boolean isMeat;
 	boolean canAlwaysEat;
 	List<IBite> bites;
-	
+
 	BitableProperties(boolean isFast, boolean isMeat, boolean canAlwaysEat, List<IBite> bites) {
 		this.isFast = isFast;
 		this.isMeat = isMeat;
 		this.canAlwaysEat = canAlwaysEat;
 		this.bites = bites;
 	}
-	
+
 	public IBite getBite(int index) {
 		return bites.get(index);
 	}
-	
+
 	public int getBiteSize() {
 		return bites.size();
 	}
-	
+
 	public boolean isFast() {
 		return isFast;
 	}
-	
+
 	public boolean isMeat() {
 		return isMeat;
 	}
-	
+
 	public boolean canAlwaysEat() {
 		return canAlwaysEat;
 	}
-	
+
 	public FoodProperties toFoodProperties() {
 		var nutrition = 0;
 		var satMod = 0;
@@ -63,7 +63,7 @@ public class BitableProperties {
 				});
 			});
 		}
-		
+
 		var builder = new FoodProperties.Builder();
 		builder.nutrition(nutrition);
 		builder.saturationMod(satMod);
@@ -82,40 +82,40 @@ public class BitableProperties {
 		}
 		return builder.build();
 	}
-	
+
 	public static class Builder {
 		boolean fast;
 		boolean meat;
 		boolean always;
 		List<IBite> bBites;
-		
+
 		public Builder() {
 			fast = false;
 			meat = false;
 			always = false;
 			bBites = new ArrayList<>();
 		}
-		
+
 		public Builder fast() {
 			this.fast = true;
 			return this;
 		}
-		
+
 		public Builder meat() {
 			this.meat = true;
 			return this;
 		}
-		
+
 		public Builder always() {
 			this.always = true;
 			return this;
 		}
-		
+
 		public Builder addBite(IBite bite) {
 			this.bBites.add(bite);
 			return this;
 		}
-		
+
 		public BitableProperties build() {
 			return new BitableProperties(fast, meat, always, bBites);
 		}

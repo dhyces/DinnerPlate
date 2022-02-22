@@ -5,7 +5,6 @@ import java.util.Optional;
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.util.FluidHelper;
-import dhyces.dinnerplate.util.ItemHelper;
 import dhyces.dinnerplate.util.LoosePair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -20,10 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEntity> {
@@ -31,7 +28,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 	public MeasuringCupBlock(Properties properties) {
 		super(properties);
 	}
-	
+
 	@Override
 	public InteractionResult rightClick(BlockState state, MeasuringCupBlockEntity bEntity, Level level, BlockPos pos,
 			Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
@@ -50,7 +47,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 		}
 		return super.rightClick(state, bEntity, level, pos, player, hand, res, isClient);
 	}
-	
+
 	@Override
 	public InteractionResult shiftRightClick(BlockState state, MeasuringCupBlockEntity bEntity, Level level,
 			BlockPos pos, Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
@@ -70,7 +67,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 		}
 		return super.shiftRightClick(state, bEntity, level, pos, player, hand, res, isClient);
 	}
-	
+
 	private Optional<LoosePair<IFluidHandler, IFluidHandlerItem>> getCaps(BlockEntity blockEntity, ItemStack itemStack) {
 		var blockCap = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		if (blockCap.isPresent()) {
@@ -81,17 +78,17 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		return Shapes.box(0.3125, 0, 0.3125, 0.6875, 0.4375, 0.6875);
 	}
-	
+
 	@Override
 	public boolean propagatesSkylightDown(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return true;
 	}
-	
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return new MeasuringCupBlockEntity(pPos, pState);

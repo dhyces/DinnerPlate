@@ -22,21 +22,21 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class CapabilityEventSubscriber {
 
 	public static Capability<IMockFoodProvider> MOCK_FOOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<IMockFoodProvider>() {});
-	
+
 	@EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)
 	public class ModSided {
-		
+
 		@SubscribeEvent
 		public static void registerCapability(final RegisterCapabilitiesEvent event) {
 			event.register(IMockFoodProvider.class);
 		}
 	}
-	
+
 	@EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.FORGE)
 	public class ForgeSided {
-		
+
 		public static final ResourceLocation SOUP_CAP_ID = new ResourceLocation(DinnerPlate.MODID, "soup");
-		
+
 		@SubscribeEvent
 		public static void attachCapability(final AttachCapabilitiesEvent<ItemStack> event) {
 			var stack = event.getObject();
@@ -50,7 +50,7 @@ public class CapabilityEventSubscriber {
 				event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.RABBIT_STEW_FLUID.get()));
 			}
 		}
-		
+
 		private static ICapabilityProvider bowlOf(ItemStack stack, Fluid fluid) {
 			var handler = new FluidHandlerItemStackSimple.SwapEmpty(stack, new ItemStack(Items.BOWL), 100);
 			handler.fill(new FluidStack(fluid, 100), FluidAction.EXECUTE);

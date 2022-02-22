@@ -4,19 +4,14 @@ import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
-import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
-import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.item.MockFoodItem;
-import dhyces.dinnerplate.registry.SoundRegistry;
 import dhyces.dinnerplate.registry.ItemRegistry;
+import dhyces.dinnerplate.registry.SoundRegistry;
 import dhyces.dinnerplate.sound.DinnerSoundTypes;
 import dhyces.dinnerplate.util.BlockHelper;
-import dhyces.dinnerplate.util.ItemHelper;
 import dhyces.dinnerplate.util.MathHelper;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -48,14 +43,14 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 	public static final int MIN_LEVEL = 1;
 	public static final int MAX_LEVEL = 8;
 	public static final IntegerProperty PLATES = IntegerProperty.create("plates", MIN_LEVEL, MAX_LEVEL);
-	
+
 	public PlateBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(PLATES, 1).setValue(FACING, Direction.NORTH));
 	}
-	
+
 	@Override
-	public InteractionResult rightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos, 
+	public InteractionResult rightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos,
 											Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		if (plateEntity.hasItem()) {
 			var mockFoodOptional = plateEntity.getMockFood();
@@ -106,7 +101,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 	}
 
 	@Override
-	public InteractionResult shiftRightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos, 
+	public InteractionResult shiftRightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos,
 												Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		var platesProperty = state.getValue(PLATES);
 		if (plateEntity.hasItem()) {
@@ -122,48 +117,48 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 		}
 		return super.shiftRightClick(state, plateEntity, level, pos, player, hand, res, isClient);
 	}
-	
+
 	private boolean canAddPlate(BlockState pState, ItemStack stackToCheck) {
 		return 	pState.getValue(PLATES) < MAX_LEVEL &&
 				stackToCheck.getOrCreateTag().getCompound(Constants.TAG_BLOCK_ENTITY).getCompound(Constants.TAG_SINGLE_ITEM).isEmpty();
 	}
-	
+
 	public int getPlatesFromStack(ItemStack stack) {
 		return BlockHelper.getPropertyFromTag(PLATES, BlockHelper.getBlockStateTag(stack));
 	}
-	
+
 	public BlockState setPlates(BlockState pState, int pInt) {
 		return pState.setValue(PLATES, pInt);
 	}
-	
+
 	public BlockState growPlates(BlockState pState, int pAmount) {
 		return pState.setValue(PLATES, pState.getValue(PLATES) + pAmount);
 	}
-	
+
 	public double topPlateHeight(BlockState pState) {
 		return (pState.getValue(PLATES)-1) * 0.09375;
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		return Shapes.box(.125, 0, .125, .875, .078125 + topPlateHeight(pState), .875);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		return defaultBlockState().setValue(FACING, pContext.getHorizontalDirection());
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		pBuilder.add(FACING, PLATES);
 	}
-	
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return new PlateBlockEntity(pPos, pState);
 	}
-	
+
 	@Override
 	public ForgeSoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		return DinnerSoundTypes.PLATE_SOUND_TYPE;

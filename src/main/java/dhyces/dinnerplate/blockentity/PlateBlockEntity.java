@@ -3,11 +3,11 @@ package dhyces.dinnerplate.blockentity;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IDishware;
 import dhyces.dinnerplate.blockentity.api.ISingleItemHolder;
-import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.capability.IMockFoodProvider;
 import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.registry.BEntityRegistry;
@@ -25,11 +25,11 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 
 	private ItemStack platedItem = ItemStack.EMPTY;
 	private Supplier<Boolean> isFood = () -> !platedItem.isEmpty() && (platedItem.isEdible() || platedItem.getItem() instanceof IBitable);
-	
+
 	public PlateBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(BEntityRegistry.PLATE_ENTITY.get(), pWorldPosition, pBlockState);
 	}
-	
+
 	/** Chew is affected by fast foods.*/
 	@Override
 	public void bite(Player player) {
@@ -47,7 +47,7 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 			setChanged();
 		}
 	}
-	
+
 	@Override
 	public void eat(Player player) {
 		if (isFood.get()) {
@@ -56,36 +56,36 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 			consumeItem();
 		}
 	}
-	
+
 	private void consumeItem() {
 		var mockFood = getMockFood();
 		if (mockFood.isPresent())
 			setItem(ItemHelper.returnedItem(mockFood.get().getRealStack()));
 	}
-	
+
 	@Override
 	public int getBiteCount() {
 		return IBitable.bitable(platedItem).map(c -> c.getBiteCount(platedItem)).orElse(-1);
 	}
-	
+
 	private boolean isMockFood() {
 		return platedItem.is(ItemRegistry.MOCK_FOOD_ITEM.get());
 	}
-	
+
 	public Optional<IMockFoodProvider> getMockFood() {
 		return isMockFood() ? Optional.of(MockFoodItem.getCapabilityLowest(platedItem)) : Optional.empty();
 	}
-	
+
 	@Override
 	public boolean hasItem() {
 		return !platedItem.isEmpty();
 	}
-	
+
 	@Override
 	public void read(CompoundTag pTag) {
 		this.platedItem = ItemStack.of(pTag.getCompound(Constants.TAG_SINGLE_ITEM));
 	}
-	
+
 	@Override
 	public void write(CompoundTag tag) {
 		if (!platedItem.isEmpty())

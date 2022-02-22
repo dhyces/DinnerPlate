@@ -11,7 +11,7 @@ public class RenderTypes extends RenderStateShard {
 	public RenderTypes() {
 		super(null, null, null);
 	}
-	
+
 	private static final RenderType FLUID = RenderType.create("dinnerplate:fluid",
 			DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER)

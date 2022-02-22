@@ -1,6 +1,5 @@
 package dhyces.dinnerplate.util;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;

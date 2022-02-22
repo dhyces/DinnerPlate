@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.capability;
 
-import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.Constants;
+import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.bite.Bite;
 import dhyces.dinnerplate.util.Couple;
 import net.minecraft.core.Direction;
@@ -15,9 +15,9 @@ import net.minecraftforge.common.util.LazyOptional;
 public class MockFoodCapability extends MockFoodProvider implements ICapabilitySerializable<CompoundTag> {
 
 	public static final ResourceLocation CAP_ID = new ResourceLocation(DinnerPlate.MODID, "mock_food_cap");
-	
+
 	private final LazyOptional<IMockFoodProvider> PROVIDER = LazyOptional.of(() -> this);
-	
+
 	@Override
 	public CompoundTag serializeNBT() {
 		var tag = new CompoundTag();
@@ -45,7 +45,7 @@ public class MockFoodCapability extends MockFoodProvider implements ICapabilityS
 			this.bites = Couple.coupleOf(firstBite, lastBite);
 		}
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		return CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY.orEmpty(cap, PROVIDER);

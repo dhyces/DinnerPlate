@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 public interface ISingleItemHolder extends IItemHolder {
 
 	public void setItem(ItemStack stack);
-	
+
 	@Override
 	default ItemStack insertItem(ItemStack stack) {
 		if (containsItemStack(stack)) {

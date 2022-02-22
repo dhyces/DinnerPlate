@@ -7,9 +7,9 @@ import net.minecraft.world.entity.player.Player;
 public class DinnerUnitStack implements IDinnerUnitHolder {
 
 	public DinnerUnitStack(int capacityIn) {
-		
+
 	}
-	
+
 	@Override
 	public int getMaxUnits() {
 		return 0;
