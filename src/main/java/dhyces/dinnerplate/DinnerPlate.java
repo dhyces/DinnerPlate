@@ -18,7 +18,11 @@ import net.minecraft.world.item.MilkBucketItem;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.model.DynamicBucketModel;
+import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -55,7 +59,7 @@ import dhyces.dinnerplate.render.item.MockFoodItemRenderer;
 import dhyces.dinnerplate.render.item.PlateItemRenderer;
 import dhyces.dinnerplate.render.util.RenderTypes;
 import dhyces.dinnerplate.util.BlockHelper;
-import dhyces.dinnerplate.util.ModelHelper;
+import dhyces.dinnerplate.util.ResourceHelper;
 
 @Mod(DinnerPlate.MODID)
 public class DinnerPlate {
@@ -75,6 +79,7 @@ public class DinnerPlate {
     	
         bus.addListener(this::setup);
         bus.addListener(this::clientSetup);
+        bus.addListener(this::registerModels);
         bus.addListener(this::entityRenders);
         bus.addListener(this::modelBakery);
         bus.addListener(this::dataGenerators);
@@ -110,13 +115,29 @@ public class DinnerPlate {
     	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RABBIT_STEW_FLUID_BLOCK.get(), RenderType.translucent());
     }
     
+    private void registerModels(final ModelRegistryEvent event) {
+    	Minecraft.getInstance().getResourceManager().listResources("models/item/bitten/", c -> c.contains(".json"))
+		.stream()
+		.map(c -> {
+			var modifiedPath = c.getPath().substring(c.getPath().indexOf('/')+1);
+			modifiedPath = modifiedPath.substring(0, modifiedPath.indexOf('.'));
+			var n = new ResourceLocation(c.getNamespace(), modifiedPath);
+			System.out.println(c + " new one " + n);
+			return n;
+			})
+		.forEach(ForgeModelBakery::addSpecialModel);
+    }
+    
+    private void reloadSeparateModels(final RegisterClientReloadListenersEvent event) {
+    }
+    
     private void entityRenders(final EntityRenderersEvent.RegisterRenderers event) {
     	event.registerBlockEntityRenderer(BEntityRegistry.PLATE_ENTITY.get(), PlateBlockRenderer::new);
     	event.registerBlockEntityRenderer(BEntityRegistry.MIXING_BOWL_ENTITY.get(), MixingBowlBlockRenderer::new);
     }
     
     private void modelBakery(final ModelBakeEvent e) {
-    	putInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId(), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, new ResourceLocation(MODID, "item/bite_mask_0"))));
+    	putInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId(), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, ItemRegistry.MOCK_FOOD_ITEM.getId())));
     	putInRegistry(e, ItemRegistry.PLATE_ITEM.getId(), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, ItemRegistry.PLATE_ITEM.getId())));
     }
     
@@ -125,11 +146,11 @@ public class DinnerPlate {
     }
     
     private BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
-    	return e.getModelManager().getModel(ModelHelper.inventoryModel(resource));
+    	return e.getModelManager().getModel(ResourceHelper.inventoryModel(resource));
     }
     
     private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
-    	e.getModelRegistry().put(ModelHelper.inventoryModel(resource), model); 
+    	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model); 
     }
     
     public static CreativeModeTab tab = new CreativeModeTab(MODID) {
