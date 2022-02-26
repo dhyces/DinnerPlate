@@ -43,7 +43,10 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 				return;
 			}
 			var bite = e.getBite(platedItem, e.getBiteCount(platedItem));
-			FoodHelper.playerStaticEatBite(level, player, platedItem, bite);
+			if (!isMockFood())
+				FoodHelper.playerStaticEatBite(level, player, platedItem, bite);
+			else
+				FoodHelper.playerStaticEatBite(level, player, getMockFood().get().getRealStack(), bite);
 			setChanged();
 		}
 	}
