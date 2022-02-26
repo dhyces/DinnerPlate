@@ -17,7 +17,12 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +31,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -88,8 +97,8 @@ public class MockFoodItem extends Item implements IBitable {
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack itemStack) {
-		return getCapabilityLowest(itemStack).getRealStack();
+	public ItemStack getContainerItem(ItemStack stack) {
+		return getCapabilityLowest(stack).getRealStack();
 	}
 
 	@Override
@@ -146,15 +155,48 @@ public class MockFoodItem extends Item implements IBitable {
 		}
 		return InteractionResultHolder.pass(stack);
 	}
-
+	
 	@Override
-	public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-		var real = getCapabilityLowest(pStack).getRealStack();
-		var ret = real.finishUsingItem(pLevel, pLivingEntity);
-		real.setCount(1);
-		return ret;
+	public InteractionResult useOn(UseOnContext pContext) {
+		var level = pContext.getLevel();
+		var pos = pContext.getClickedPos();
+		var blockState = level.getBlockState(pos);
+		if (blockState.is(Blocks.COMPOSTER)) {
+			if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
+				var hand = pContext.getItemInHand();
+				var realCopy = getCapabilityLowest(hand).getRealStack().copy();
+				ComposterBlock.insertItem(blockState, serverLevel, realCopy, pos);
+				if (realCopy.isEmpty()) {
+					hand.shrink(1);
+					level.playSound((Player)null, pos, SoundEvents.COMPOSTER_FILL_SUCCESS, SoundSource.BLOCKS, 0.7f, 0.5f);
+				}
+			}
+			return InteractionResult.sidedSuccess(level.isClientSide);
+		}
+		return super.useOn(pContext);
 	}
 
+	// TODO: bitten item design system
+//	@Override
+//	public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
+//		var real = getCapabilityLowest(pStack).getRealStack();
+//		var ret = real.finishUsingItem(pLevel, pLivingEntity);
+//		real.setCount(1);
+//		return ret;
+//	}
+	
+	@Override
+	public CompoundTag getShareTag(ItemStack stack) {
+		stack.getOrCreateTag().merge(((MockFoodCapability)getCapabilityLowest(stack)).serializeNBT());
+		return stack.serializeNBT();
+	}
+	
+	@Override
+	public void readShareTag(ItemStack stack, CompoundTag nbt) {
+		((MockFoodCapability)getCapabilityLowest(stack)).deserializeNBT(nbt);
+		stack.deserializeNBT(nbt);
+	}
+	
 	public static IMockFoodProvider getCapabilityLowest(ItemStack stack) {
 		return stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve().get();
 	}
