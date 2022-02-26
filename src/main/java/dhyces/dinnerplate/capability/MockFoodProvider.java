@@ -20,11 +20,6 @@ public class MockFoodProvider implements IMockFoodProvider {
 	}
 
 	@Override
-	public ItemStack getRealStack() {
-		return stack;
-	}
-
-	@Override
 	public void initialize(ItemStack stack, int chewCount) {
 		if (!stack.isEdible()) return;
 		this.stack = stack;
@@ -33,6 +28,11 @@ public class MockFoodProvider implements IMockFoodProvider {
 		// TODO: there's an issue here in the case there is an array out of bounds error if the splitInto method returns a list with a
 		// size less than 2
 		this.bites = Couple.coupleOf(biteList.get(0), biteList.get(1));
+	}
+	
+	@Override
+	public ItemStack getRealStack() {
+		return stack;
 	}
 
 	@Override
