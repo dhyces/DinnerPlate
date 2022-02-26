@@ -47,6 +47,6 @@ public class BlockRegistry {
 
 		MUSHROOM_STEW_FLUID_BLOCK = registerFluid("mushroom_stew", () -> new LiquidBlock(FluidRegistry.MUSHROOM_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_BROWN).strength(100)));
 		BEETROOT_SOUP_FLUID_BLOCK = registerFluid("beetroot_soup", () -> new LiquidBlock(FluidRegistry.BEETROOT_SOUP_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_RED).strength(100)));
-		RABBIT_STEW_FLUID_BLOCK = registerFluid("rabbit_soup", () -> new LiquidBlock(FluidRegistry.RABBIT_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_ORANGE).strength(100)));
+		RABBIT_STEW_FLUID_BLOCK = registerFluid("rabbit_stew", () -> new LiquidBlock(FluidRegistry.RABBIT_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_ORANGE).strength(100)));
 	}
 }
