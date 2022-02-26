@@ -2,6 +2,7 @@ package dhyces.dinnerplate.blockentity.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -17,11 +18,22 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 
 	@Override
 	public CompoundTag getUpdateTag() {
-		var tag = super.getUpdateTag();
-		write(tag);
+		var tag = saveWithFullMetadata();
+		writeClient(tag);
 		return tag;
 	}
-
+	
+//	@Override
+//	public void handleUpdateTag(CompoundTag tag) {
+//		super.handleUpdateTag(tag);
+//		readClient(tag);
+//	}
+//
+//	@Override
+//	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+//		super.onDataPacket(net, pkt);
+//	}
+	
 	@Override
 	public Packet<ClientGamePacketListener> getUpdatePacket() {
 		return ClientboundBlockEntityDataPacket.create(this);
@@ -32,6 +44,18 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 
 	/** Load additional information, such as itemstacks or fluidstacks*/
 	public abstract void read(CompoundTag tag);
+	
+	/** Load additional information, such as itemstacks or fluidstacks, separate from the regular methods in case implementors wanted to send
+	 *  more or less information*/
+	public void writeClient(CompoundTag tag) {
+		write(tag);
+	}
+	
+	/** Load additional information, such as itemstacks or fluidstacks, separate from the regular methods in case implementors wanted to send
+	 *  more or less information*/
+	public void readClient(CompoundTag tag) {
+		read(tag);
+	}
 
 	@Override
 	public void load(CompoundTag pTag) {
