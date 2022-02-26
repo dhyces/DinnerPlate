@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -19,6 +20,7 @@ import dhyces.dinnerplate.util.ResourceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -43,6 +45,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 	private static final boolean testGen = false;
 	private Map<ResourceLocation, BakedModel> generatedModels = testGen ? new ConcurrentHashMap<>() : null;
 	boolean written = false;
+	public static final Function<ResourceLocation, ResourceLocation> toBitten = c -> new ResourceLocation(DinnerPlate.MODID, "");
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -57,12 +60,12 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		var biteCount = capability.get().getBiteCount();
 		if (biteCount > 0) {
 			var itemRL = realStack.getItem().getRegistryName();
-			var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath() + "_" + (biteCount-1));
+			var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath());
 
 			var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
 			var bittenModel = Minecraft.getInstance().getModelManager().getModel(bittenInvRL);
-			if (!bittenModel.equals(Minecraft.getInstance().getModelManager().getMissingModel())) {
-				model = bittenModel;
+			if (!bittenModel.equals(Minecraft.getInstance().getModelManager().getMissingModel()) && !bittenModel.getOverrides().equals(ItemOverrides.EMPTY)) {
+				model = bittenModel.getOverrides().resolve(bittenModel, pStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);;
 			} else if (testGen) {
 				var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
 
@@ -103,11 +106,6 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			Lighting.setupFor3DItems();
 		pPoseStack.popPose();
 		RenderSystem.applyModelViewMatrix();
-	}
-
-	@Override
-	public void onResourceManagerReload(ResourceManager pResourceManager) {
-		System.out.println("I'm Called!");
 	}
 
 	/** This is a method that generates a "builtin/generated" type item model, due to the inability to generate one outside of the model bakery
