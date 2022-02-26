@@ -9,6 +9,7 @@ import dhyces.dinnerplate.item.PlateItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -46,6 +47,15 @@ public class ItemRegistry {
 		MUSHROOM_STEW_BUCKET = register("mushroom_stew_bucket", () -> simpleBucket(FluidRegistry.MUSHROOM_STEW_FLUID));
 		BEETROOT_SOUP_BUCKET = register("beetroot_soup_bucket", () -> simpleBucket(FluidRegistry.BEETROOT_SOUP_FLUID));
 		RABBIT_STEW_BUCKET = register("rabbit_stew_bucket", () -> simpleBucket(FluidRegistry.RABBIT_STEW_FLUID));
+	}
+	
+	public static Item registerCompostable(Item item, float value) {
+		addToComposter(item, value);
+		return item;
+	}
+	
+	public static void addToComposter(Item item, float value) {
+		ComposterBlock.COMPOSTABLES.put(item, value);
 	}
 
 	private static Item simpleBucket(Supplier<? extends Fluid> fluid) {
