@@ -20,7 +20,6 @@ public abstract class AbstractDinnerBlockEntity extends SyncedBlockEntity {
 	@Override
 	public void setChanged() {
 		super.setChanged();
-
 		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
 	}
 
