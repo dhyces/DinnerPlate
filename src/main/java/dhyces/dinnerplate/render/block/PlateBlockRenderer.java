@@ -28,18 +28,19 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		if (!pBlockEntity.hasItem())
 			return;
 		var item = pBlockEntity.getLastItem();
+		var model = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(item.getItem().getRegistryName()));
 		poseStack.pushPose();
 		poseStack.scale(.5F, .5F, .5F);
 		poseStack.translate(1, 0.1563, 1);
-		if (!Minecraft.getInstance().getItemRenderer().getModel(item, (Level)null, (LivingEntity)null, 0).isGui3d()) {
-			poseStack.mulPose(new Quaternion(90, 0, pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot(), true));
+		if (!model.isGui3d()) {
+			poseStack.mulPose(new Quaternion(90, 180, -pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot(), true));
 		} else {
 			poseStack.mulPose(new Quaternion(0, -pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot(), 0, true));
-			poseStack.translate(0, .25, 0);
+			poseStack.scale(0.5f, 0.5f, 0.5f);
+			poseStack.translate(0, .45, 0);
+			poseStack.mulPose(new Quaternion(0, 180, 0, true));
 		}
-		var model = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(item.getItem().getRegistryName()));
 		Minecraft.getInstance().getItemRenderer().render(item, TransformType.NONE, false, poseStack, pBufferSource, pPackedLight, pPackedOverlay, model);
-		//Minecraft.getInstance().getItemRenderer().renderStatic((LivingEntity)null, item, TransformType.FIXED, false, poseStack, pBufferSource, pBlockEntity.getLevel(), pPackedLight, pPackedOverlay, 0);
 		poseStack.popPose();
 	}
 
