@@ -70,16 +70,11 @@ public abstract class AbstractDinnerBlock<T extends AbstractDinnerBlockEntity> e
 		if (stack.isEmpty()) return;
 		var preferredSlot = InventoryHelper.getPreferredSlot(inv, stack);
 		if (preferredSlot == -1) {
-			if (!level.isClientSide) {
-				spawnCenterBlock(level, pos, yModifier, stack);
-			}
+			spawnCenterBlock(level, pos, yModifier, stack);
 			return;
 		}
-		PlayerHelper.staticEquipEventAndSound(inv.player, stack);
-		if (!level.isClientSide) {
-			if (!(inv.findSlotMatchingItem(stack) != -1 && inv.player.getAbilities().instabuild))
-				inv.add(preferredSlot, stack);
-		}
+		if (!(inv.findSlotMatchingItem(stack) != -1 && inv.player.getAbilities().instabuild))
+			inv.add(preferredSlot, stack);
 	}
 
 	/** @param yModifier This will add to the y coordinate after it's been moved to the center*/

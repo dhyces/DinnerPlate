@@ -12,6 +12,7 @@ import dhyces.dinnerplate.util.BlockHelper;
 import dhyces.dinnerplate.util.MathHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -106,13 +107,18 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 		var platesProperty = state.getValue(PLATES);
 		if (plateEntity.hasItem()) {
 			// TODO: may need to split this back up due to the difficulty of making it work sided
-			var stack = plateEntity.removeLastItem();
-			insertInvOrSpawn(level, pos, -0.25, player.getInventory(), stack);
+			if (!isClient) {
+				var stack = plateEntity.removeLastItem();
+				insertInvOrSpawn(level, pos, -0.25, player.getInventory(), stack);
+			}
+			level.playSound(player, pos, DinnerSoundTypes.PLATE_SOUND_TYPE.getStepSound(), SoundSource.BLOCKS, 1f, 1.2f);
 			return InteractionResult.sidedSuccess(isClient);
-		} else if (platesProperty > 1 && !player.getMainHandItem().is(Items.DEBUG_STICK)) {
-			var stack = asItem().getDefaultInstance().copy();
-			insertInvOrSpawn(level, pos, .5, player.getInventory(), stack);
-			level.setBlock(pos, growPlates(state, -1), 3);
+		} else if (platesProperty > 1) {
+			if (!isClient) {
+				var stack = asItem().getDefaultInstance().copy();
+				insertInvOrSpawn(level, pos, .5, player.getInventory(), stack);
+				level.setBlock(pos, growPlates(state, -1), 3);
+			}
 			return InteractionResult.sidedSuccess(isClient);
 		}
 		return super.shiftRightClick(state, plateEntity, level, pos, player, hand, res, isClient);
