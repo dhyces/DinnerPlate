@@ -54,13 +54,10 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 	public InteractionResult rightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos,
 											Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		if (plateEntity.hasItem()) {
-			var mockFoodOptional = plateEntity.getMockFood();
-			if (mockFoodOptional.isPresent() && player.canEat(mockFoodOptional.get().canAlwaysEat())) {
-					if (!mockFoodOptional.get().isFast() && plateEntity.getBiteCount() < Constants.MAX_ITEM_CHEW_COUNT) {
-						plateEntity.bite(player);
-					} else {
-						plateEntity.eat(player);
-					}
+			var item = plateEntity.getLastItem();
+			if (item.isEdible() && player.canEat(item.getItem().getFoodProperties().canAlwaysEat())) {
+				if (!isClient)
+					plateEntity.bite(player);
 				return InteractionResult.sidedSuccess(isClient);
 			}
 		} else {

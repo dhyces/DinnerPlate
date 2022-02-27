@@ -8,6 +8,7 @@ import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IDishware;
 import dhyces.dinnerplate.blockentity.api.ISingleItemHolder;
+import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.capability.IMockFoodProvider;
 import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.registry.BEntityRegistry;
@@ -33,20 +34,15 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	/** Chew is affected by fast foods.*/
 	@Override
 	public void bite(Player player) {
-		if (platedItem.isEdible())
+		if (platedItem.isEdible() && !(platedItem.getItem() instanceof IBitable) && !(platedItem.getItem() instanceof MockFoodItem))
+			// TODO: Try to change this to get a value from some map in case someone wants to change the number of bites it takes to eat. I'm
+			// just worried about exceeding the number of tags in an item
+			platedItem = MockFoodItem.mockFoodStack(platedItem, 3);
 		if (platedItem.getItem() instanceof IBitable e) {
-			e.incrementBiteCount(platedItem);
-			if (e.isFast(platedItem)) {
-				//platedItem.finishUsingItem(level, player);
-				player.eat(this.level, platedItem);
-				consumeItem();
-				return;
+			var ret = e.eat(platedItem, player, level);
+			if (!ret.equals(platedItem)) {
+				platedItem = ret;
 			}
-			var bite = e.getBite(platedItem, e.getBiteCount(platedItem));
-			if (!isMockFood())
-				FoodHelper.playerStaticEatBite(level, player, platedItem, bite);
-			else
-				FoodHelper.playerStaticEatBite(level, player, getMockFood().get().getRealStack(), bite);
 			setChanged();
 		}
 	}
@@ -55,15 +51,7 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	public void eat(Player player) {
 		if (isFood.get()) {
 			bite(player);
-			FoodHelper.playerStaticEat(level, player, platedItem);
-			consumeItem();
 		}
-	}
-
-	private void consumeItem() {
-		var mockFood = getMockFood();
-		if (mockFood.isPresent())
-			setItem(ItemHelper.returnedItem(mockFood.get().getRealStack()));
 	}
 
 	@Override
@@ -71,12 +59,8 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 		return IBitable.bitable(platedItem).map(c -> c.getBiteCount(platedItem)).orElse(-1);
 	}
 
-	private boolean isMockFood() {
-		return platedItem.is(ItemRegistry.MOCK_FOOD_ITEM.get());
-	}
-
-	public Optional<IMockFoodProvider> getMockFood() {
-		return isMockFood() ? Optional.of(MockFoodItem.getCapabilityLowest(platedItem)) : Optional.empty();
+	public Optional<IBitable> getBitable() {
+		return IBitable.bitable(platedItem);
 	}
 
 	@Override
@@ -87,6 +71,8 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	@Override
 	public void read(CompoundTag pTag) {
 		this.platedItem = ItemStack.of(pTag.getCompound(Constants.TAG_SINGLE_ITEM));
+		if (platedItem.getItem() == null)
+			platedItem = ItemStack.EMPTY;
 	}
 
 	@Override
@@ -113,9 +99,9 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	@Override
 	public ItemStack removeLastItem() {
 		var item = platedItem;
-		var optional = getMockFood();
-		if (optional.isPresent() && optional.get().getBiteCount() == 0) {
-			item = optional.get().getRealStack();
+		var optional = platedItem.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY);
+		if (optional.isPresent() && optional.resolve().get().getBiteCount() == 0) {
+			item = optional.resolve().get().getRealStack();
 		}
 		setItem(ItemStack.EMPTY);
 		return item;

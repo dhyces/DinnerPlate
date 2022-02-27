@@ -48,8 +48,10 @@ public class MockFoodItem extends Item implements IBitable {
 	}
 
 	public static ItemStack mockFoodStack(ItemStack mockStack, int chewCount) {
-		if (mockStack.getItem() instanceof MockFoodItem || mockStack.isEmpty() || !mockStack.isEdible())
+		if (mockStack.getItem() instanceof MockFoodItem)
 			return mockStack;
+		if (mockStack.isEmpty() || !mockStack.isEdible())
+			throw new IllegalStateException("ItemStack: " + mockStack + " is not a qualifying item. Either empty or not edible.");
 		var stack = ItemRegistry.MOCK_FOOD_ITEM.get().getDefaultInstance().copy();
 		var optional = stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY);
 		optional.ifPresent(c -> c.initialize(mockStack, chewCount));
@@ -62,8 +64,8 @@ public class MockFoodItem extends Item implements IBitable {
 	}
 
 	@Override
-	public int getMaxBiteCount(ItemStack stack) {
-		return getCapabilityLowest(stack).getMaxBiteCount();
+	public int getMaxBites(ItemStack stack) {
+		return getCapabilityLowest(stack).getMaxBites();
 	}
 
 	@Override
@@ -95,10 +97,10 @@ public class MockFoodItem extends Item implements IBitable {
 	public boolean isMeat(ItemStack stack) {
 		return getCapabilityLowest(stack).isMeat();
 	}
-
+	
 	@Override
-	public ItemStack getContainerItem(ItemStack stack) {
-		return getCapabilityLowest(stack).getRealStack();
+	public ItemStack getReturnedItem(ItemStack stack) {
+		return getCapabilityLowest(stack).getReturnedItem(stack);
 	}
 
 	@Override
@@ -137,20 +139,13 @@ public class MockFoodItem extends Item implements IBitable {
 		var capability = getCapabilityLowest(stack);
 		if (capability.getRealStack().isEdible()) {
 			if (pPlayer.canEat(capability.canAlwaysEat())) {
-				var isEaten = capability.incrementBiteCount();
-				var bite = capability.getBite(capability.getBiteCount());
 				var underlyingStack = capability.getRealStack();
 				if (!pLevel.isClientSide)
-					FoodHelper.playerStaticEatBite(pLevel, pPlayer, underlyingStack, bite);
-				if (isEaten) {
-					capability.setBiteCount(0);
-					if (!pPlayer.getAbilities().instabuild)
-						stack.shrink(1);
-					if (!pLevel.isClientSide)
-						FoodHelper.playerStaticEat(pLevel, pPlayer, underlyingStack);
-					return InteractionResultHolder.consume(ItemHelper.returnedItem(underlyingStack));
-				}
-				return InteractionResultHolder.consume(stack);
+					capability.eat(stack, pPlayer, pLevel);
+				capability.setBiteCount(0);
+				if (!pPlayer.getAbilities().instabuild)
+					stack.shrink(1);
+				return InteractionResultHolder.consume(ItemHelper.returnedItem(underlyingStack));
 			}
 		}
 		return InteractionResultHolder.pass(stack);
@@ -177,13 +172,32 @@ public class MockFoodItem extends Item implements IBitable {
 	}
 
 	// TODO: bitten item design system
-//	@Override
-//	public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-//		var real = getCapabilityLowest(pStack).getRealStack();
-//		var ret = real.finishUsingItem(pLevel, pLivingEntity);
-//		real.setCount(1);
-//		return ret;
-//	}
+	@Override
+	public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
+		var real = getCapabilityLowest(pStack).getRealStack();
+		if (pLivingEntity instanceof Player p) {
+			var tempStorage = new CompoundTag();
+			var ability = p.getAbilities().instabuild;
+			p.getFoodData().addAdditionalSaveData(tempStorage);
+			p.getAbilities().instabuild = false;
+			var ret = real.finishUsingItem(pLevel, pLivingEntity);
+			real.setCount(1);
+			p.getAbilities().instabuild = ability;
+			p.getFoodData().readAdditionalSaveData(tempStorage);
+			return ret.equals(real) ? ItemStack.EMPTY : ret;
+		}
+		return ItemStack.EMPTY;
+	}
+	
+	@Override
+	public ItemStack getContainerItem(ItemStack stack) {
+		return getReturnedItem(stack);
+	}
+	
+	@Override
+	public SoundEvent getEatingSound(ItemStack stack) {
+		return getCapabilityLowest(stack).getEatingSound(stack);
+	}
 	
 	@Override
 	public CompoundTag getShareTag(ItemStack stack) {

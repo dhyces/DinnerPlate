@@ -12,7 +12,7 @@ public interface IMockFoodProvider extends IBitable {
 
 	public int getBiteCount();
 
-	public int getMaxBiteCount();
+	public int getMaxBites();
 
 	public boolean incrementBiteCount();
 
@@ -32,8 +32,8 @@ public interface IMockFoodProvider extends IBitable {
 	}
 
 	@Override
-	default int getMaxBiteCount(ItemStack stack) {
-		return getMaxBiteCount();
+	default int getMaxBites(ItemStack stack) {
+		return getMaxBites();
 	}
 
 	@Override

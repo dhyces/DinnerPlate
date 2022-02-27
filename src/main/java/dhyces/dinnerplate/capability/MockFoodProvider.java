@@ -3,6 +3,7 @@ package dhyces.dinnerplate.capability;
 import dhyces.dinnerplate.bite.Bite;
 import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.util.Couple;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
 public class MockFoodProvider implements IMockFoodProvider {
@@ -34,6 +35,16 @@ public class MockFoodProvider implements IMockFoodProvider {
 	public ItemStack getRealStack() {
 		return stack;
 	}
+	
+	@Override
+	public SoundEvent getEatingSound(ItemStack stack) {
+		return this.stack.getEatingSound();
+	}
+	
+	@Override
+	public ItemStack getReturnedItem(ItemStack stack) {
+		return stack.getContainerItem();
+	}
 
 	@Override
 	public int getBiteCount() {
@@ -41,7 +52,7 @@ public class MockFoodProvider implements IMockFoodProvider {
 	}
 
 	@Override
-	public int getMaxBiteCount() {
+	public int getMaxBites() {
 		return 3;
 	}
 
