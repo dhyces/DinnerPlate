@@ -7,9 +7,11 @@ import java.util.concurrent.Executor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.datagen.ModelGenerator;
+import dhyces.dinnerplate.item.BitableItem;
 import dhyces.dinnerplate.model.SimpleCustomBakedModelWrapper;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.registry.BlockRegistry;
@@ -32,6 +34,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener.Preparation
 import net.minecraft.util.Unit;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -55,7 +58,7 @@ public class DinnerPlate {
 
 	public static final String MODID = "dinnerplate";
 	
-	private List<ResourceLocation> edibleItems;
+	private List<Item> edibleItems;
 
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -101,6 +104,11 @@ public class DinnerPlate {
     		var cap = stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve().get();
 			return (float) cap.getBiteCount(stack) / cap.getMaxBiteCount(stack);
 		}));
+    	event.enqueueWork(() -> ItemProperties.register(ItemRegistry.BITABLE_ITEM.get(), new ResourceLocation(DinnerPlate.MODID, "bites"), (stack, level, entity, seed) -> {
+			if (stack.getItem() instanceof BitableItem b)
+				return (float) b.getBiteCount(stack) / b.getMaxBiteCount(stack);
+			return 1.0f;
+		}));
     	event.enqueueWork(() -> setRenderLayers());
     }
 
@@ -112,23 +120,22 @@ public class DinnerPlate {
     }
     
     private void modelRegistry(final ModelRegistryEvent event) {
-    	edibleItems = ForgeRegistries.ITEMS.getEntries().stream().filter(c -> c.getValue().isEdible()).map(c -> c.getKey().location()).toList();
+    	edibleItems = ForgeRegistries.ITEMS.getEntries().stream().filter(c -> c.getValue().isEdible()).map(c -> c.getValue()).toList();
     	prepareSeparateModels();
     }
     
     // TODO: remove the println. Also I want to only actually get models that are used, aka have a list of edible items and then just add those
     // the the special model list
     private void prepareSeparateModels() {
-    	edibleItems.stream()
+    	edibleItems.stream().filter(c -> !(c instanceof IBitable))
 		.map(c -> {
-			var n = new ResourceLocation(MODID, "item/bitten/bitten_" + c.getPath());
+			var n = new ResourceLocation(MODID, "item/bitten/bitten_" + c.getRegistryName().getPath());
 			System.out.println(c + " new one " + n);
 			return n;
 			})
 		.forEach(ForgeModelBakery::addSpecialModel);
     }
     
-    // TODO: see if there's a way to do the preparation inside of the completeable future
     private void reloadSeparateModels(final RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener(new PreparableReloadListener() {
 			
