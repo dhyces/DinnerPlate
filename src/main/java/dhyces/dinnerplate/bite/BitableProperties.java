@@ -50,12 +50,11 @@ public class BitableProperties {
 	public FoodProperties toFoodProperties() {
 		var nutrition = 0;
 		var satMod = 0;
-		List<Pair<MobEffectInstance, Float>> effects = new ArrayList<>();
 		Map<MobEffect, Triplet<Integer, Integer, Float>> effectMap = new HashMap<>();
 		for (IBite bite : bites) {
 			nutrition += bite.getNutrition();
 			satMod += bite.getSaturationModifier();
-			bite.getEffects().forEach(c -> {
+			bite.getEffects().stream().forEach(c -> {
 				var instance = c.getFirst();
 				var chance = c.getSecond();
 				effectMap.merge(instance.getEffect(), new Triplet<>(instance.getDuration(), instance.getAmplifier(), chance), (mapValue,listValue) -> {
@@ -113,6 +112,11 @@ public class BitableProperties {
 
 		public Builder addBite(IBite bite) {
 			this.bBites.add(bite);
+			return this;
+		}
+		
+		public Builder addSimpleBite(int nutrition, float saturationModifier) {
+			this.bBites.add(new Bite.Builder().nutrition(nutrition).saturation(saturationModifier).build());
 			return this;
 		}
 

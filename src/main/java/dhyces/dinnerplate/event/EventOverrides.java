@@ -4,6 +4,8 @@ import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.block.api.IForkedInteract;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import net.minecraft.world.InteractionResult;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

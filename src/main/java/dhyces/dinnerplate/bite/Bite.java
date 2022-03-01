@@ -8,8 +8,10 @@ import com.mojang.datafixers.util.Pair;
 
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.util.Couple;
+import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 
@@ -152,6 +154,10 @@ public class Bite implements IBite {
 		public Builder saturation(float saturationMod) {
 			builderSaturationMod = saturationMod;
 			return this;
+		}
+		
+		public Builder addEffect(MobEffect effect, int amplifier, int duration, float chance) {
+			return addEffect(new MobEffectInstance(effect, duration, amplifier), chance);
 		}
 
 		public Builder addEffect(MobEffectInstance effectInstance, float chance) {
