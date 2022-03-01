@@ -43,7 +43,7 @@ public class MixingBowlBlockRenderer implements BlockEntityRenderer<MixingBowlBl
 				boolean nb1 = r.nextBoolean();
 				nd *= Boolean.compare(nb, !nb);
 				nd1 *= Boolean.compare(nb1, !nb1);
-				var item = bEntity.getItem(i); 
+				var item = bEntity.getItem(i);
 				poseStack.pushPose();
 				poseStack.translate(nd, 0, nd1);
 				poseStack.mulPose(new Quaternion((float)nd1 * 100, (float)nd1 * 100, (float)nd * 100, false));
@@ -53,7 +53,7 @@ public class MixingBowlBlockRenderer implements BlockEntityRenderer<MixingBowlBl
 			poseStack.popPose();
 		}
 	}
-	
+
 	private float fromPixel(float px) {
 		return px / 16f;
 	}

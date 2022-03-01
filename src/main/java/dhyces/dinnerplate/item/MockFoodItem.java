@@ -10,7 +10,6 @@ import dhyces.dinnerplate.capability.IMockFoodProvider;
 import dhyces.dinnerplate.capability.MockFoodCapability;
 import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.render.item.MockFoodItemRenderer;
-import dhyces.dinnerplate.util.ItemHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -95,7 +94,7 @@ public class MockFoodItem extends Item implements IBitableItem {
 	public boolean isMeat(ItemStack stack) {
 		return getCapabilityLowest(stack).isMeat();
 	}
-	
+
 	@Override
 	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
 		return getCapabilityLowest(stack).finish(stack, level, livingEntity);
@@ -140,7 +139,7 @@ public class MockFoodItem extends Item implements IBitableItem {
 		}
 		return InteractionResultHolder.pass(stack);
 	}
-	
+
 	@Override
 	public InteractionResult useOn(UseOnContext pContext) {
 		var level = pContext.getLevel();
@@ -178,29 +177,29 @@ public class MockFoodItem extends Item implements IBitableItem {
 		}
 		return ItemStack.EMPTY;
 	}
-	
+
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
 		return getCapabilityLowest(stack).getRealStack().getContainerItem();
 	}
-	
+
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return getCapabilityLowest(stack).getEatingSound(stack);
 	}
-	
+
 	@Override
 	public CompoundTag getShareTag(ItemStack stack) {
 		stack.getOrCreateTag().merge(((MockFoodCapability)getCapabilityLowest(stack)).serializeNBT());
 		return stack.serializeNBT();
 	}
-	
+
 	@Override
 	public void readShareTag(ItemStack stack, CompoundTag nbt) {
 		((MockFoodCapability)getCapabilityLowest(stack)).deserializeNBT(nbt);
 		stack.deserializeNBT(nbt);
 	}
-	
+
 	public static IMockFoodProvider getCapabilityLowest(ItemStack stack) {
 		return stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve().get();
 	}

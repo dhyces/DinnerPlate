@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
@@ -114,7 +112,7 @@ public class BitableProperties {
 			this.bBites.add(bite);
 			return this;
 		}
-		
+
 		public Builder addSimpleBite(int nutrition, float saturationModifier) {
 			this.bBites.add(new Bite.Builder().nutrition(nutrition).saturation(saturationModifier).build());
 			return this;

@@ -11,11 +11,11 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class ModelGenerator extends ItemModelProvider {
 
 	private final ModelFile BUILT_IN_GENERATED;
-	
+
 	public ModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
 		super(generator, modid, existingFileHelper);
 		BUILT_IN_GENERATED = getExistingFile(new ResourceLocation("item/generated"));
-		
+
 	}
 
 	@Override
@@ -35,20 +35,20 @@ public class ModelGenerator extends ItemModelProvider {
 		put(threeBite(bittenRL("potato")));
 		put(threeBite(bittenRL("melon_slice")));
 		put(threeBite(bittenRL("glow_berries")));
-		
+
 		put(withExistingParent("item/bitten/bitten_dried_kelp", "dried_kelp"));
-		
+
 		put(withExistingParent("item/bitten/bitten_mock_food", "air"));
 	}
-	
+
 	public void put(ItemModelBuilder builder) {
 		generatedModels.put(builder.getLocation(), builder);
 	}
-	
+
 	public ResourceLocation bittenRL(String item) {
 		return new ResourceLocation(modid, "bitten_" + item);
 	}
-	
+
 	public ItemModelBuilder threeBite(ResourceLocation location) {
 		return bittenModel(location, 0.5f);
 	}
@@ -64,7 +64,7 @@ public class ModelGenerator extends ItemModelProvider {
 		}
 		return builder;
 	}
-	
+
 	public ItemModelBuilder predicateBittenModel(ResourceLocation location, int biteCount) {
 		return singleTexture("item/bitten/" + location.getPath() + "_" + biteCount,
 							 BUILT_IN_GENERATED.getLocation(),

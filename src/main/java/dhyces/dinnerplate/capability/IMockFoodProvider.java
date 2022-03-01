@@ -1,6 +1,5 @@
 package dhyces.dinnerplate.capability;
 
-import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
 import net.minecraft.world.item.ItemStack;

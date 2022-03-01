@@ -29,7 +29,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -65,7 +64,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
 			var bittenModel = Minecraft.getInstance().getModelManager().getModel(bittenInvRL);
 			if (!bittenModel.equals(Minecraft.getInstance().getModelManager().getMissingModel()) && !bittenModel.getOverrides().equals(ItemOverrides.EMPTY)) {
-				model = bittenModel.getOverrides().resolve(bittenModel, pStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);;
+				model = bittenModel.getOverrides().resolve(bittenModel, pStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
 			} else if (testGen) {
 				var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
 

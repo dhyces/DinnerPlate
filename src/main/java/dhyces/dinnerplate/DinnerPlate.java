@@ -22,7 +22,6 @@ import dhyces.dinnerplate.render.block.MixingBowlBlockRenderer;
 import dhyces.dinnerplate.render.block.PlateBlockRenderer;
 import dhyces.dinnerplate.util.BlockHelper;
 import dhyces.dinnerplate.util.ResourceHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -30,7 +29,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.PreparableReloadListener.PreparationBarrier;
 import net.minecraft.util.Unit;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.CreativeModeTab;
@@ -45,7 +43,6 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.capability.templates.VoidFluidHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -57,7 +54,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class DinnerPlate {
 
 	public static final String MODID = "dinnerplate";
-	
+
 	private List<Item> edibleItems;
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -118,12 +115,12 @@ public class DinnerPlate {
     	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BEETROOT_SOUP_FLUID_BLOCK.get(), RenderType.translucent());
     	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RABBIT_STEW_FLUID_BLOCK.get(), RenderType.translucent());
     }
-    
+
     private void modelRegistry(final ModelRegistryEvent event) {
     	edibleItems = ForgeRegistries.ITEMS.getEntries().stream().filter(c -> c.getValue().isEdible()).map(c -> c.getValue()).toList();
     	prepareSeparateModels();
     }
-    
+
     // TODO: remove the println. Also I want to only actually get models that are used, aka have a list of edible items and then just add those
     // the the special model list
     private void prepareSeparateModels() {
@@ -135,10 +132,10 @@ public class DinnerPlate {
 			})
 		.forEach(ForgeModelBakery::addSpecialModel);
     }
-    
+
     private void reloadSeparateModels(final RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener(new PreparableReloadListener() {
-			
+
 			@Override
 			public CompletableFuture<Void> reload(PreparationBarrier pPreparationBarrier, ResourceManager pResourceManager,
 					ProfilerFiller pPreparationsProfiler, ProfilerFiller pReloadProfiler, Executor pBackgroundExecutor,
@@ -165,7 +162,7 @@ public class DinnerPlate {
     private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
     	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model);
     }
-    
+
     private void dataGenerators(final GatherDataEvent event) {
     	event.getGenerator().addProvider(new ModelGenerator(event.getGenerator(), MODID,  event.getExistingFileHelper()));
     }

@@ -19,36 +19,49 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public interface IBitableItem extends IBitable<ItemStack> {
-	
+
+	@Override
 	public int getBiteCount(ItemStack stack);
-	
+
+	@Override
 	abstract int getMaxBites(ItemStack stack);
 
+	@Override
 	public default int getMaxBiteCount(ItemStack stack) {
 		return isFast(stack) ? 1 : getMaxBites(stack);
 	}
 
+	@Override
 	public boolean incrementBiteCount(ItemStack stack);
 
+	@Override
 	public void setBiteCount(ItemStack stack, int count);
 
+	@Override
 	public IBite getBite(ItemStack stack, int chew);
 
+	@Override
 	boolean canBeFast(ItemStack stack);
-	
+
+	@Override
 	public default boolean isFast(ItemStack stack) {
 		return getMaxBites(stack) == 1 && canBeFast(stack);
 	}
 
+	@Override
 	public boolean isMeat(ItemStack stack);
 
+	@Override
 	public boolean canAlwaysEat(ItemStack stack);
-	
+
+	@Override
 	public SoundEvent getEatingSound(ItemStack stack);
-	
+
 	/** Override this if your food is contained by something else, ie a bowl, a bottle, etc*/
+	@Override
 	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity);
-	
+
+	@Override
 	public default ItemStack eat(ItemStack stack, Player player, Level level) {
 		var returnStack = stack;
 		// TODO: this breaks MockFood
@@ -61,7 +74,7 @@ public interface IBitableItem extends IBitable<ItemStack> {
 				FoodHelper.addEffect(player, new MobEffectInstance(pair.getFirst()));
 			}
 		}
-		
+
 		if (incrementBiteCount(stack)) {
 			returnStack = finish(stack, level, player);
 			player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
@@ -73,7 +86,7 @@ public interface IBitableItem extends IBitable<ItemStack> {
 		setBiteCount(stack, getBiteCount(stack) % getMaxBiteCount(stack));
 		return returnStack;
 	}
-	
+
 	public static Optional<IBitableItem> bitable(ItemStack stack) {
 		return stack.getItem() instanceof IBitableItem bitable ? Optional.of(bitable) : Optional.empty();
 	}

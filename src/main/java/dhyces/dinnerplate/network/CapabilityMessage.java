@@ -11,13 +11,13 @@ import net.minecraftforge.network.NetworkEvent;
 public record CapabilityMessage(LazyOptional<IMockFoodProvider> cap) {
 
 	public void encode(FriendlyByteBuf buffer) {
-		
+
 	}
-	
+
 	public static CapabilityMessage decode(FriendlyByteBuf buffer) {
 		return new CapabilityMessage(buffer.readItem().getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY));
 	}
-	
+
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() ->
 			{

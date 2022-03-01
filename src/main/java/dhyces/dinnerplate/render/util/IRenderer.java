@@ -30,12 +30,12 @@ public interface IRenderer {
 		var a = FastColor.ARGB32.alpha(color);
 		vertex(pConsumer, poseStack, vert, a, r, g, b, pU, pV, pPackedLight, face);
 	}
-	
+
 	default void vertex(VertexConsumer pConsumer, PoseStack poseStack, Vec3 vert, int r, int g, int b, int a, float pU, float pV, int pPackedLight, Direction face) {
 		//System.out.println("side: " + face + " " + vert.x + " " + vert.y + " " + vert.z);
 		var last = poseStack.last();
 		var normal = face.getNormal();
-		
+
 		pConsumer.vertex(last.pose(), (float)vert.x, (float)vert.y, (float)vert.z)
 				 .color(r, g, b, a)
 				 .uv(pU, pV)
@@ -43,6 +43,6 @@ public interface IRenderer {
 				 .uv2(pPackedLight)
 				 .normal(last.normal(), normal.getX(), normal.getY(), normal.getZ())
 				 .endVertex();
-		
+
 	}
 }

@@ -2,10 +2,8 @@ package dhyces.dinnerplate.item;
 
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.BitableProperties;
-import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
-import dhyces.dinnerplate.util.ItemHelper;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -37,17 +35,17 @@ public class BitableItem extends Item implements IBitableItem {
 		}
 		return InteractionResultHolder.pass(stack);
 	}
-	
+
 	@Override
 	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
 		return getContainerItem(stack);
 	}
-	
+
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return getEatingSound();
 	}
-	
+
 	@Override
 	public void setBiteCount(ItemStack stack, int count) {
 		if (count == 0)
@@ -55,7 +53,7 @@ public class BitableItem extends Item implements IBitableItem {
 		else
 			stack.getOrCreateTag().putInt(Constants.TAG_BITE_COUNT, count);
 	}
-	
+
 	@Override
 	public int getBiteCount(ItemStack stack) {
 		return stack.getOrCreateTag().getInt(Constants.TAG_BITE_COUNT);

@@ -2,7 +2,6 @@ package dhyces.dinnerplate.block.api;
 
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.util.InventoryHelper;
-import dhyces.dinnerplate.util.PlayerHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;

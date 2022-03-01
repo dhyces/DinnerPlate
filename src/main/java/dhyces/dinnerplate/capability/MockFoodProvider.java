@@ -32,17 +32,17 @@ public class MockFoodProvider implements IMockFoodProvider {
 		// size less than 2
 		this.bites = Couple.coupleOf(biteList.get(0), biteList.get(1));
 	}
-	
+
 	@Override
 	public ItemStack getRealStack() {
 		return stack;
 	}
-	
+
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return this.stack.getEatingSound();
 	}
-	
+
 	@Override
 	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
 		return stack.getContainerItem();
