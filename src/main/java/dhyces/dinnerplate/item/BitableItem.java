@@ -3,15 +3,20 @@ package dhyces.dinnerplate.item;
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.BitableProperties;
 import dhyces.dinnerplate.bite.IBitable;
+import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
+import dhyces.dinnerplate.util.ItemHelper;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /** TODO: this would be an item that can take an array of bites from the constructor. acts like a singleton form of the mockfooditem behavior.*/
-public class BitableItem extends Item implements IBitable {
+public class BitableItem extends Item implements IBitableItem {
 
 	protected final BitableProperties biteProperties;
 
@@ -21,23 +26,34 @@ public class BitableItem extends Item implements IBitable {
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-		return pStack;
-	}
-	
-	@Override
-	public ItemStack getReturnedItem(ItemStack stack) {
-		return ItemStack.EMPTY;
-	}
-	
-	@Override
-		public SoundEvent getEatingSound(ItemStack stack) {
-			return getEatingSound();
+	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+		var stack = pPlayer.getItemInHand(pUsedHand);
+		if (pPlayer.canEat(canAlwaysEat(stack))) {
+			//if (!pLevel.isClientSide)
+				eat(stack, pPlayer, pLevel);
+			if (!pPlayer.getAbilities().instabuild)
+				stack.shrink(1);
+			return InteractionResultHolder.consume(stack);
 		}
+		return InteractionResultHolder.pass(stack);
+	}
+	
+	@Override
+	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
+		return getContainerItem(stack);
+	}
+	
+	@Override
+	public SoundEvent getEatingSound(ItemStack stack) {
+		return getEatingSound();
+	}
 	
 	@Override
 	public void setBiteCount(ItemStack stack, int count) {
-		stack.getOrCreateTag().putInt(Constants.TAG_BITE_COUNT, count);
+		if (count == 0)
+			stack.getOrCreateTag().remove(Constants.TAG_BITE_COUNT);
+		else
+			stack.getOrCreateTag().putInt(Constants.TAG_BITE_COUNT, count);
 	}
 	
 	@Override
@@ -62,9 +78,9 @@ public class BitableItem extends Item implements IBitable {
 	}
 
 	@Override
-	public boolean isFast(ItemStack stack) {
-		return biteProperties.isFast();
-	}
+		public boolean canBeFast(ItemStack stack) {
+			return biteProperties.isFast();
+		}
 
 	@Override
 	public boolean isMeat(ItemStack stack) {

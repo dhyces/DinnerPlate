@@ -24,8 +24,8 @@ public class MockFoodCapability extends MockFoodProvider implements ICapabilityS
 		if (!getRealStack().isEmpty()) {
 			tag.put(Constants.TAG_SINGLE_ITEM, getRealStack().serializeNBT());
 			tag.putInt(Constants.TAG_BITE_COUNT, getBiteCount());
-			tag.put(Constants.TAG_FIRST_BITE, getBite(1).serializeNBT());
-			tag.put(Constants.TAG_LAST_BITE, getBite(3).serializeNBT());
+			tag.put(Constants.TAG_FIRST_BITE, getBite(0).serializeNBT());
+			tag.put(Constants.TAG_LAST_BITE, getBite(2).serializeNBT());
 		}
 		var returnTag = new CompoundTag();
 		returnTag.put(CAP_ID.toString(), tag);

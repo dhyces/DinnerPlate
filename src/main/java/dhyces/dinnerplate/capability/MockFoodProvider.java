@@ -4,7 +4,9 @@ import dhyces.dinnerplate.bite.Bite;
 import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.util.Couple;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class MockFoodProvider implements IMockFoodProvider {
 
@@ -42,7 +44,7 @@ public class MockFoodProvider implements IMockFoodProvider {
 	}
 	
 	@Override
-	public ItemStack getReturnedItem(ItemStack stack) {
+	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
 		return stack.getContainerItem();
 	}
 
@@ -68,11 +70,11 @@ public class MockFoodProvider implements IMockFoodProvider {
 
 	@Override
 	public IBite getBite(int chew) {
-		return chew < 3 ? bites.getFirst() : bites.getSecond();
+		return chew < 2 ? bites.getFirst() : bites.getSecond();
 	}
 
 	@Override
-	public boolean isFast() {
+	public boolean canBeFast() {
 		return stack.getItem().getFoodProperties().isFastFood();
 	}
 

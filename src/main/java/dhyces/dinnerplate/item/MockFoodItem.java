@@ -3,14 +3,13 @@ package dhyces.dinnerplate.item;
 import java.util.List;
 import java.util.function.Consumer;
 
-import dhyces.dinnerplate.bite.IBitable;
+import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.capability.IMockFoodProvider;
 import dhyces.dinnerplate.capability.MockFoodCapability;
 import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.render.item.MockFoodItemRenderer;
-import dhyces.dinnerplate.util.FoodHelper;
 import dhyces.dinnerplate.util.ItemHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -35,11 +34,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class MockFoodItem extends Item implements IBitable {
+public class MockFoodItem extends Item implements IBitableItem {
 
 	private final MockFoodItemRenderer renderer = new MockFoodItemRenderer();
 
@@ -89,8 +87,8 @@ public class MockFoodItem extends Item implements IBitable {
 	}
 
 	@Override
-	public boolean isFast(ItemStack stack) {
-		return getCapabilityLowest(stack).isFast();
+	public boolean canBeFast(ItemStack stack) {
+		return getCapabilityLowest(stack).canBeFast();
 	}
 
 	@Override
@@ -99,8 +97,8 @@ public class MockFoodItem extends Item implements IBitable {
 	}
 	
 	@Override
-	public ItemStack getReturnedItem(ItemStack stack) {
-		return getCapabilityLowest(stack).getReturnedItem(stack);
+	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
+		return getCapabilityLowest(stack).finish(stack, level, livingEntity);
 	}
 
 	@Override
@@ -129,24 +127,16 @@ public class MockFoodItem extends Item implements IBitable {
 
 	@Override
 	public Rarity getRarity(ItemStack pStack) {
-		var hiddenStack = getCapabilityLowest(pStack).getRealStack();
-		return hiddenStack.getRarity();
+		return getCapabilityLowest(pStack).getRealStack().getRarity();
 	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 		var stack = pPlayer.getItemInHand(pUsedHand);
 		var capability = getCapabilityLowest(stack);
-		if (capability.getRealStack().isEdible()) {
-			if (pPlayer.canEat(capability.canAlwaysEat())) {
-				var underlyingStack = capability.getRealStack();
-				if (!pLevel.isClientSide)
-					capability.eat(stack, pPlayer, pLevel);
-				capability.setBiteCount(0);
-				if (!pPlayer.getAbilities().instabuild)
-					stack.shrink(1);
-				return InteractionResultHolder.consume(ItemHelper.returnedItem(underlyingStack));
-			}
+		if (pPlayer.canEat(capability.canAlwaysEat())) {
+			var ret = capability.eat(stack, pPlayer, pLevel);
+			return InteractionResultHolder.consume(ret);
 		}
 		return InteractionResultHolder.pass(stack);
 	}
@@ -191,7 +181,7 @@ public class MockFoodItem extends Item implements IBitable {
 	
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
-		return getReturnedItem(stack);
+		return getCapabilityLowest(stack).getRealStack().getContainerItem();
 	}
 	
 	@Override

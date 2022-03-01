@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.IBitable;
+import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IDishware;
 import dhyces.dinnerplate.blockentity.api.ISingleItemHolder;
@@ -38,7 +39,7 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 			// TODO: Try to change this to get a value from some map in case someone wants to change the number of bites it takes to eat. I'm
 			// just worried about exceeding the number of tags in an item
 			platedItem = MockFoodItem.mockFoodStack(platedItem, 3);
-		if (platedItem.getItem() instanceof IBitable e) {
+		if (platedItem.getItem() instanceof IBitableItem e) {
 			var ret = e.eat(platedItem, player, level);
 			if (!ret.equals(platedItem)) {
 				platedItem = ret;
@@ -56,11 +57,11 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 
 	@Override
 	public int getBiteCount() {
-		return IBitable.bitable(platedItem).map(c -> c.getBiteCount(platedItem)).orElse(-1);
+		return IBitableItem.bitable(platedItem).map(c -> c.getBiteCount(platedItem)).orElse(-1);
 	}
 
-	public Optional<IBitable> getBitable() {
-		return IBitable.bitable(platedItem);
+	public Optional<IBitableItem> getBitable() {
+		return IBitableItem.bitable(platedItem);
 	}
 
 	@Override
@@ -71,8 +72,6 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	@Override
 	public void read(CompoundTag pTag) {
 		this.platedItem = ItemStack.of(pTag.getCompound(Constants.TAG_SINGLE_ITEM));
-		if (platedItem.getItem() == null)
-			platedItem = ItemStack.EMPTY;
 	}
 
 	@Override

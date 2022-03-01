@@ -1,10 +1,11 @@
 package dhyces.dinnerplate.capability;
 
 import dhyces.dinnerplate.bite.IBitable;
+import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
 import net.minecraft.world.item.ItemStack;
 
-public interface IMockFoodProvider extends IBitable {
+public interface IMockFoodProvider extends IBitableItem {
 
 	public ItemStack getRealStack();
 
@@ -20,7 +21,7 @@ public interface IMockFoodProvider extends IBitable {
 
 	public IBite getBite(int chew);
 
-	public boolean isFast();
+	public boolean canBeFast();
 
 	public boolean isMeat();
 
@@ -52,8 +53,8 @@ public interface IMockFoodProvider extends IBitable {
 	}
 
 	@Override
-	default boolean isFast(ItemStack stack) {
-		return isFast();
+	default boolean canBeFast(ItemStack stack) {
+		return canBeFast();
 	}
 
 	@Override
