@@ -14,6 +14,9 @@ import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,13 +26,14 @@ public class MixingBowlBlockRenderer implements BlockEntityRenderer<MixingBowlBl
 
 	public MixingBowlBlockRenderer(BlockEntityRendererProvider.Context context) {
 	}
-
+	
 	@Override
 	public void render(MixingBowlBlockEntity bEntity, float pPartialTick, PoseStack poseStack,
 			MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 		if (!bEntity.hasLevel() || bEntity.getBlockPos() == null)
 			return;
-		float fluidHeight = tessalateFluids(bEntity, pBufferSource.getBuffer(RenderTypes.getFluid()), poseStack, pPartialTick, pPackedLight, Direction.UP);
+		float fluidHeight = tessalateFluids(bEntity, bEntity.getLevel(), bEntity.getBlockPos(), new Vec3(3, 2, 3), new Vec3(13, 2.1, 13), pBufferSource.getBuffer(RenderTypes.getFluid()),
+				poseStack, pPartialTick, pPackedLight, Direction.UP);
 		if (bEntity.hasItem()) {
 			poseStack.pushPose();
 			poseStack.translate(fromPixel(8), fromPixel(2) + fromPixel(fluidHeight), fromPixel(8));

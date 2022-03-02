@@ -1,7 +1,11 @@
 package dhyces.dinnerplate.render.util;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
@@ -9,7 +13,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.phys.Vec3;
 
 public interface IRenderer {
-
+	
 	default void renderFace(VertexConsumer pConsumer, PoseStack poseStack, QuadFace face, int color, float u1, float v1, float u2, float v2,
 			int packedLight, Direction side) {
 		var r = FastColor.ARGB32.red(color);
@@ -29,6 +33,22 @@ public interface IRenderer {
 		var b = FastColor.ARGB32.blue(color);
 		var a = FastColor.ARGB32.alpha(color);
 		vertex(pConsumer, poseStack, vert, a, r, g, b, pU, pV, pPackedLight, face);
+	}
+	
+	default void tessalatorVertex(PoseStack poseStack, Vec3 vert, int r, int g, int b, int a, float pU, float pV, int pPackedLight, Direction face) {
+		//System.out.println("side: " + face + " " + vert.x + " " + vert.y + " " + vert.z);
+		var last = poseStack.last();
+		var normal = face.getNormal();
+
+		Tesselator.getInstance().getBuilder().begin(Mode.QUADS, DefaultVertexFormat.NEW_ENTITY);
+		Tesselator.getInstance().getBuilder().vertex(last.pose(), (float)vert.x, (float)vert.y, (float)vert.z)
+				 .color(r, g, b, a)
+				 .uv(pU, pV)
+				 .overlayCoords(OverlayTexture.NO_OVERLAY)
+				 .uv2(pPackedLight)
+				 .normal(last.normal(), normal.getX(), normal.getY(), normal.getZ())
+				 .endVertex();
+		Tesselator.getInstance().end();
 	}
 
 	default void vertex(VertexConsumer pConsumer, PoseStack poseStack, Vec3 vert, int r, int g, int b, int a, float pU, float pV, int pPackedLight, Direction face) {
