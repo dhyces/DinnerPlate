@@ -62,6 +62,7 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 			return InteractionResult.sidedSuccess(isClient);
 		} else if (bEntity.hasRecipe()) {
 			level.setBlockAndUpdate(pos, state.cycle(MIX_POSITION));
+			return InteractionResult.sidedSuccess(isClient);
 		}
 		return super.rightClick(state, bEntity, level, pos, player, hand, res, isClient);
 	}
