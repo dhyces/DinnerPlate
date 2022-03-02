@@ -27,7 +27,6 @@ public class PlateItemRenderer extends SimpleItemRenderer {
 		var model = Minecraft.getInstance().getItemRenderer().getModel(pStack, (Level)null, (LivingEntity)null, 0);
 		var hasItem = !BlockHelper.getBlockEntityTag(pStack).getCompound(Constants.TAG_SINGLE_ITEM).isEmpty();
 
-		pPoseStack.pushPose();
 		var vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(pStack, true), true, false);
 		pPoseStack.pushPose();
 		Minecraft.getInstance().getItemRenderer().renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer);
@@ -35,13 +34,14 @@ public class PlateItemRenderer extends SimpleItemRenderer {
 		if (hasItem) {
 			var platedItem = ItemStack.of(BlockHelper.getBlockEntityTag(pStack).getCompound(Constants.TAG_SINGLE_ITEM));
 			var platedItemModel = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(platedItem.getItem().getRegistryName()));
+			platedItemModel = platedItemModel.getOverrides().resolve(platedItemModel, platedItem, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
 			var vertexConsumer1 = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(platedItem, true), true, false);
 
 			pPoseStack.pushPose();
 			if (!platedItemModel.isGui3d()) {
 				pPoseStack.scale(0.5F, 0.5F, 0.5F);
-				pPoseStack.mulPose(new Quaternion(90, 0, 180, true));
-				pPoseStack.translate(-1.5F, -1.5F, -0.65F);
+				pPoseStack.translate(0.5F, -0.35F, 1.5F);
+				pPoseStack.mulPose(new Quaternion(-90, 0, 0, true));
 			} else {
 				pPoseStack.scale(0.25F, 0.25F, 0.25F);
 				pPoseStack.translate(1.5F, 0.25F, 1.5F);
@@ -49,9 +49,8 @@ public class PlateItemRenderer extends SimpleItemRenderer {
 			if (!platedItemModel.isCustomRenderer())
 				Minecraft.getInstance().getItemRenderer().renderModelLists(platedItemModel, platedItem, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer1);
 			else
-				RenderProperties.get(platedItem).getItemStackRenderer().renderByItem(platedItem, TransformType.FIXED, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+				RenderProperties.get(platedItem).getItemStackRenderer().renderByItem(platedItem, TransformType.NONE, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
 			pPoseStack.popPose();
 		}
-		pPoseStack.popPose();
 	}
 }
