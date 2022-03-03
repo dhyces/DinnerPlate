@@ -111,7 +111,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	}
 
 	@Override
-	public int getFluidSizeScaled() {
+	public int getFluidAmount() {
 		return getFluidSize() * 100;
 	}
 

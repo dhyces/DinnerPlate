@@ -14,8 +14,6 @@ public interface IMixedInventory extends IItemHolder, IFluidHolder {
 
 	public int getFluidSize();
 
-	public int getFluidSizeScaled();
-
 	public int getItemSize();
 
 	public default int remaining() {

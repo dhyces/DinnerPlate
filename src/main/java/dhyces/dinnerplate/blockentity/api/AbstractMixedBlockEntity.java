@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity implements IMixedInventory {
 
-	private MixedInventory inventory;
+	protected MixedInventory inventory;
 	
 	public AbstractMixedBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int inventorySize) {
 		super(pType, pWorldPosition, pBlockState);
@@ -25,17 +25,17 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	}
 	
 	@Override
-	public void read(CompoundTag tag) {
+	public void write(CompoundTag tag) {
 		var inv = inventory.serializeNBT();
 		if (!inv.isEmpty())
 			tag.merge(inv);		
 	}
 	
 	@Override
-	public void write(CompoundTag tag) {
+	public void read(CompoundTag tag) {
 		inventory.deserializeNBT(tag);
 	}
-
+	
 	@Override
 	public boolean hasItem() {
 		return inventory.hasItem();
@@ -180,8 +180,8 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	}
 
 	@Override
-	public int getFluidSizeScaled() {
-		return inventory.getFluidSizeScaled();
+	public int getFluidAmount() {
+		return inventory.getFluidAmount();
 	}
 
 	@Override

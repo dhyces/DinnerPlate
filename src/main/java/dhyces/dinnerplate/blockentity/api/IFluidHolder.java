@@ -28,4 +28,7 @@ public interface IFluidHolder {
 
 	/** Sets the fluidstack into the given index*/
 	public FluidStack setFluid(int index, FluidStack stack);
+	
+	/** Returns the amount of fluid this holder contains in millibuckets*/
+	public int getFluidAmount();
 }
