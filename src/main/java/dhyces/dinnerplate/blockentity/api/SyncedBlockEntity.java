@@ -2,6 +2,7 @@ package dhyces.dinnerplate.blockentity.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -17,25 +18,29 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 
 	@Override
 	public CompoundTag getUpdateTag() {
-		var tag = saveWithFullMetadata();
+		var tag = new CompoundTag();
 		writeClient(tag);
 		return tag;
 	}
 
-//	@Override
-//	public void handleUpdateTag(CompoundTag tag) {
-//		super.handleUpdateTag(tag);
-//		readClient(tag);
-//	}
-//
-//	@Override
-//	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-//		super.onDataPacket(net, pkt);
-//	}
+	@Override
+	public void handleUpdateTag(CompoundTag tag) {
+		super.handleUpdateTag(tag);
+		readClient(tag);
+	}
 
 	@Override
 	public Packet<ClientGamePacketListener> getUpdatePacket() {
 		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	@Override
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+		super.onDataPacket(net, pkt);
+		var tag = pkt.getTag();
+		if (tag == null)
+			tag = new CompoundTag();
+		readClient(tag);
 	}
 
 	/** Save additional information, such as itemstacks or fluidstacks*/
@@ -44,14 +49,14 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 	/** Load additional information, such as itemstacks or fluidstacks*/
 	public abstract void read(CompoundTag tag);
 
-	/** Load additional information, such as itemstacks or fluidstacks, separate from the regular methods in case implementors wanted to send
-	 *  more or less information*/
+	/** Write additional information, such as itemstacks or fluidstacks, separate from the regular methods in case implementors wanted to send
+	 *  more or less information or wanted to compare data before writing*/
 	public void writeClient(CompoundTag tag) {
 		write(tag);
 	}
 
 	/** Load additional information, such as itemstacks or fluidstacks, separate from the regular methods in case implementors wanted to send
-	 *  more or less information*/
+	 *  more or less information or wanted to compare data before reading*/
 	public void readClient(CompoundTag tag) {
 		read(tag);
 	}
@@ -59,7 +64,10 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 	@Override
 	public void load(CompoundTag pTag) {
 		super.load(pTag);
-		read(pTag);
+		if (hasLevel() && level.isClientSide)
+			readClient(pTag);
+		else
+			read(pTag);
 	}
 
 	@Override
