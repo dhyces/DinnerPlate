@@ -6,6 +6,10 @@ import com.mojang.datafixers.util.Pair;
 
 import dhyces.dinnerplate.util.FoodHelper;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -17,58 +21,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 
 public interface IBitableItem extends IBitable<ItemStack> {
 
-	@Override
-	public int getBiteCount(ItemStack stack);
-
-	@Override
-	abstract int getMaxBites(ItemStack stack);
-
-	@Override
-	public default int getMaxBiteCount(ItemStack stack) {
-		return isFast(stack) ? 1 : getMaxBites(stack);
-	}
-
-	@Override
-	public boolean incrementBiteCount(ItemStack stack);
-
-	@Override
-	public void setBiteCount(ItemStack stack, int count);
-
-	@Override
-	public IBite getBite(ItemStack stack, int chew);
-
-	@Override
-	boolean canBeFast(ItemStack stack);
-
-	@Override
-	public default boolean isFast(ItemStack stack) {
-		return getMaxBites(stack) == 1 && canBeFast(stack);
-	}
-
-	@Override
-	public boolean isMeat(ItemStack stack);
-
-	@Override
-	public boolean canAlwaysEat(ItemStack stack);
-
-	@Override
-	public SoundEvent getEatingSound(ItemStack stack);
-
-	/** Override this if your food is contained by something else, ie a bowl, a bottle, etc*/
-	@Override
-	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity);
-
+	public ParticleOptions getParticle(ItemStack stack);
+	
 	@Override
 	public default ItemStack eat(ItemStack stack, Player player, Level level) {
 		var returnStack = stack;
-		// TODO: this breaks MockFood
 		var bite = getBite(stack, getBiteCount(stack));
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
 		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
 		level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), getEatingSound(stack), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
+		var pos = getPlayerLocalPos(player, new Vec3(0, player.getEyeY() - player.getY(), 0.05));
+		spawnParticles(level, pos, stack);
 		for(Pair<MobEffectInstance, Float> pair : bite.getEffects()) {
 			if (!level.isClientSide && pair.getFirst() != null && level.random.nextFloat() < pair.getSecond()) {
 				FoodHelper.addEffect(player, new MobEffectInstance(pair.getFirst()));
@@ -85,6 +52,20 @@ public interface IBitableItem extends IBitable<ItemStack> {
 		}
 		setBiteCount(stack, getBiteCount(stack) % getMaxBiteCount(stack));
 		return returnStack;
+	}
+	
+	public default Vec3 getPlayerLocalPos(Player player, Vec3 offset) {
+		var playerPos = offset;
+		playerPos = playerPos.xRot(-player.getXRot() * (float)(Math.PI / 180));
+		playerPos = playerPos.yRot(-player.getYRot() * (float)(Math.PI / 180));
+		return playerPos.add(player.position().x, player.position().y, player.position().z);
+	}
+	
+	public default void spawnParticles(Level level, Vec3 pos, ItemStack stack) {
+		if (level instanceof ServerLevel sLevel)
+            sLevel.sendParticles(getParticle(stack), pos.x, pos.y, pos.z, 1, 0, 0.05D, 0, 0.0D);
+        else
+        	level.addParticle(getParticle(stack), pos.x, pos.y, pos.z, 0, 0.05D, 0);
 	}
 
 	public static Optional<IBitableItem> bitable(ItemStack stack) {
