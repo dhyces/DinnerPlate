@@ -18,6 +18,7 @@ import dhyces.dinnerplate.registry.BlockRegistry;
 import dhyces.dinnerplate.registry.FluidRegistry;
 import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.registry.SoundRegistry;
+import dhyces.dinnerplate.render.block.MeasuringCupBlockRenderer;
 import dhyces.dinnerplate.render.block.MixingBowlBlockRenderer;
 import dhyces.dinnerplate.render.block.PlateBlockRenderer;
 import dhyces.dinnerplate.util.BlockHelper;
@@ -148,6 +149,7 @@ public class DinnerPlate {
     private void entityRenders(final EntityRenderersEvent.RegisterRenderers event) {
     	event.registerBlockEntityRenderer(BEntityRegistry.PLATE_ENTITY.get(), PlateBlockRenderer::new);
     	event.registerBlockEntityRenderer(BEntityRegistry.MIXING_BOWL_ENTITY.get(), MixingBowlBlockRenderer::new);
+    	event.registerBlockEntityRenderer(BEntityRegistry.MEASURING_CUP_ENTITY.get(), MeasuringCupBlockRenderer::new);
     }
 
     private void modelBakery(final ModelBakeEvent e) {
