@@ -32,6 +32,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.model.ItemLayerModel;
 import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 import net.minecraftforge.client.model.ItemTextureQuadConverter;
@@ -56,6 +57,10 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		}
 		var realStack = capability.get().getRealStack();
 		BakedModel model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(realStack);
+		if (model.isCustomRenderer()) {
+			RenderProperties.get(realStack).getItemStackRenderer().renderByItem(realStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+			return;
+		}
 		var biteCount = capability.get().getBiteCount();
 		if (biteCount > 0) {
 			var itemRL = realStack.getItem().getRegistryName();
