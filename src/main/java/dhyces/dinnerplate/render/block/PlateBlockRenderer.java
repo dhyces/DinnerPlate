@@ -10,14 +10,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity> {
+public class PlateBlockRenderer extends SimpleBlockRenderer<PlateBlockEntity> {
 
-	public PlateBlockRenderer(BlockEntityRendererProvider.Context pContext) {
+	public PlateBlockRenderer(Context context) {
+		super(context);
 	}
 
 	@Override
