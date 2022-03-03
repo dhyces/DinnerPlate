@@ -4,6 +4,9 @@ import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.BitableProperties;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -41,6 +44,11 @@ public class BitableItem extends Item implements IBitableItem {
 		return getContainerItem(stack);
 	}
 
+	@Override
+	public ParticleOptions getParticle(ItemStack stack) {
+		return new ItemParticleOption(ParticleTypes.ITEM, stack);
+	}
+	
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return getEatingSound();
