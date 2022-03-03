@@ -37,7 +37,7 @@ public interface IBitable<T> extends IEdible<T> {
 
 	public SoundEvent getEatingSound(T bitable);
 
-	/** Override this if your food is contained by something else, ie a bowl, a bottle, etc*/
+	/** Override this to do an operation on the last bite and return an item that results from finishing the food.*/
 	public T finish(T bitable, Level level, LivingEntity livingEntity);
 
 	public default T eat(T bitable, Player player, Level level) {
