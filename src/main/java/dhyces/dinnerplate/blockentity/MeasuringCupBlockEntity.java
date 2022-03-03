@@ -1,19 +1,23 @@
 package dhyces.dinnerplate.blockentity;
 
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
+import dhyces.dinnerplate.blockentity.api.IFluidHolder;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity {
+public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implements IFluidHolder {
 
 	protected ListenedTank tank = new ListenedTank(FluidHelper.BUCKET);
 	private final LazyOptional<IFluidHandler> tankLazy = LazyOptional.of(() -> tank);
@@ -31,6 +35,55 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity {
 	@Override
 	public void read(CompoundTag tag) {
 		tank.readFromNBT(tag);
+	}
+	
+	@Override
+	public boolean hasFluid() {
+		return !tank.isEmpty();
+	}
+
+	@Override
+	public boolean containsFluidStack(FluidStack stack) {
+		return tank.getFluid().isFluidEqual(stack);
+	}
+
+	@Override
+	public boolean containsFluid(Fluid fluid) {
+		return tank.getFluid().getFluid().isSame(fluid);
+	}
+
+	@Override
+	public FluidStack getLastFluid() {
+		return tank.getFluid();
+	}
+
+	@Override
+	public FluidStack getFluidStack(int index) {
+		return getLastFluid();
+	}
+
+	@Override
+	public FluidStack removeLastFluid(int capacity) {
+		return tank.drain(capacity, FluidAction.EXECUTE);
+	}
+
+	@Override
+	public FluidStack insertFluid(FluidStack stack) {
+		var filled = tank.fill(stack, FluidAction.EXECUTE);
+		stack.shrink(filled);
+		return stack;
+	}
+
+	@Override
+	public FluidStack setFluid(int index, FluidStack stack) {
+		var old = tank.getFluid();
+		tank.setFluid(stack);
+		return old;
+	}
+
+	@Override
+	public int getFluidAmount() {
+		return tank.getFluidAmount();
 	}
 
 	@Override
