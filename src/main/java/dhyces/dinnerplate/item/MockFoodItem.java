@@ -12,6 +12,7 @@ import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.render.item.MockFoodItemRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -160,29 +161,16 @@ public class MockFoodItem extends Item implements IBitableItem {
 		return super.useOn(pContext);
 	}
 
-	// TODO: bitten item design system
-	@Override
-	public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-		var real = getCapabilityLowest(pStack).getRealStack();
-		if (pLivingEntity instanceof Player p) {
-			var tempStorage = new CompoundTag();
-			var ability = p.getAbilities().instabuild;
-			p.getFoodData().addAdditionalSaveData(tempStorage);
-			p.getAbilities().instabuild = false;
-			var ret = real.finishUsingItem(pLevel, pLivingEntity);
-			real.setCount(1);
-			p.getAbilities().instabuild = ability;
-			p.getFoodData().readAdditionalSaveData(tempStorage);
-			return ret.equals(real) ? ItemStack.EMPTY : ret;
-		}
-		return ItemStack.EMPTY;
-	}
-
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
 		return getCapabilityLowest(stack).getRealStack().getContainerItem();
 	}
 
+	@Override
+	public ParticleOptions getParticle(ItemStack stack) {
+		return getCapabilityLowest(stack).getParticle(stack);
+	}
+	
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return getCapabilityLowest(stack).getEatingSound(stack);
