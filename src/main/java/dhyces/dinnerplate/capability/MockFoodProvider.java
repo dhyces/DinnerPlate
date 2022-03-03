@@ -3,8 +3,14 @@ package dhyces.dinnerplate.capability;
 import dhyces.dinnerplate.bite.Bite;
 import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.util.Couple;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -42,10 +48,27 @@ public class MockFoodProvider implements IMockFoodProvider {
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return this.stack.getEatingSound();
 	}
+	
+	@Override
+	public ParticleOptions getParticle(ItemStack stack) {
+		return new ItemParticleOption(ParticleTypes.ITEM, this.stack);
+	}
 
 	@Override
-	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
-		return stack.getContainerItem();
+	public ItemStack finish(ItemStack stackIn, Level level, LivingEntity livingEntity) {
+		var stackCopy = this.stack.copy();
+		if (livingEntity instanceof Player p) {
+			var tempStorage = new CompoundTag();
+			var ability = p.getAbilities().instabuild;
+			p.getFoodData().addAdditionalSaveData(tempStorage);
+			p.getAbilities().instabuild = false;
+			var ret = stackCopy.finishUsingItem(level, livingEntity);
+			stackCopy.setCount(1);
+			p.getAbilities().instabuild = ability;
+			p.getFoodData().readAdditionalSaveData(tempStorage);
+			return ret.equals(stackCopy) ? this.stack.getContainerItem() : ret;
+		}
+		return stack;
 	}
 
 	@Override
