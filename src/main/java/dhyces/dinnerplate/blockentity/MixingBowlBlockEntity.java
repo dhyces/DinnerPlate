@@ -1,15 +1,18 @@
 package dhyces.dinnerplate.blockentity;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.AbstractMixedBlockEntity;
+import dhyces.dinnerplate.blockentity.api.IRenderableTracker;
 import dhyces.dinnerplate.blockentity.api.IWorkstation;
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import dhyces.dinnerplate.registry.BEntityRegistry;
+import dhyces.dinnerplate.util.Interpolation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -19,9 +22,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory {
+public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory, IRenderableTracker {
 
 	private byte mixes = 0;
+	public Interpolation renderedFluid = new Interpolation(1);
 
 	public MixingBowlBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(BEntityRegistry.MIXING_BOWL_ENTITY.get(), pWorldPosition, pBlockState, 9);
@@ -50,6 +54,14 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 	}
 
 	@Override
+	public void readClient(CompoundTag tag) {
+		var priorFluid = getFluidAmount();
+		super.readClient(tag);
+		if (getFluidAmount() != priorFluid)
+			renderedFluid.reset();
+	}
+	
+	@Override
 	public void craft() {
 
 	}
@@ -57,5 +69,10 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 	@Override
 	public boolean hasRecipe() {
 		return true;
+	}
+
+	@Override
+	public float updateRenderable(String id, float partial) {
+		return renderedFluid.updateChase(partial);
 	}
 }
