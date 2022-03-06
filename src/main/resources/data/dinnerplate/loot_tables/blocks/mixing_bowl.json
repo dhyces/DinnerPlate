@@ -17,7 +17,7 @@
 									"ops": [
 										{
 											"source": "Items",
-											"target": "BlockEntityTag.Items",
+											"target": "Items",
 											"op": "replace"
 										}
 									]
@@ -28,7 +28,18 @@
 									"ops": [
 										{
 											"source": "Fluids",
-											"target": "BlockEntityTag.Fluids",
+											"target": "Fluids",
+											"op": "replace"
+										}
+									]
+								},
+								{
+									"function": "minecraft:copy_nbt",
+									"source": "block_entity",
+									"ops": [
+										{
+											"source": "UsedSize",
+											"target": "UsedSize",
 											"op": "replace"
 										}
 									]
@@ -39,17 +50,11 @@
 									"ops": [
 										{
 											"source": "MixState",
-											"target": "BlockEntityTag.MixState",
+											"target": "MixState",
 											"op": "replace"
 										}
 									]
-								}
-							]
-                        },
-						{
-							"name": "dinnerplate:mixing_bowl",
-							"type": "minecraft:item",
-							"functions": [
+								},
 								{
 									"function": "minecraft:copy_state",
 									"block": "dinnerplate:mixing_bowl",
@@ -58,7 +63,7 @@
 									]
 								}
 							]
-						}
+                        }
 					]
 				}
             ]

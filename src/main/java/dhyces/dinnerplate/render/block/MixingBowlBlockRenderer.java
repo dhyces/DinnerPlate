@@ -39,7 +39,7 @@ public class MixingBowlBlockRenderer extends SimpleBlockRenderer<MixingBowlBlock
 			MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 		if (!bEntity.hasLevel() || bEntity.getBlockPos() == null)
 			return;
-		var fluidHeight = (bEntity.getFluidSize() * 0.4375f) + (bEntity.updateRenderable("", 0.05f) * 0.4375f);
+		var fluidHeight = ((bEntity.updateRenderable("", 0.05f)/100) * 0.4375f);
 		var buffer = pBufferSource.getBuffer(RenderType.itemEntityTranslucentCull(TextureAtlas.LOCATION_BLOCKS));
 		if (bEntity.hasItem()) {
 			poseStack.pushPose();
@@ -67,7 +67,7 @@ public class MixingBowlBlockRenderer extends SimpleBlockRenderer<MixingBowlBlock
 			poseStack.popPose();
 		}
 		if (bEntity.hasFluid())
-			tessalateFluids(fluidArray(bEntity.getLastFluid()), bEntity.getLevel(), bEntity.getBlockPos(), new Vec3(3, 2, 3),
+			tessalateFluids(fluidArray(bEntity.getLastFluid()), bEntity.getBlockPos(), new Vec3(3, 2, 3),
 				new Vec3(13, 2.1 + fluidHeight, 13), pBufferSource.getBuffer(RenderTypes.getFluid()), poseStack, 
 				pPartialTick, pPackedLight, Direction.UP);
 		

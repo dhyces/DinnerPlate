@@ -22,17 +22,17 @@ import net.minecraftforge.client.RenderProperties;
 public class PlateItemRenderer extends SimpleItemRenderer {
 
 	@Override
-	public void renderByItem(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
-			MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+	public void render(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer,
+			int pPackedLight, int pPackedOverlay) {
 		var model = Minecraft.getInstance().getItemRenderer().getModel(pStack, (Level)null, (LivingEntity)null, 0);
-		var hasItem = !BlockHelper.getBlockEntityTag(pStack).getCompound(Constants.TAG_SINGLE_ITEM).isEmpty();
+		var hasItem = pStack.getTagElement(Constants.TAG_SINGLE_ITEM) != null;
 
 		var vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(pStack, true), true, false);
 		pPoseStack.pushPose();
 		Minecraft.getInstance().getItemRenderer().renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer);
 		pPoseStack.popPose();
 		if (hasItem) {
-			var platedItem = ItemStack.of(BlockHelper.getBlockEntityTag(pStack).getCompound(Constants.TAG_SINGLE_ITEM));
+			var platedItem = ItemStack.of(pStack.getTagElement(Constants.TAG_SINGLE_ITEM));
 			var platedItemModel = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(platedItem.getItem().getRegistryName()));
 			platedItemModel = platedItemModel.getOverrides().resolve(platedItemModel, platedItem, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
 			var vertexConsumer1 = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(platedItem, true), true, platedItem.hasFoil());

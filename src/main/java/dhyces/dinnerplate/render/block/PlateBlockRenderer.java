@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
+import dhyces.dinnerplate.render.util.IRenderer;
 import dhyces.dinnerplate.util.ResourceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,7 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class PlateBlockRenderer extends SimpleBlockRenderer<PlateBlockEntity> {
+public class PlateBlockRenderer extends SimpleBlockRenderer<PlateBlockEntity> implements IRenderer {
 
 	public PlateBlockRenderer(Context context) {
 		super(context);
@@ -28,7 +29,7 @@ public class PlateBlockRenderer extends SimpleBlockRenderer<PlateBlockEntity> {
 		if (!pBlockEntity.hasItem())
 			return;
 		var item = pBlockEntity.getLastItem();
-		var model = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(item.getItem().getRegistryName()));
+		var model = getResolvedItemModel(item);
 		poseStack.pushPose();
 		poseStack.scale(.5F, .5F, .5F);
 		poseStack.translate(1, 0.1563, 1);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -19,6 +20,7 @@ import dhyces.dinnerplate.render.util.ItemModel;
 import dhyces.dinnerplate.util.ResourceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -29,6 +31,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,18 +48,18 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 	private static final boolean testGen = false;
 	private Map<ResourceLocation, BakedModel> generatedModels = testGen ? new ConcurrentHashMap<>() : null;
 	boolean written = false;
-	public static final Function<ResourceLocation, ResourceLocation> toBitten = c -> new ResourceLocation(DinnerPlate.MODID, "");
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
-	public void renderByItem(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
-			MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+	public void render(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer,
+			int pPackedLight, int pPackedOverlay) {
 		var capability = pStack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve();
 		if (capability.isEmpty()) {
 			return;
 		}
 		var realStack = capability.get().getRealStack();
 		BakedModel model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(realStack);
+		model = model.getOverrides().resolve(model, realStack, Minecraft.getInstance().level, Minecraft.getInstance().player, new Random(42).nextInt());
 		if (model.isCustomRenderer()) {
 			RenderProperties.get(realStack).getItemStackRenderer().renderByItem(realStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
 			return;
@@ -99,13 +102,12 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 		var flag = pTransformType == TransformType.GUI && !model.usesBlockLight();
 		if (flag)
 			Lighting.setupForFlatItems();
-		var consumer = pBuffer.getBuffer(ItemLayerModel.getLayerRenderType(testGen));
+		var consumer = pBuffer.getBuffer(RenderType.itemEntityTranslucentCull(TextureAtlas.LOCATION_BLOCKS));
 		for (BakedQuad q : model.getQuads(null, null, null, null)) {
-			consumer.putBulkData(pPoseStack.last(), q, 1f, 1f, 1f, pPackedLight, pPackedOverlay);
+			consumer.putBulkData(pPoseStack.last(), q, 1f, 1f, 1f, pPackedLight, pPackedOverlay, true);
 		}
 
 		Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-		RenderSystem.enableDepthTest();
 		if (flag)
 			Lighting.setupFor3DItems();
 		pPoseStack.popPose();

@@ -1,5 +1,7 @@
 package dhyces.dinnerplate.util;
 
+import java.util.Optional;
+
 import dhyces.dinnerplate.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -7,12 +9,12 @@ import net.minecraft.world.level.block.state.properties.Property;
 
 public class BlockHelper {
 
-	public static CompoundTag getBlockStateTag(ItemStack stack) {
-		return stack.getOrCreateTag().getCompound(Constants.TAG_BLOCK_STATE);
+	public static Optional<CompoundTag> getBlockStateTag(ItemStack stack) {
+		return Optional.ofNullable(stack.getTagElement(Constants.TAG_BLOCK_STATE));
 	}
 
-	public static CompoundTag getBlockEntityTag(ItemStack stack) {
-		return stack.getOrCreateTag().getCompound(Constants.TAG_BLOCK_ENTITY);
+	public static Optional<CompoundTag> getBlockEntityTag(ItemStack stack) {
+		return Optional.ofNullable(stack.getTagElement(Constants.TAG_BLOCK_ENTITY));
 	}
 
 	public static <E extends Comparable<E>> E getPropertyFromTag(Property<E> property, CompoundTag tag) {

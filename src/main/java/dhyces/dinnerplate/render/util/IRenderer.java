@@ -1,17 +1,27 @@
 package dhyces.dinnerplate.render.util;
 
+import java.util.Random;
+
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public interface IRenderer {
 	
 	default void renderFace(VertexConsumer pConsumer, PoseStack poseStack, QuadFace face, int color, float u1, float v1, float u2, float v2,
@@ -27,7 +37,6 @@ public interface IRenderer {
 	}
 
 	default void vertex(VertexConsumer pConsumer, PoseStack poseStack, Vec3 vert, int color, float pU, float pV, int pPackedLight, Direction face) {
-		//System.out.println("side: " + face + " " + vert.x + " " + vert.y + " " + vert.z);
 		var r = FastColor.ARGB32.red(color);
 		var g = FastColor.ARGB32.green(color);
 		var b = FastColor.ARGB32.blue(color);
@@ -36,7 +45,6 @@ public interface IRenderer {
 	}
 	
 	default void tessalatorVertex(PoseStack poseStack, Vec3 vert, int r, int g, int b, int a, float pU, float pV, int pPackedLight, Direction face) {
-		//System.out.println("side: " + face + " " + vert.x + " " + vert.y + " " + vert.z);
 		var last = poseStack.last();
 		var normal = face.getNormal();
 
@@ -52,7 +60,6 @@ public interface IRenderer {
 	}
 
 	default void vertex(VertexConsumer pConsumer, PoseStack poseStack, Vec3 vert, int r, int g, int b, int a, float pU, float pV, int pPackedLight, Direction face) {
-		//System.out.println("side: " + face + " " + vert.x + " " + vert.y + " " + vert.z);
 		var last = poseStack.last();
 		var normal = face.getNormal();
 
@@ -64,5 +71,18 @@ public interface IRenderer {
 				 .normal(last.normal(), normal.getX(), normal.getY(), normal.getZ())
 				 .endVertex();
 
+	}
+	
+	public default BakedModel getResolvedItemModel(ItemStack stack) {
+		var base = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
+		return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), clientLevel().random.nextInt());
+	}
+	
+	public default ClientLevel clientLevel() {
+		return Minecraft.getInstance().level;
+	}
+	
+	public default LocalPlayer clientPlayer() {
+		return Minecraft.getInstance().player;
 	}
 }

@@ -1,11 +1,9 @@
 package dhyces.dinnerplate.render.util;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,18 +14,35 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidStack;
 
 public interface IFluidRenderer extends IRenderer {
+	
+	default void tessalateItemFluids(FluidStack[] fluids, Vec3 startPixels, Vec3 endPixels, VertexConsumer pConsumer, PoseStack poseStack,
+			float partial, int packedLight, Direction... faces) {
+		tessalateFluids(fluids, BlockPos.ZERO, startPixels, endPixels, pConsumer, poseStack, partial, packedLight, faces);
+	}
 
-	default void tessalateFluids(FluidStack[] fluids, Level level, BlockPos pos, Vec3 start, Vec3 end,
-			VertexConsumer pConsumer, PoseStack poseStack, float partial, int packedLight, Direction... faces) {
+	default void tessalateItemFluids(FluidStack[] fluids, RectPrism prism, VertexConsumer pConsumer, PoseStack poseStack,
+			float partial, int packedLight, Direction... faces) {
+		tessalateFluids(fluids, BlockPos.ZERO, prism, pConsumer, poseStack, partial, packedLight, faces);
+	}
+	
+	default void tessalateFluids(FluidStack[] fluids, BlockPos pos, Vec3 startPixels, Vec3 endPixels, VertexConsumer pConsumer, 
+			PoseStack poseStack, float partial, int packedLight, Direction... faces) {
+		
+		var prism = RectPrism.fromPixel(startPixels.x, startPixels.y, startPixels.z).toPixel(endPixels.x, endPixels.y, endPixels.z);
+		tessalateFluids(fluids, pos, prism, pConsumer, poseStack, partial, packedLight, faces);
+	}
+	
+	default void tessalateFluids(FluidStack[] fluids, BlockPos pos, RectPrism prism, VertexConsumer pConsumer, PoseStack poseStack,
+			float partial, int packedLight, Direction... faces) {
 		if (fluids.length == 0)
 			return;
 		FluidStack stack = fluids[0];
 		Fluid fluid = stack.getFluid();
+		Level level = clientLevel();
 		TextureAtlasSprite stillSprite = ForgeHooksClient.getFluidSprites(level, pos, fluid.defaultFluidState())[0];
 		int packedColor = fluid.getAttributes().getColor(level, pos);
-		RectPrism p = RectPrism.fromPixel(start.x, start.y, start.z).toPixel(end.x, end.y, end.z);
 		for (Direction side : faces) {
-			var verts = p.getVertices(side);
+			var verts = prism.getVertices(side);
 			var positive = side.getAxisDirection().equals(Direction.AxisDirection.POSITIVE);
 			var horizontal = side.getAxis().getPlane().equals(Direction.Plane.HORIZONTAL);
 			var xAxis = side.getAxis().equals(Direction.Axis.X);
