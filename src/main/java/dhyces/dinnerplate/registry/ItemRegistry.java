@@ -8,6 +8,8 @@ import dhyces.dinnerplate.item.BitableItem;
 import dhyces.dinnerplate.item.MeasuringCupItem;
 import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.item.PlateItem;
+import dhyces.dinnerplate.item.RenderableNBTBlockItem;
+import dhyces.dinnerplate.render.item.MixingBowlItemRenderer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -50,7 +52,7 @@ public class ItemRegistry {
 
 	static {
 		PLATE_ITEM = register("plate", () -> new PlateItem(new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		MIXING_BOWL_ITEM = register("mixing_bowl", () -> new BlockItem(BlockRegistry.MIXING_BOWL_BLOCK.get(), new Item.Properties().stacksTo(1).tab(DinnerPlate.tab)));
+		MIXING_BOWL_ITEM = register("mixing_bowl", () -> new RenderableNBTBlockItem(new MixingBowlItemRenderer(), BlockRegistry.MIXING_BOWL_BLOCK.get(), new Item.Properties().stacksTo(1).tab(DinnerPlate.tab)));
 		MEASURING_CUP_ITEM = register("measuring_cup", () -> new MeasuringCupItem(new Item.Properties().stacksTo(1).tab(DinnerPlate.tab)));
 
 		MOCK_FOOD_ITEM = register("mock_food", MockFoodItem::new);
