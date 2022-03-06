@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
-import dhyces.dinnerplate.datagen.ModelGenerator;
+import dhyces.dinnerplate.datagen.ModelGen;
 import dhyces.dinnerplate.item.BitableItem;
 import dhyces.dinnerplate.model.SimpleCustomBakedModelWrapper;
 import dhyces.dinnerplate.registry.BEntityRegistry;
@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -35,6 +36,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -42,6 +44,7 @@ import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -50,6 +53,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryBuilder;
 
 @Mod(DinnerPlate.MODID)
 public class DinnerPlate {
@@ -96,7 +100,7 @@ public class DinnerPlate {
 
     private void clientSetup(final FMLClientSetupEvent event) {
     	event.enqueueWork(() -> ItemProperties.register(ItemRegistry.PLATE_ITEM.get(), new ResourceLocation(DinnerPlate.MODID, "plates"), (stack, level, entity, seed) -> {
-			return (float) BlockHelper.getPropertyFromTag(PlateBlock.PLATES, BlockHelper.getBlockStateTag(stack)) / 8;
+			return (float) BlockHelper.getPropertyFromTag(PlateBlock.PLATES, BlockHelper.getBlockStateTag(stack).orElse(new CompoundTag())) / 8;
 		}));
     	event.enqueueWork(() -> ItemProperties.register(ItemRegistry.MOCK_FOOD_ITEM.get(), new ResourceLocation(DinnerPlate.MODID, "bites"), (stack, level, entity, seed) -> {
     		var cap = stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve().get();
@@ -153,20 +157,26 @@ public class DinnerPlate {
     }
 
     private void modelBakery(final ModelBakeEvent e) {
-    	putInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId(), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, ItemRegistry.MOCK_FOOD_ITEM.getId())));
-    	putInRegistry(e, ItemRegistry.PLATE_ITEM.getId(), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, ItemRegistry.PLATE_ITEM.getId())));
+    	putCustomInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId());
+    	putCustomInRegistry(e, ItemRegistry.PLATE_ITEM.getId());
+    	putCustomInRegistry(e, ItemRegistry.MIXING_BOWL_ITEM.getId());
+    	putCustomInRegistry(e, ItemRegistry.MEASURING_CUP_ITEM.getId());
     }
 
     private BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
     	return e.getModelManager().getModel(ResourceHelper.inventoryModel(resource));
     }
+    
+    private void putCustomInRegistry(final ModelBakeEvent e, ResourceLocation resource) {
+    	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, resource)));
+    }
 
     private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
     	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model);
     }
-
+    
     private void dataGenerators(final GatherDataEvent event) {
-    	event.getGenerator().addProvider(new ModelGenerator(event.getGenerator(), MODID,  event.getExistingFileHelper()));
+    	event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID,  event.getExistingFileHelper()));
     }
 
     public static CreativeModeTab tab = new CreativeModeTab(MODID) {
