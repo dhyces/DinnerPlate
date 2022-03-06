@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.blockentity.api;
+package dhyces.dinnerplate.inventory.api;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
@@ -23,4 +23,7 @@ public interface IItemHolder extends Container {
 
 	/** Inserts as much of the stack as possible and returns what's left */
 	public ItemStack insertItem(ItemStack stack);
+	
+	/** Returns the number of holders, similar to the size of a list*/
+	public int getItemSize();
 }

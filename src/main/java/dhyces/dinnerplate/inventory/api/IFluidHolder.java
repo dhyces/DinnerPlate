@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.blockentity.api;
+package dhyces.dinnerplate.inventory.api;
 
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,6 +29,12 @@ public interface IFluidHolder {
 	/** Sets the fluidstack into the given index*/
 	public FluidStack setFluid(int index, FluidStack stack);
 	
+	/** Removes the fluid from the given index and returns it*/
+	public FluidStack removeFluid(int index);
+	
 	/** Returns the amount of fluid this holder contains in millibuckets*/
 	public int getFluidAmount();
+	
+	/** Returns the number of holders, such as the size of a list*/
+	public int getFluidSize();
 }

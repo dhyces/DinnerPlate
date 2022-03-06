@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.blockentity.api;
+package dhyces.dinnerplate.inventory.api;
 
 import dhyces.dinnerplate.util.ItemHelper;
 import net.minecraft.world.item.ItemStack;
