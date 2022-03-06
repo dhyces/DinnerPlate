@@ -1,31 +1,29 @@
 package dhyces.dinnerplate.blockentity;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.AbstractMixedBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IRenderableTracker;
 import dhyces.dinnerplate.blockentity.api.IWorkstation;
-import dhyces.dinnerplate.dinnerunit.FlutemStack;
-import dhyces.dinnerplate.inventory.MixedInventory;
+import dhyces.dinnerplate.capability.fluid.ListenedMultiFluidTank;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.util.Interpolation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory, IRenderableTracker {
 
 	private byte mixes = 0;
 	public Interpolation renderedFluid = new Interpolation(1);
+	private LazyOptional<IFluidHandler> lazyFluid = LazyOptional.of(() -> new ListenedMultiFluidTank(this));
 
 	public MixingBowlBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(BEntityRegistry.MIXING_BOWL_ENTITY.get(), pWorldPosition, pBlockState, 9);
@@ -58,7 +56,7 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 		var priorFluid = getFluidAmount();
 		super.readClient(tag);
 		if (getFluidAmount() != priorFluid)
-			renderedFluid.reset();
+			renderedFluid.setVals(priorFluid, getFluidAmount());
 	}
 	
 	@Override
@@ -74,5 +72,16 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 	@Override
 	public float updateRenderable(String id, float partial) {
 		return renderedFluid.updateChase(partial);
+	}
+	
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return lazyFluid.cast();
+		}
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			
+		}
+		return super.getCapability(cap, side);
 	}
 }

@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.util;
 
-import java.util.function.Function;
-
 import net.minecraft.util.Mth;
 
 public class Interpolation {
@@ -9,43 +7,40 @@ public class Interpolation {
 	private float previous;
 	private float goal;
 	protected Chaser chaser;
-	protected Function<Float, Float> onUpdate;
 
 
 	public Interpolation(float goal) {
-		this(goal, (c, p, v) -> Mth.lerp(c, p, v));
+		this(0, goal);
+	}
+	
+	public Interpolation(float from, float goal) {
+		this(from, goal, (c, p, v) -> Mth.lerp(c, p, v));
 	}
 
-	public Interpolation(float goal, Chaser chaser) {
+	public Interpolation(float from, float goal, Chaser chaser) {
 		this.goal = goal;
 		this.chaser = chaser;
-		this.onUpdate = UPDATE_FUNCTION;
 	}
 
 	public float updateChase(float partial) {
-		return onUpdate.apply(partial);
+		if (Mth.equal(previous, goal)) {
+			return this.goal;
+		}
+		var prev = this.previous;
+		this.previous = chaser.chase(partial, previous, goal);
+		System.out.println(previous);
+		return prev;
 	}
 	
 	public float getPrevious() {
 		return this.previous;
 	}
 	
-	public void reset() {
-		previous = 0;
-		onUpdate = UPDATE_FUNCTION;
+	public void setVals(float from, float goal) {
+		previous = from;
+		this.goal = goal;
+		System.out.println("we are set: " + this);
 	}
-
-	private final Function<Float, Float> IMMEDIATE_RETURN_FUNCTION =  (p) -> goal;
-	private final Function<Float, Float> UPDATE_FUNCTION = (p) -> {
-		var prev = this.previous;
-		if (Mth.equal(previous, goal)) {
-			this.previous = this.goal;
-			this.onUpdate = IMMEDIATE_RETURN_FUNCTION;
-			return this.goal;
-		}
-		this.previous = chaser.chase(p, previous, goal);
-		return prev;
-	};
 
 	@Override
 	public String toString() {
