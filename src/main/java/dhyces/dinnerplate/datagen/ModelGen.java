@@ -8,11 +8,11 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-public class ModelGenerator extends ItemModelProvider {
+public class ModelGen extends ItemModelProvider {
 
 	private final ModelFile BUILT_IN_GENERATED;
 
-	public ModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
+	public ModelGen(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
 		super(generator, modid, existingFileHelper);
 		BUILT_IN_GENERATED = getExistingFile(new ResourceLocation("item/generated"));
 
