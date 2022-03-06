@@ -20,6 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -72,9 +73,12 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 			BlockPos pos, Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		if (InteractionHand.OFF_HAND.equals(hand))
 			return InteractionResult.FAIL;
-		var tag = new CompoundTag();
-		bEntity.write(tag);
-		System.out.println(tag);
+		var playerHandCap = player.getItemInHand(hand).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+		if (playerHandCap.isPresent()) {
+			if (!isClient)
+				FluidHelper.fill(playerHandCap.resolve().get(), bEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get());
+			return InteractionResult.sidedSuccess(isClient);
+		}
 		if (bEntity.hasItem()) {
 			var i = bEntity.removeLastItem();
 			insertInvOrSpawn(level, pos, 0.25, player.getInventory(), i);
