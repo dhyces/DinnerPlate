@@ -12,6 +12,7 @@ import dhyces.dinnerplate.util.BlockHelper;
 import dhyces.dinnerplate.util.MathHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -67,7 +68,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 			if (preferredItem.sameItem(ItemRegistry.PLATE_ITEM.get().getDefaultInstance())) {
 				if (canAddPlate(state, preferredItem)) {
 					if (!isClient) {
-						var itemStateTag = BlockHelper.getBlockStateTag(preferredItem);
+						var itemStateTag = preferredItem.getOrCreateTagElement(Constants.TAG_BLOCK_STATE);
 						var itemPlates = getPlatesFromStack(preferredItem);
 						level.setBlock(pos, setPlates(state, Mth.clamp(levelProperty+itemPlates, MIN_LEVEL, MAX_LEVEL)), 11);
 						if (!player.getAbilities().instabuild) {
@@ -126,7 +127,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 	}
 
 	public int getPlatesFromStack(ItemStack stack) {
-		return BlockHelper.getPropertyFromTag(PLATES, BlockHelper.getBlockStateTag(stack));
+		return BlockHelper.getPropertyFromTag(PLATES, BlockHelper.getBlockStateTag(stack).orElse(new CompoundTag()));
 	}
 
 	public BlockState setPlates(BlockState pState, int pInt) {
