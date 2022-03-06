@@ -1,11 +1,15 @@
 package dhyces.dinnerplate.block;
 
+import java.util.List;
 import java.util.Optional;
 
+import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
+import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.util.FluidHelper;
 import dhyces.dinnerplate.util.LoosePair;
+import dhyces.dinnerplate.util.api.INBTMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +19,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -56,7 +61,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 		if (caps.isPresent()) {
 			var blockHandler = caps.get().first;
 			var itemHandler = caps.get().second;
-			// TODO: this doesn't work for things like bowls, unfortunately, thus I must find a way to do that
+			// TODO: this doesn't work for things like bowls, unfortunately, thus I must find a way to do that. I have added a capability on bowls.
 			var filled = FluidHelper.fill(itemHandler, blockHandler);
 			if (filled > 0) {
 				if (!itemHandler.getContainer().sameItem(item)) {
@@ -78,7 +83,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 		}
 		return Optional.empty();
 	}
-
+	
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		return Shapes.box(0.3125, 0, 0.3125, 0.6875, 0.4375, 0.6875);
