@@ -1,8 +1,9 @@
-package dhyces.dinnerplate.capability;
+package dhyces.dinnerplate.capability.bitten;
 
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.bite.Bite;
+import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.util.Couple;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

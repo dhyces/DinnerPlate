@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.capability;
+package dhyces.dinnerplate.capability.bitten;
 
 import dhyces.dinnerplate.bite.Bite;
 import dhyces.dinnerplate.bite.IBite;
