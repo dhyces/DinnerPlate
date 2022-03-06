@@ -13,9 +13,9 @@ public class Constants {
 	public static final String TAG_BLOCK_STATE = BlockItem.BLOCK_STATE_TAG;
 	public static final String TAG_BLOCK_ENTITY = "BlockEntityTag";
 	public static final String TAG_SLOT = "Slot";
-	public static final String TAG_SIZE = "Size";
+	public static final String TAG_USED_SIZE = "UsedSize";
 
-	// Mock Food Tags
+	// Bitten Tags
 	public static final String TAG_BITE_COUNT = "Chews";
 
 	// Mock Food Capability Tags

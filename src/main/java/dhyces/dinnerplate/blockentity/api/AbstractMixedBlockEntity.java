@@ -148,6 +148,14 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 			setChanged();
 		return ret;
 	}
+	
+	@Override
+	public FluidStack removeFluid(int index) {
+		var ret = inventory.removeFluid(index);
+		if (!ret.isEmpty())
+			setChanged();
+		return ret;
+	}
 
 	@Override
 	public FluidStack insertFluid(FluidStack stack) {
@@ -183,7 +191,7 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	public int getFluidAmount() {
 		return inventory.getFluidAmount();
 	}
-
+	
 	@Override
 	public int getItemSize() {
 		return inventory.getItemSize();

@@ -132,11 +132,15 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 
 	@Override
 	public FluidStack getLastFluid() {
+		if (fluidInventory.isEmpty())
+			return FluidStack.EMPTY;
 		return fluidInventory.peek();
 	}
 
 	@Override
 	public FluidStack getFluidStack(int index) {
+		if (fluidInventory.isEmpty() || index < 0 || index > fluidInventory.size())
+			return FluidStack.EMPTY;
 		return fluidInventory.get(index);
 	}
 
@@ -154,6 +158,14 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 			return FluidStack.EMPTY;
 		usedSize--;
 		return fluidInventory.pop();
+	}
+	
+	@Override
+	public FluidStack removeFluid(int index) {
+		if (fluidInventory.empty() || index < 0 || index > fluidInventory.size())
+			return FluidStack.EMPTY;
+		usedSize--;
+		return fluidInventory.remove(index);
 	}
 
 	@Override
@@ -223,7 +235,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		if (pCount == 0) {
 			throw new IllegalStateException("count cannot equal zero");
 		}
-
+		usedSize--;
 		var stack = itemInventory.get(pIndex);
 		var count = Math.min(stack.getCount(), pCount);
 		var copy = stack.copy();
@@ -288,13 +300,14 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 			}
 			tag.put(Constants.TAG_ITEMS, itemsTag);
 		}
-		tag.putInt(Constants.TAG_SIZE, usedSize);
+		if (usedSize > 0)
+			tag.putInt(Constants.TAG_USED_SIZE, usedSize);
 		return tag;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag tag) {
-		usedSize = tag.getInt(Constants.TAG_SIZE);
+		usedSize = tag.getInt(Constants.TAG_USED_SIZE);
 		if (usedSize == 0) {
 			clearContent();
 			return;

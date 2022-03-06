@@ -1,7 +1,8 @@
 package dhyces.dinnerplate.blockentity;
 
+import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
-import dhyces.dinnerplate.blockentity.api.IFluidHolder;
+import dhyces.dinnerplate.inventory.api.IFluidHolder;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.core.BlockPos;
@@ -28,13 +29,16 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 
 	@Override
 	public void write(CompoundTag tag) {
-		if (!tank.isEmpty())
-			tank.writeToNBT(tag);
+		if (!tank.isEmpty()) {
+			var tTag = new CompoundTag();
+			tank.writeToNBT(tTag);
+			tag.put(Constants.TAG_SINGLE_FLUID, tTag);
+		}
 	}
 
 	@Override
 	public void read(CompoundTag tag) {
-		tank.readFromNBT(tag);
+		tank.readFromNBT(tag.getCompound(Constants.TAG_SINGLE_FLUID));
 	}
 	
 	@Override
@@ -61,6 +65,11 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 	public FluidStack getFluidStack(int index) {
 		return getLastFluid();
 	}
+	
+	@Override
+	public FluidStack removeFluid(int index) {
+		return removeLastFluid(tank.getCapacity());
+	}
 
 	@Override
 	public FluidStack removeLastFluid(int capacity) {
@@ -86,6 +95,11 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 		return tank.getFluidAmount();
 	}
 
+	@Override
+	public int getFluidSize() {
+		return 1;
+	}
+	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if ((side == null || side.equals(Direction.UP)) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)

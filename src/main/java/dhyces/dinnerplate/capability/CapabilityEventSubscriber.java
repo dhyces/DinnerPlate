@@ -1,6 +1,7 @@
 package dhyces.dinnerplate.capability;
 
 import dhyces.dinnerplate.DinnerPlate;
+import dhyces.dinnerplate.capability.bitten.IMockFoodProvider;
 import dhyces.dinnerplate.registry.FluidRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;

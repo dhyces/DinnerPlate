@@ -8,8 +8,8 @@ import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IDishware;
-import dhyces.dinnerplate.blockentity.api.ISingleItemHolder;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
+import dhyces.dinnerplate.inventory.api.ISingleItemHolder;
 import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import net.minecraft.core.BlockPos;
@@ -145,6 +145,11 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 		setChanged();
 	}
 
+	@Override
+	public int getItemSize() {
+		return 1;
+	}
+	
 	@Override
 	public boolean stillValid(Player pPlayer) {
 		return true;
