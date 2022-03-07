@@ -19,6 +19,10 @@ public class FlutemStack {
 	public boolean match(Object oIn) {
 		return isItem() ? getItemStack().sameItem((ItemStack)oIn) : getFluidStack().isFluidEqual((FluidStack)oIn);
 	}
+	
+	public boolean isEmpty() {
+		return isItem() ? getItemStack().isEmpty() : getFluidStack().isEmpty();
+	}
 
 	public ItemStack getItemStack() {
 		if (isItem())
