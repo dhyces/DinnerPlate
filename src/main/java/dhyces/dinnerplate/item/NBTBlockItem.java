@@ -25,9 +25,10 @@ public class NBTBlockItem extends BlockItem {
 	}
 	
 	@Override
-	public InteractionResult useOn(UseOnContext pContext) {
-		var ret = super.useOn(pContext);
-		pContext.getItemInHand().setTag(pContext.getItemInHand().getOrCreateTagElement(Constants.TAG_BLOCK_ENTITY));
-		return ret;
+	public InteractionResult place(BlockPlaceContext pContext) {
+		var res = super.place(pContext);
+		if (res.consumesAction())
+			pContext.getItemInHand().setTag(pContext.getItemInHand().getOrCreateTagElement(Constants.TAG_BLOCK_ENTITY));
+		return res;
 	}
 }
