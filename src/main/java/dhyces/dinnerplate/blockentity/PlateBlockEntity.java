@@ -150,7 +150,7 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	public int getItemSize() {
 		return 1;
 	}
-	
+
 	@Override
 	public boolean stillValid(Player pPlayer) {
 		return true;

@@ -12,7 +12,7 @@ public class Interpolation {
 	public Interpolation(float goal) {
 		this(0, goal);
 	}
-	
+
 	public Interpolation(float from, float goal) {
 		this(from, goal, (c, p, v) -> Mth.lerp(c, p, v));
 	}
@@ -31,11 +31,11 @@ public class Interpolation {
 		System.out.println(previous);
 		return prev;
 	}
-	
+
 	public float getPrevious() {
 		return this.previous;
 	}
-	
+
 	public void setVals(float from, float goal) {
 		previous = from;
 		this.goal = goal;
@@ -46,7 +46,7 @@ public class Interpolation {
 	public String toString() {
 		return "Goal: " + goal + ", Previous: " + previous;
 	}
-	
+
 	@FunctionalInterface
 	public static interface Chaser {
 

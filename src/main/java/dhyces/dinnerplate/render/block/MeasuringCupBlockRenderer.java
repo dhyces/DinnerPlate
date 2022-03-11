@@ -21,9 +21,9 @@ public class MeasuringCupBlockRenderer extends SimpleBlockRenderer<MeasuringCupB
 			MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 		if (pBlockEntity.hasFluid())
 			tessalateFluids(fluidArray(pBlockEntity.getLastFluid()), pBlockEntity.getBlockPos(), new Vec3(6, 1, 6),
-					new Vec3(10, 1.1 + ((pBlockEntity.getFluidAmount()/100) * 0.4375f), 10), pBufferSource.getBuffer(RenderType.translucent()), pPoseStack, pPartialTick, pPackedLight, 
+					new Vec3(10, 1.1 + ((pBlockEntity.getFluidAmount()/100) * 0.4375f), 10), pBufferSource.getBuffer(RenderType.translucent()), pPoseStack, pPartialTick, pPackedLight,
 					Direction.values());
-		
+
 	}
 
 }

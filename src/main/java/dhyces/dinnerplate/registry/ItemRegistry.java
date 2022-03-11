@@ -10,7 +10,6 @@ import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.item.PlateItem;
 import dhyces.dinnerplate.item.RenderableNBTBlockItem;
 import dhyces.dinnerplate.render.item.MixingBowlItemRenderer;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.ComposterBlock;

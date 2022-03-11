@@ -30,7 +30,7 @@ public final class FluidHelper {
 		}
 		return FluidStack.EMPTY;
 	}
-	
+
 	public static FluidAction clientAction(boolean isClient) {
 		return isClient ? FluidAction.SIMULATE : FluidAction.EXECUTE;
 	}

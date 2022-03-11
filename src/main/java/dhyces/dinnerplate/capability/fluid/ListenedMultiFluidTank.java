@@ -17,7 +17,7 @@ public class ListenedMultiFluidTank implements IFluidHandler {
 	private final Function<Integer, FluidStack> getFluidInTank;
 	private final Function<FluidStack, FluidStack> fill;
 	private final Function<Integer, FluidStack> drain;
-	
+
 	public ListenedMultiFluidTank(IFluidHolder holder) {
 		getTanks = () -> {return holder.getFluidSize();};
 		getMaxTanks = () -> {return holder.getFluidCapacity();};
@@ -25,7 +25,7 @@ public class ListenedMultiFluidTank implements IFluidHandler {
 		fill = fluid -> {return holder.insertFluid(fluid);};
 		drain = index -> {return holder.removeFluid(index);};
 	}
-	
+
 	@Override
 	public int getTanks() {
 		return getTanks.get();

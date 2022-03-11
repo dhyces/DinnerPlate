@@ -3,7 +3,6 @@ package dhyces.dinnerplate.render.util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +13,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidStack;
 
 public interface IFluidRenderer extends IRenderer {
-	
+
 	default void tessalateItemFluids(FluidStack[] fluids, Vec3 startPixels, Vec3 endPixels, VertexConsumer pConsumer, PoseStack poseStack,
 			float partial, int packedLight, Direction... faces) {
 		tessalateFluids(fluids, BlockPos.ZERO, startPixels, endPixels, pConsumer, poseStack, partial, packedLight, faces);
@@ -24,14 +23,14 @@ public interface IFluidRenderer extends IRenderer {
 			float partial, int packedLight, Direction... faces) {
 		tessalateFluids(fluids, BlockPos.ZERO, prism, pConsumer, poseStack, partial, packedLight, faces);
 	}
-	
-	default void tessalateFluids(FluidStack[] fluids, BlockPos pos, Vec3 startPixels, Vec3 endPixels, VertexConsumer pConsumer, 
+
+	default void tessalateFluids(FluidStack[] fluids, BlockPos pos, Vec3 startPixels, Vec3 endPixels, VertexConsumer pConsumer,
 			PoseStack poseStack, float partial, int packedLight, Direction... faces) {
-		
+
 		var prism = RectPrism.fromPixel(startPixels.x, startPixels.y, startPixels.z).toPixel(endPixels.x, endPixels.y, endPixels.z);
 		tessalateFluids(fluids, pos, prism, pConsumer, poseStack, partial, packedLight, faces);
 	}
-	
+
 	default void tessalateFluids(FluidStack[] fluids, BlockPos pos, RectPrism prism, VertexConsumer pConsumer, PoseStack poseStack,
 			float partial, int packedLight, Direction... faces) {
 		if (fluids.length == 0)
@@ -67,7 +66,7 @@ public interface IFluidRenderer extends IRenderer {
 			poseStack.popPose();
 		}
 	}
-	
+
 	default FluidStack[] fluidArray(FluidStack... fluidStacks) {
 		return fluidStacks;
 	}

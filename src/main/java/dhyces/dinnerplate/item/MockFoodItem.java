@@ -170,7 +170,7 @@ public class MockFoodItem extends Item implements IBitableItem {
 	public ParticleOptions getParticle(ItemStack stack) {
 		return getCapabilityLowest(stack).getParticle(stack);
 	}
-	
+
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return getCapabilityLowest(stack).getEatingSound(stack);

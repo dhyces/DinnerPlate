@@ -36,7 +36,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -44,7 +43,6 @@ import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -53,7 +51,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryBuilder;
 
 @Mod(DinnerPlate.MODID)
 public class DinnerPlate {
@@ -166,7 +163,7 @@ public class DinnerPlate {
     private BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
     	return e.getModelManager().getModel(ResourceHelper.inventoryModel(resource));
     }
-    
+
     private void putCustomInRegistry(final ModelBakeEvent e, ResourceLocation resource) {
     	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, resource)));
     }
@@ -174,7 +171,7 @@ public class DinnerPlate {
     private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
     	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model);
     }
-    
+
     private void dataGenerators(final GatherDataEvent event) {
     	event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID,  event.getExistingFileHelper()));
     }

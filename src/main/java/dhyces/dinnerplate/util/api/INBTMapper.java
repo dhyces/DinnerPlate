@@ -15,6 +15,6 @@ public interface INBTMapper<NBT extends Tag, MAPPED extends Tag> {
 		n.put(Constants.TAG_BLOCK_ENTITY, c);
 		return n;
 	};
-	
+
 	public MAPPED apply(NBT givenNBT);
 }

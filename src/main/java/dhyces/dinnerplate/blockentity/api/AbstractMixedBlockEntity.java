@@ -14,29 +14,28 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity implements IMixedInventory {
 
 	protected MixedInventory inventory;
-	
+
 	public AbstractMixedBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int inventorySize) {
 		super(pType, pWorldPosition, pBlockState);
 		inventory = new MixedInventory(inventorySize);
 	}
-	
+
 	@Override
 	public void write(CompoundTag tag) {
 		var inv = inventory.serializeNBT();
 		if (!inv.isEmpty())
-			tag.merge(inv);		
+			tag.merge(inv);
 	}
-	
+
 	@Override
 	public void read(CompoundTag tag) {
 		inventory.deserializeNBT(tag);
 	}
-	
+
 	@Override
 	public boolean hasItem() {
 		return inventory.hasItem();
@@ -149,7 +148,7 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 			setChanged();
 		return ret;
 	}
-	
+
 	@Override
 	public FluidStack removeFluid(int index) {
 		var ret = inventory.removeFluid(index);
@@ -192,12 +191,12 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	public int getFluidAmount() {
 		return inventory.getFluidAmount();
 	}
-	
+
 	@Override
 	public int getFluidCapacity() {
 		return 9;
 	}
-	
+
 	@Override
 	public int getItemSize() {
 		return inventory.getItemSize();

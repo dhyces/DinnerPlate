@@ -28,13 +28,16 @@ public interface IFluidHolder {
 
 	/** Sets the fluidstack into the given index*/
 	public FluidStack setFluid(int index, FluidStack stack);
-	
+
 	/** Removes the fluid from the given index and returns it*/
 	public FluidStack removeFluid(int index);
-	
+
 	/** Returns the amount of fluid this holder contains in millibuckets*/
 	public int getFluidAmount();
-	
-	/** Returns the number of holders, such as the size of a list*/
+
+	/** Returns the number of fluids*/
 	public int getFluidSize();
+
+	/** Returns the max number of fluids*/
+	public int getFluidCapacity();
 }

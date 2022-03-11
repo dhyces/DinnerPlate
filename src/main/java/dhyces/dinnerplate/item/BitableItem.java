@@ -48,7 +48,7 @@ public class BitableItem extends Item implements IBitableItem {
 	public ParticleOptions getParticle(ItemStack stack) {
 		return new ItemParticleOption(ParticleTypes.ITEM, stack);
 	}
-	
+
 	@Override
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return getEatingSound();

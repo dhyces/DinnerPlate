@@ -7,14 +7,12 @@ import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.blockentity.api.AbstractMixedBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IRenderableTracker;
 import dhyces.dinnerplate.blockentity.api.IWorkstation;
-import dhyces.dinnerplate.capability.fluid.ListenedMultiFluidTank;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.util.Interpolation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -66,7 +64,7 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 		if (fluidPrev != getFluidAmount())
 			renderedFluid.setVals(fluidPrev, getFluidAmount());
 	}
-	
+
 	@Override
 	public void craft() {
 
@@ -81,7 +79,7 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 	public float updateRenderable(String id, float partial) {
 		return renderedFluid.updateChase(partial);
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {

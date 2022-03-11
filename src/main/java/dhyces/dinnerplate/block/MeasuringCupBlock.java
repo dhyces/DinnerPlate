@@ -22,7 +22,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEntity> {
 
@@ -83,7 +82,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 		}
 		return Optional.empty();
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		return Shapes.box(0.3125, 0, 0.3125, 0.6875, 0.4375, 0.6875);

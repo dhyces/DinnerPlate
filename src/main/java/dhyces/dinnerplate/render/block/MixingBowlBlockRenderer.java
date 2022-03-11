@@ -2,12 +2,6 @@ package dhyces.dinnerplate.render.block;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 
@@ -68,11 +62,11 @@ public class MixingBowlBlockRenderer extends SimpleBlockRenderer<MixingBowlBlock
 		}
 		if (bEntity.hasFluid())
 			tessalateFluids(fluidArray(bEntity.getLastFluid()), bEntity.getBlockPos(), new Vec3(3, 2, 3),
-				new Vec3(13, 2.1 + fluidHeight, 13), pBufferSource.getBuffer(RenderTypes.getFluid()), poseStack, 
+				new Vec3(13, 2.1 + fluidHeight, 13), pBufferSource.getBuffer(RenderTypes.getFluid()), poseStack,
 				pPartialTick, pPackedLight, Direction.UP);
-		
+
 	}
-	
+
 	private Quaternion doubleQuaternion(double i, double j, double k, boolean bool) {
 		return new Quaternion((float)i, (float)j, (float)k, bool);
 	}

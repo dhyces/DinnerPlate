@@ -40,7 +40,7 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 	public void read(CompoundTag tag) {
 		tank.readFromNBT(tag.getCompound(Constants.TAG_SINGLE_FLUID));
 	}
-	
+
 	@Override
 	public boolean hasFluid() {
 		return !tank.isEmpty();
@@ -65,7 +65,7 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 	public FluidStack getFluidStack(int index) {
 		return getLastFluid();
 	}
-	
+
 	@Override
 	public FluidStack removeFluid(int index) {
 		return removeLastFluid(tank.getCapacity());
@@ -99,12 +99,12 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 	public int getFluidSize() {
 		return hasFluid() ? 1 : 0;
 	}
-	
+
 	@Override
 	public int getFluidCapacity() {
 		return 1;
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if ((side == null || side.equals(Direction.UP)) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)

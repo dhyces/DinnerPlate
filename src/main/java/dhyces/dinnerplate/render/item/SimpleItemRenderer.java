@@ -18,7 +18,7 @@ public abstract class SimpleItemRenderer extends BlockEntityWithoutLevelRenderer
 		super(Minecraft.getInstance() == null ? null : Minecraft.getInstance().getBlockEntityRenderDispatcher(),
 				Minecraft.getInstance() == null ?  null : Minecraft.getInstance().getEntityModels());
 	}
-	
+
 	@Override
 	public void renderByItem(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
 			MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
@@ -27,7 +27,7 @@ public abstract class SimpleItemRenderer extends BlockEntityWithoutLevelRenderer
 
 	public abstract void render(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
 			MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay);
-	
+
 	public void renderItem(ItemStack stack, PoseStack poseStack, VertexConsumer consumer, int packedLight, int packedOverlay) {
 		var model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
 		model = model.getOverrides().resolve(model, stack, clientLevel(), clientPlayer(), new Random(42L).nextInt());

@@ -5,7 +5,6 @@ import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.util.Couple;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -48,7 +47,7 @@ public class MockFoodProvider implements IMockFoodProvider {
 	public SoundEvent getEatingSound(ItemStack stack) {
 		return this.stack.getEatingSound();
 	}
-	
+
 	@Override
 	public ParticleOptions getParticle(ItemStack stack) {
 		return new ItemParticleOption(ParticleTypes.ITEM, this.stack);

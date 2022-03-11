@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.render.util;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -14,7 +12,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
@@ -25,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public interface IRenderer {
-	
+
 	default void renderFace(VertexConsumer pConsumer, PoseStack poseStack, QuadFace face, int color, float u1, float v1, float u2, float v2,
 			int packedLight, Direction side) {
 		var r = FastColor.ARGB32.red(color);
@@ -45,7 +42,7 @@ public interface IRenderer {
 		var a = FastColor.ARGB32.alpha(color);
 		vertex(pConsumer, poseStack, vert, a, r, g, b, pU, pV, pPackedLight, face);
 	}
-	
+
 	default void tessalatorVertex(PoseStack poseStack, Vec3 vert, int r, int g, int b, int a, float pU, float pV, int pPackedLight, Direction face) {
 		var last = poseStack.last();
 		var normal = face.getNormal();
@@ -74,20 +71,20 @@ public interface IRenderer {
 				 .endVertex();
 
 	}
-	
+
 	public default BakedModel getResolvedItemModel(ItemStack stack) {
 		var base = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
 		return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), clientLevel().random.nextInt());
 	}
-	
+
 	public default ClientLevel clientLevel() {
 		return Minecraft.getInstance().level;
 	}
-	
+
 	public default LocalPlayer clientPlayer() {
 		return Minecraft.getInstance().player;
 	}
-	
+
 	public default ResourceLocation atlas() {
 		return TextureAtlas.LOCATION_BLOCKS;
 	}
