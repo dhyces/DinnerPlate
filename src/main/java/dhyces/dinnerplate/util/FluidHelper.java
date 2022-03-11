@@ -30,18 +30,18 @@ public final class FluidHelper {
 		}
 		return FluidStack.EMPTY;
 	}
+	
+	public static FluidAction clientAction(boolean isClient) {
+		return isClient ? FluidAction.SIMULATE : FluidAction.EXECUTE;
+	}
 
-	public static int fill(IFluidHandler toFill, IFluidHandler toDrain) {
-		var sim = simFill(toFill, toDrain);
-		if (sim > 0) {
-			return toFill.fill(toDrain.drain(sim, FluidAction.EXECUTE), FluidAction.EXECUTE);
-		}
-		return sim;
+	public static int fill(IFluidHandler toFill, IFluidHandler toDrain, FluidAction action) {
+		var testFill = toFill.fill(toDrain.drain(Integer.MAX_VALUE, FluidAction.SIMULATE).copy(), FluidAction.SIMULATE);
+		return toFill.fill(toDrain.drain(testFill, action).copy(), action);
 	}
 
 	public static int simFill(IFluidHandler toFill, IFluidHandler toDrain) {
-		var tankCapacity = toDrain.getTankCapacity(0);
-		var test = toDrain.drain(tankCapacity, FluidAction.SIMULATE);
+		var test = toDrain.drain(Integer.MAX_VALUE, FluidAction.SIMULATE);
 		if (!test.isEmpty()) {
 			var cap = compatibleCapacity(toFill, test);
 			var drained = toDrain.drain(cap, FluidAction.SIMULATE);
