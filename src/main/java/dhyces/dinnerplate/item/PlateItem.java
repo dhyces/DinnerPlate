@@ -7,7 +7,6 @@ import net.minecraft.sounds.SoundEvent;
 
 public class PlateItem extends RenderableNBTBlockItem {
 
-
 	public PlateItem(Properties pProperties) {
 		super(new PlateItemRenderer(), BlockRegistry.PLATE_BLOCK.get(), pProperties);
 	}
