@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 // TODO: name could be changed since it's somewhat ambiguous. "what is mixed?", well in this case its both item and fluid stacks
 public class MixedInventory implements IMixedInventory, INBTSerializable<CompoundTag> {
@@ -98,9 +97,22 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		if (usedSize < size && !stack.isEmpty()) {
 			var amount = stack.getCount();
 			var safeAmount = Math.min(remaining(), amount);
-				itemInventory.push(stack);
+			var copy = stack.copy();
+			var split = copy.split(safeAmount);
+			itemInventory.push(split);
 			usedSize += safeAmount;
-			return ItemHandlerHelper.copyStackWithSize(stack, amount - safeAmount);
+			return copy;
+		}
+		return stack;
+	}
+
+	public ItemStack insertItemAt(ItemStack stack, int slot) {
+		if (usedSize < size && !stack.isEmpty()) {
+			var amount = stack.getCount();
+			var safeAmount = Math.min(remaining(), amount);
+			var split = stack.split(safeAmount);
+			itemInventory.insertElementAt(split, slot);
+			usedSize += safeAmount;
 		}
 		return stack;
 	}
@@ -113,6 +125,11 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	@Override
 	public int getFluidAmount() {
 		return getFluidSize() * 100;
+	}
+
+	@Override
+	public int getFluidCapacity() {
+		return 900;
 	}
 
 	@Override
@@ -139,7 +156,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 
 	@Override
 	public FluidStack getFluidStack(int index) {
-		if (fluidInventory.isEmpty() || index < 0 || index > fluidInventory.size())
+		if (fluidInventory.isEmpty() || index < 0 || index >= fluidInventory.size())
 			return FluidStack.EMPTY;
 		return fluidInventory.get(index);
 	}
@@ -159,7 +176,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		usedSize--;
 		return fluidInventory.pop();
 	}
-	
+
 	@Override
 	public FluidStack removeFluid(int index) {
 		if (fluidInventory.empty() || index < 0 || index > fluidInventory.size())
@@ -260,7 +277,6 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 
 	@Override
 	public void setChanged() {
-
 	}
 
 	@Override
@@ -308,8 +324,8 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	@Override
 	public void deserializeNBT(CompoundTag tag) {
 		usedSize = tag.getInt(Constants.TAG_USED_SIZE);
+		clearContent();
 		if (usedSize == 0) {
-			clearContent();
 			return;
 		}
 		var fluidsTag = tag.getList(Constants.TAG_FLUIDS, Tag.TAG_COMPOUND);
