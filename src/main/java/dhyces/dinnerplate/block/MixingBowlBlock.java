@@ -1,5 +1,7 @@
 package dhyces.dinnerplate.block;
 
+import java.util.Optional;
+
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
 import dhyces.dinnerplate.util.FluidHelper;
@@ -40,28 +42,31 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 			return InteractionResult.PASS;
 		var preferredStack = getPreferredItemOtherwise(player, InteractionHand.OFF_HAND);
 		if (!preferredStack.isEmpty() && !bEntity.isFull()) {
-			var fluidContainerOptional = FluidUtil.getFluidHandler(preferredStack);
-			if (!fluidContainerOptional.isPresent() || FluidHelper.isEmpty(fluidContainerOptional.resolve().get())) {
-				if (!isClient) {
-					var itemCopy = ItemHandlerHelper.copyStackWithSize(preferredStack, 1);
-					var ret = bEntity.insertItem(itemCopy);
-					if (ret.isEmpty() && !player.getAbilities().instabuild)
-						preferredStack.shrink(1);
-				}
-			} else {
-				if (fluidContainerOptional.map(c -> c.drain(bEntity.remaining() * 100, FluidAction.SIMULATE)).get().isEmpty())
-					return InteractionResult.FAIL;
-				if (!isClient) {
-					var handler = fluidContainerOptional.resolve().get();
-					var fluid = handler.drain(bEntity.remaining() * 100, FluidAction.EXECUTE);
-					var ret = bEntity.insertFluid(fluid);
-					if (!handler.getContainer().sameItem(preferredStack)) {
-						player.setItemInHand(hand, handler.getContainer());
+			var lazyItemFluidHandler = FluidUtil.getFluidHandler(preferredStack);
+			if (lazyItemFluidHandler.isPresent()) {
+				var itemHandler = lazyItemFluidHandler.resolve().get();
+				var lazyBlockHandler = bEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+				if (lazyBlockHandler.isPresent()) {
+					var blockHandler = lazyBlockHandler.resolve().get();
+					var fill = FluidHelper.fill(blockHandler, itemHandler, FluidHelper.clientAction(isClient));
+					if (!isClient) {
+						if (!itemHandler.getContainer().sameItem(preferredStack)) {
+							player.setItemInHand(hand, itemHandler.getContainer());
+						}
 					}
+					if (fill > 0)
+						return InteractionResult.sidedSuccess(isClient);
 				}
 			}
+			if (!isClient) {
+				var itemCopy = ItemHandlerHelper.copyStackWithSize(preferredStack, 1);
+				var ret = bEntity.insertItem(itemCopy);
+				if (ret.isEmpty() && !player.getAbilities().instabuild)
+					preferredStack.shrink(1);
+			}
 			return InteractionResult.sidedSuccess(isClient);
-		} else if (bEntity.hasRecipe()) {
+		}
+		if (bEntity.hasRecipe()) {
 			level.setBlockAndUpdate(pos, state.cycle(MIX_POSITION));
 			return InteractionResult.sidedSuccess(isClient);
 		}
@@ -75,9 +80,10 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 			return InteractionResult.FAIL;
 		var playerHandCap = player.getItemInHand(hand).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 		if (playerHandCap.isPresent()) {
-			if (!isClient)
-				FluidHelper.fill(playerHandCap.resolve().get(), bEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get());
-			return InteractionResult.sidedSuccess(isClient);
+			var bEntityCap = bEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+			var fill = FluidHelper.fill(playerHandCap.resolve().get(), bEntityCap.resolve().get(), FluidHelper.clientAction(isClient));
+			if (fill > 0)
+				return InteractionResult.sidedSuccess(isClient);
 		}
 		if (bEntity.hasItem()) {
 			var i = bEntity.removeLastItem();
