@@ -97,6 +97,11 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 
 	@Override
 	public int getFluidSize() {
+		return hasFluid() ? 1 : 0;
+	}
+	
+	@Override
+	public int getFluidCapacity() {
 		return 1;
 	}
 	

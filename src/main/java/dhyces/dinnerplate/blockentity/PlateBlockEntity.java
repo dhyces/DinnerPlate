@@ -18,8 +18,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.IItemHandler;
 
-public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDishware, ISingleItemHolder {
+public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDishware, ISingleItemHolder, IItemHandler {
 
 	private ItemStack platedItem = ItemStack.EMPTY;
 	private Supplier<Boolean> isFood = () -> !platedItem.isEmpty() && (platedItem.isEdible() || platedItem.getItem() instanceof IBitable);
@@ -159,5 +160,37 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	public void clearContent() {
 		platedItem = ItemStack.EMPTY;
 		setChanged();
+	}
+
+	@Override
+	public int getSlots() {
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return platedItem;
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		return insertItem(stack);
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		if (!simulate)
+			return removeLastItem();
+		return getLastItem();
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return 1;
+	}
+
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack) {
+		return true;
 	}
 }
