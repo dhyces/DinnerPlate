@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity implements IMixedInventory {
 
@@ -67,7 +68,7 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	@Override
 	public ItemStack insertItem(ItemStack stack) {
 		var ret = inventory.insertItem(stack);
-		if (!stack.equals(ret))
+		if (!ItemStack.matches(stack, ret))
 			setChanged();
 		return ret;
 	}
@@ -160,7 +161,7 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	@Override
 	public FluidStack insertFluid(FluidStack stack) {
 		var ret = inventory.insertFluid(stack);
-		if (!stack.equals(ret))
+		if (!stack.isFluidStackIdentical(ret))
 			setChanged();
 		return ret;
 	}
@@ -190,6 +191,11 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	@Override
 	public int getFluidAmount() {
 		return inventory.getFluidAmount();
+	}
+	
+	@Override
+	public int getFluidCapacity() {
+		return 9;
 	}
 	
 	@Override
