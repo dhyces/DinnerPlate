@@ -9,15 +9,18 @@ import dhyces.dinnerplate.inventory.api.IFluidHolder;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+@Deprecated(forRemoval = true) /** Unused in the current iteration, if it is unused in the next few iterations, remove*/
 public class ListenedMultiFluidTank implements IFluidHandler {
 
 	private final Supplier<Integer> getTanks;
+	private final Supplier<Integer> getMaxTanks;
 	private final Function<Integer, FluidStack> getFluidInTank;
 	private final Function<FluidStack, FluidStack> fill;
 	private final Function<Integer, FluidStack> drain;
 	
 	public ListenedMultiFluidTank(IFluidHolder holder) {
 		getTanks = () -> {return holder.getFluidSize();};
+		getMaxTanks = () -> {return holder.getFluidCapacity();};
 		getFluidInTank = tank -> {return holder.getFluidStack(tank);};
 		fill = fluid -> {return holder.insertFluid(fluid);};
 		drain = index -> {return holder.removeFluid(index);};
@@ -35,7 +38,7 @@ public class ListenedMultiFluidTank implements IFluidHandler {
 
 	@Override
 	public int getTankCapacity(int tank) {
-		return 900;
+		return 100;
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class ListenedMultiFluidTank implements IFluidHandler {
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
-		var maxFill = Math.min(getTankCapacity(0) - (getTanks() * 100), resource.getAmount());
+		var maxFill = Math.min((getMaxTanks.get() - getTanks()) * 100, resource.getAmount());
 		if (action.execute() && maxFill > 0) {
 			fill.apply(resource);
 		}
