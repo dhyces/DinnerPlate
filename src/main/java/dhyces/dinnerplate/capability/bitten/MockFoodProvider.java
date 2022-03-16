@@ -31,8 +31,7 @@ public class MockFoodProvider implements IMockFoodProvider {
 	public void initialize(ItemStack stack, int chewCount) {
 		if (!stack.isEdible()) return;
 		this.stack = stack;
-		this.chewCount = chewCount;
-		var biteList = new Bite.Builder().build().splitInto(stack.getItem().getFoodProperties(), 3);
+		var biteList = new Bite.Builder().build().splitInto(stack.getItem().getFoodProperties(), chewCount);
 		// TODO: there's an issue here in the case there is an array out of bounds error if the splitInto method returns a list with a
 		// size less than 2
 		this.bites = Couple.coupleOf(biteList.get(0), biteList.get(1));
