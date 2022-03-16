@@ -44,6 +44,11 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 			setChanged();
 		}
 	}
+	
+	@Override
+	public boolean canBite(Player player) {
+		return platedItem.isEdible() && player.canEat(getBitable().map(c -> c.canAlwaysEat(platedItem)).orElse(platedItem.getItem().getFoodProperties().canAlwaysEat()));
+	}
 
 	@Override
 	public void eat(Player player) {
@@ -95,10 +100,6 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	@Override
 	public ItemStack removeLastItem() {
 		var item = platedItem;
-		var optional = platedItem.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY);
-		if (optional.isPresent() && optional.resolve().get().getBiteCount() == 0) {
-			item = optional.resolve().get().getRealStack();
-		}
 		setItem(ItemStack.EMPTY);
 		return item;
 	}

@@ -5,6 +5,7 @@ import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
 import dhyces.dinnerplate.item.MockFoodItem;
+import dhyces.dinnerplate.item.PlateItem;
 import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.registry.SoundRegistry;
 import dhyces.dinnerplate.sound.DinnerSoundTypes;
@@ -55,7 +56,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 											Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		if (plateEntity.hasItem()) {
 			var item = plateEntity.getLastItem();
-			if (item.isEdible() && player.canEat(item.getItem().getFoodProperties().canAlwaysEat())) {
+			if (item.isEdible() && plateEntity.canBite(player)) {
 				if (!isClient)
 					plateEntity.bite(player);
 				return InteractionResult.sidedSuccess(isClient);
@@ -65,7 +66,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 			if (preferredItem.isEmpty() || player.getMainHandItem().is(Items.DEBUG_STICK))
 				return InteractionResult.PASS;
 			var levelProperty = state.getValue(PLATES);
-			if (preferredItem.sameItem(ItemRegistry.PLATE_ITEM.get().getDefaultInstance())) {
+			if (preferredItem.getItem() instanceof PlateItem) {
 				if (canAddPlate(state, preferredItem)) {
 					if (!isClient) {
 						var itemStateTag = preferredItem.getOrCreateTagElement(Constants.TAG_BLOCK_STATE);
@@ -85,7 +86,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 			} else if (levelProperty == 1) {
 				if (!isClient) {
 					var itemToSet = preferredItem.copy().split(1);
-					plateEntity.setItem(itemToSet.isEdible() && !(itemToSet.getItem() instanceof IBitable) ? MockFoodItem.mockFoodStack(itemToSet, 0) : itemToSet);
+					plateEntity.setItem(itemToSet);
 					if (!player.getAbilities().instabuild)
 						preferredItem.shrink(1);
 				}
@@ -103,7 +104,6 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 												Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
 		var platesProperty = state.getValue(PLATES);
 		if (plateEntity.hasItem()) {
-			// TODO: may need to split this back up due to the difficulty of making it work sided
 			if (!isClient) {
 				var stack = plateEntity.removeLastItem();
 				insertInvOrSpawn(level, pos, -0.25, player.getInventory(), stack);
@@ -123,7 +123,8 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
 
 	private boolean canAddPlate(BlockState pState, ItemStack stackToCheck) {
 		return 	pState.getValue(PLATES) < MAX_LEVEL &&
-				stackToCheck.getOrCreateTag().getCompound(Constants.TAG_BLOCK_ENTITY).getCompound(Constants.TAG_SINGLE_ITEM).isEmpty();
+				stackToCheck.sameItem(this.asItem().getDefaultInstance()) &&
+				stackToCheck.getOrCreateTag().getCompound(Constants.TAG_SINGLE_ITEM).isEmpty();
 	}
 
 	public int getPlatesFromStack(ItemStack stack) {
