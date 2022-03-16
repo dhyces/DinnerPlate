@@ -17,7 +17,8 @@ public class NBTBlockItem extends BlockItem {
 	@Override
 	protected boolean placeBlock(BlockPlaceContext pContext, BlockState pState) {
 		if (super.placeBlock(pContext, pState)) {
-			pContext.getItemInHand().setTag(INBTMapper.WRAP_BLOCK_ENTITY.apply(pContext.getItemInHand().getOrCreateTag()));
+			pContext.getItemInHand().getOrCreateTag().merge(INBTMapper.WRAP_BLOCK_ENTITY.apply(pContext.getItemInHand().getOrCreateTag()));
+			pContext.getItemInHand().removeTagKey(Constants.TAG_SINGLE_ITEM);
 			return true;
 		}
 		return false;
@@ -26,8 +27,10 @@ public class NBTBlockItem extends BlockItem {
 	@Override
 	public InteractionResult place(BlockPlaceContext pContext) {
 		var res = super.place(pContext);
-		if (res.consumesAction())
-			pContext.getItemInHand().setTag(pContext.getItemInHand().getOrCreateTagElement(Constants.TAG_BLOCK_ENTITY));
+		if (res.consumesAction()) {
+			pContext.getItemInHand().getOrCreateTag().merge(pContext.getItemInHand().getOrCreateTagElement(Constants.TAG_BLOCK_ENTITY));
+			pContext.getItemInHand().removeTagKey(Constants.TAG_BLOCK_ENTITY);
+		}
 		return res;
 	}
 }
