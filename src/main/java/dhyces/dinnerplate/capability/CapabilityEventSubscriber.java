@@ -22,8 +22,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 public class CapabilityEventSubscriber {
 
-	public static Capability<IMockFoodProvider> MOCK_FOOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<IMockFoodProvider>() {});
-
+	public static final Capability<IMockFoodProvider> MOCK_FOOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<IMockFoodProvider>() {});
+	
 	@EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)
 	public class ModSided {
 
