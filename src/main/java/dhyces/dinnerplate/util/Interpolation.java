@@ -28,7 +28,6 @@ public class Interpolation {
 		}
 		var prev = this.previous;
 		this.previous = chaser.chase(partial, previous, goal);
-		System.out.println(previous);
 		return prev;
 	}
 
@@ -39,7 +38,6 @@ public class Interpolation {
 	public void setVals(float from, float goal) {
 		previous = from;
 		this.goal = goal;
-		System.out.println("we are set: " + this);
 	}
 
 	@Override
