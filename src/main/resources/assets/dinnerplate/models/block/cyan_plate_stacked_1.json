@@ -1,0 +1,7 @@
+{
+  "parent": "dinnerplate:block/plate_stacked_1",
+  "textures": {
+    "0": "dinnerplate:block/cyan_plate",
+    "particle": "dinnerplate:block/cyan_plate"
+  }
+}

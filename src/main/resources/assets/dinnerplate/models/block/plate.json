@@ -1,9 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"textures": {
-		"0": "dinnerplate:block/plate",
-		"particle": "dinnerplate:block/plate"
-	},
 	"elements": [
 		{
 			"name": "base",

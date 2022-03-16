@@ -1,0 +1,7 @@
+{
+  "parent": "dinnerplate:block/plate",
+  "textures": {
+    "0": "dinnerplate:block/lime_plate",
+    "particle": "dinnerplate:block/lime_plate"
+  }
+}

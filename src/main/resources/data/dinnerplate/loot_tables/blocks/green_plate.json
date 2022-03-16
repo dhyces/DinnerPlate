@@ -1,0 +1,54 @@
+{
+    "type": "minecraft:block",
+    "pools": [
+		{
+            "rolls": 1,
+            "entries": [
+				{
+                    "type": "minecraft:alternatives",
+                    "children": [
+						{
+							"name": "dinnerplate:green_plate",
+                            "type": "minecraft:item",
+							"conditions": [
+								{
+									"condition": "minecraft:block_state_property",
+									"block": "dinnerplate:green_plate",
+									"properties": {
+										"plates": 1
+									}
+								}
+							],
+							"functions": [
+								{
+									"function": "minecraft:copy_nbt",
+									"source": "block_entity",
+									"ops": [
+										{
+											"source": "Item",
+											"target": "Item",
+											"op": "replace"
+										}
+									]
+								}
+							]
+                        },
+						{
+							"name": "dinnerplate:green_plate",
+							"type": "minecraft:item",
+							"functions": [
+								{
+									"function": "minecraft:copy_state",
+									"block": "dinnerplate:green_plate",
+									"properties": [
+										"plates"
+									]
+								}
+							]
+						}
+					]
+				}
+            ]
+		}
+    ]
+}

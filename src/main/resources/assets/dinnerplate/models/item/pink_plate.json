@@ -1,0 +1,12 @@
+{
+	"parent": "dinnerplate:block/pink_plate",
+	"overrides": [
+		{"predicate": {"dinnerplate:plates": 0.250}, "model":"dinnerplate:block/pink_plate_stacked_1"},
+		{"predicate": {"dinnerplate:plates": 0.375}, "model":"dinnerplate:block/pink_plate_stacked_2"},
+		{"predicate": {"dinnerplate:plates": 0.500}, "model":"dinnerplate:block/pink_plate_stacked_3"},
+		{"predicate": {"dinnerplate:plates": 0.625}, "model":"dinnerplate:block/pink_plate_stacked_4"},
+		{"predicate": {"dinnerplate:plates": 0.750}, "model":"dinnerplate:block/pink_plate_stacked_5"},
+		{"predicate": {"dinnerplate:plates": 0.875}, "model":"dinnerplate:block/pink_plate_stacked_6"},
+		{"predicate": {"dinnerplate:plates": 1.000}, "model":"dinnerplate:block/pink_plate_stacked_7"}
+	]
+}
