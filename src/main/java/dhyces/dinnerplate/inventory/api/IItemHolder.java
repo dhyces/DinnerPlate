@@ -23,6 +23,9 @@ public interface IItemHolder extends Container {
 
 	/** Inserts as much of the stack as possible and returns what's left */
 	public ItemStack insertItem(ItemStack stack);
+	
+	/** Inserts as much of the stack as possible at the given slot and returns what's left */
+	public ItemStack insertItemAt(ItemStack stack, int slot);
 
 	/** Returns the number of holders, similar to the size of a list*/
 	public int getItemSize();

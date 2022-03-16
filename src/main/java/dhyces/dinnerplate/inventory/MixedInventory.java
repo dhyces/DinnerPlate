@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableList;
+
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
@@ -106,6 +108,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		return stack;
 	}
 
+	@Override
 	public ItemStack insertItemAt(ItemStack stack, int slot) {
 		if (usedSize < size && !stack.isEmpty()) {
 			var amount = stack.getCount();
@@ -200,6 +203,22 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 		}
 		return stack;
 	}
+	
+	@Override
+	public FluidStack insertFluidAt(FluidStack stack, int slot) {
+		if (usedSize < size && !stack.isEmpty()) {
+			var fluidAmount = stack.getAmount();
+			var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
+			var amount = fluidAmount / 100;
+			var safeAmount = Math.min(remaining(), amount);
+			fluidInventory.insertElementAt(FluidHelper.copyStackWithSize(stack, safeFluidAmount), slot);
+			usedSize += safeAmount;
+			var retStack = stack.copy();
+			retStack.shrink(safeFluidAmount);
+			return retStack;
+		}
+		return stack;
+	}
 
 	@Override
 	public FluidStack setFluid(int index, FluidStack stack) {
@@ -216,17 +235,13 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 	public List<FluidStack> getFluids() {
 		if (fluidInventory.isEmpty())
 			return List.of();
-		var array = new FluidStack[fluidInventory.size()];
-		fluidInventory.copyInto(array);
-		return Arrays.asList(array);
+		return List.copyOf(fluidInventory);
 	}
 
 	public List<ItemStack> getItems() {
 		if (itemInventory.isEmpty())
 			return List.of();
-		var array = new ItemStack[itemInventory.size()];
-		itemInventory.copyInto(array);
-		return Arrays.asList(array);
+		return List.copyOf(itemInventory);
 	}
 
 	@Override

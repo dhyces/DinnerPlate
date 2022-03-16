@@ -18,4 +18,9 @@ public interface ISingleItemHolder extends IItemHolder {
 		}
 		return stack;
 	}
+	
+	@Override
+	default ItemStack insertItemAt(ItemStack stack, int slot) {
+		return insertItem(stack);
+	}
 }
