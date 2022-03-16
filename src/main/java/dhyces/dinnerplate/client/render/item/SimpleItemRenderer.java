@@ -1,11 +1,11 @@
-package dhyces.dinnerplate.render.item;
+package dhyces.dinnerplate.client.render.item;
 
 import java.util.Random;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import dhyces.dinnerplate.render.util.IRenderer;
+import dhyces.dinnerplate.client.render.util.IRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,12 +25,6 @@ public abstract class SimpleItemRenderer extends BlockEntityWithoutLevelRenderer
 		render(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
 	}
 
-	public abstract void render(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
-			MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay);
-
-	public void renderItem(ItemStack stack, PoseStack poseStack, VertexConsumer consumer, int packedLight, int packedOverlay) {
-		var model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
-		model = model.getOverrides().resolve(model, stack, clientLevel(), clientPlayer(), new Random(42L).nextInt());
-		Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, consumer);
-	}
+	public abstract void render(ItemStack stack, TransformType transformType, PoseStack poseStack,
+			MultiBufferSource bufferSource, int packedLight, int packedOverlay);
 }

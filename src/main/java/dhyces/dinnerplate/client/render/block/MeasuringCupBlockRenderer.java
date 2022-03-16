@@ -1,9 +1,9 @@
-package dhyces.dinnerplate.render.block;
+package dhyces.dinnerplate.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
-import dhyces.dinnerplate.render.util.IFluidRenderer;
+import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;

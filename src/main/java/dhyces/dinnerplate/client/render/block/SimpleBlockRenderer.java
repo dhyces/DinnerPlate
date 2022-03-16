@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.block;
+package dhyces.dinnerplate.client.render.block;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

@@ -1,13 +1,13 @@
-package dhyces.dinnerplate.render.item;
+package dhyces.dinnerplate.client.render.item;
 
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import dhyces.dinnerplate.render.util.IFluidRenderer;
-import dhyces.dinnerplate.render.util.RectPrism;
-import dhyces.dinnerplate.render.util.RenderTypes;
+import dhyces.dinnerplate.client.render.util.IFluidRenderer;
+import dhyces.dinnerplate.client.render.util.RectPrism;
+import dhyces.dinnerplate.client.render.util.RenderTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

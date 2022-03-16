@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.util;
+package dhyces.dinnerplate.client.render.util;
 
 import java.util.ArrayList;
 import java.util.List;

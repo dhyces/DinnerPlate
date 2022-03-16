@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.item;
+package dhyces.dinnerplate.client.render.item;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +15,8 @@ import com.mojang.math.Transformation;
 
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
-import dhyces.dinnerplate.render.util.ItemModel;
+import dhyces.dinnerplate.client.render.util.ItemModel;
+import dhyces.dinnerplate.client.render.util.RenderTypes;
 import dhyces.dinnerplate.util.ResourceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -86,7 +87,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 
 						Optional<NativeImage> itemImage = tryGetStaticImage(itemResourceRL), maskImage = tryGetStaticImage(biteMaskResourceRL);
 						if (itemImage.isPresent() && maskImage.isPresent()) {
-							var atlas = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS);
+							var atlas = Minecraft.getInstance().getTextureAtlas(atlas());
 							var sprite = atlas.apply(itemAtlasRL);
 							var mask = atlas.apply(biteMaskAtlasRL);
 							generatedModels.put(bittenModelRL, testGen(model, mask, sprite, combineImages(itemImage.get(), maskImage.get())));
@@ -97,19 +98,10 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			}
 		}
 		pPoseStack.pushPose();
-		var flag = pTransformType == TransformType.GUI && !model.usesBlockLight();
-		if (flag)
-			Lighting.setupForFlatItems();
-		var consumer = pBuffer.getBuffer(RenderType.itemEntityTranslucentCull(TextureAtlas.LOCATION_BLOCKS));
-		for (BakedQuad q : model.getQuads(null, null, null, null)) {
-			consumer.putBulkData(pPoseStack.last(), q, 1f, 1f, 1f, pPackedLight, pPackedOverlay, true);
-		}
-
-		Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-		if (flag)
-			Lighting.setupFor3DItems();
+		var consumer = pBuffer.getBuffer(RenderType.itemEntityTranslucentCull(atlas()));
+		Minecraft.getInstance().getItemRenderer().renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, consumer);
+		
 		pPoseStack.popPose();
-		RenderSystem.applyModelViewMatrix();
 	}
 
 	/** This is a method that generates a "builtin/generated" type item model, due to the inability to generate one outside of the model bakery

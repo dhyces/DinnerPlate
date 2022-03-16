@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.util;
+package dhyces.dinnerplate.client.render.util;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;

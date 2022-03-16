@@ -1,10 +1,13 @@
-package dhyces.dinnerplate.render.util;
+package dhyces.dinnerplate.client.render.util;
+
+import java.util.Random;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+import com.mojang.math.Quaternion;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -74,7 +77,20 @@ public interface IRenderer {
 
 	public default BakedModel getResolvedItemModel(ItemStack stack) {
 		var base = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
-		return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), clientLevel().random.nextInt());
+		return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), new Random(42L).nextInt());
+	}
+	
+	public default void renderItem(ItemStack stack, PoseStack poseStack, VertexConsumer consumer, int packedLight, int packedOverlay) {
+		var model = getResolvedItemModel(stack);
+		Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, consumer);
+	}
+	
+	public default float fromPixel(float px) {
+		return px / 16f;
+	}
+	
+	public default Quaternion doubleQuaternion(double i, double j, double k, boolean isDegrees) {
+		return new Quaternion((float)i, (float)j, (float)k, isDegrees);
 	}
 
 	public default ClientLevel clientLevel() {

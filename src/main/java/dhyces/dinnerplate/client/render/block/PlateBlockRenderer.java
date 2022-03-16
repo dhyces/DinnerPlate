@@ -1,10 +1,10 @@
-package dhyces.dinnerplate.render.block;
+package dhyces.dinnerplate.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
-import dhyces.dinnerplate.render.util.IRenderer;
+import dhyces.dinnerplate.client.render.util.IRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;

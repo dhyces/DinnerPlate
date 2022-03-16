@@ -1,7 +1,8 @@
-package dhyces.dinnerplate.model;
+package dhyces.dinnerplate.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraftforge.api.distmarker.Dist;
@@ -9,16 +10,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
 @OnlyIn(Dist.CLIENT)
-public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel>{
+public class EmptyCustomModel extends BakedModelWrapper<BakedModel> {
 
-	public SimpleCustomBakedModelWrapper(BakedModel originalModel) {
-		super(originalModel);
+	public EmptyCustomModel() {
+		super(Minecraft.getInstance().getModelManager().getMissingModel());
 	}
 
-//	@Override
-//	public boolean doesHandlePerspectives() {
-//		return false;
-//	}
+	@Override
+	public boolean isGui3d() {
+		return false;
+	}
+
+	@Override
+	public boolean doesHandlePerspectives() {
+		return false;
+	}
 
 	@Override
 	public boolean isCustomRenderer() {
@@ -27,7 +33,6 @@ public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel>
 
 	@Override
 	public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack poseStack) {
-		super.handlePerspective(cameraTransformType, poseStack);
 		return this;
 	}
 }

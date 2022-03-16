@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.item;
+package dhyces.dinnerplate.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;

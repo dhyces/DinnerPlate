@@ -1,28 +1,29 @@
-package dhyces.dinnerplate.render.util;
+package dhyces.dinnerplate.client.render.util;
 
 import net.minecraft.world.phys.Vec3;
 
+// TODO: this class organizes the vertices in my binary way. Minecraft goes 00, 01, 11, 10.
 public class QuadFace {
 
 	private final Vec3[] vertices;
 	private int startIndex = 0;
 
 	public QuadFace(Vec3 f00, Vec3 f01, Vec3 f10, Vec3 f11) {
-		vertices = new Vec3[] {f00, f01, f10, f11};
-	}
-
-	public Vec3 bottomLeft() {
-		return vertices[startIndex];
-	}
-
-	public Vec3 bottomRight() {
-		return vertices[cycleIndex(1)];
+		vertices = new Vec3[] {f10, f00, f01, f11};
 	}
 
 	public Vec3 topLeft() {
-		return vertices[cycleIndex(2)];
+		return vertices[startIndex];
 	}
 
+	public Vec3 bottomLeft() {
+		return vertices[cycleIndex(1)];
+	}
+
+	public Vec3 bottomRight() {
+		return vertices[cycleIndex(2)];
+	}
+	
 	public Vec3 topRight() {
 		return vertices[cycleIndex(3)];
 	}

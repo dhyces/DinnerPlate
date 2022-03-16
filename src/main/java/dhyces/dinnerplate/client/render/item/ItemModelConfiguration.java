@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.item;
+package dhyces.dinnerplate.client.render.item;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.Material;

@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.render.util;
+package dhyces.dinnerplate.client.render.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -51,15 +51,13 @@ public interface IFluidRenderer extends IRenderer {
 			var v1 = stillSprite.getV0();
 			var v2 = stillSprite.getV1();
 
+			// TODO: these values may still not be right, but they look right.
 			if (positive && horizontal || side.equals(Direction.DOWN)) {
-				verts.rotate(2);
-			}
-			//TODO: These values are not quite right
-			if (xAxis) {
-				verts.swap(0, 1);
+				verts.swap(1, 3);
 				verts.rotate(1);
-				verts.swap(2, 3);
-				verts.rotate(2);
+			}
+			if (xAxis) {
+				verts.rotate(1);
 			}
 			poseStack.pushPose();
 			renderFace(pConsumer, poseStack, verts, packedColor, u1, v1, u2, v2, packedLight, side);
@@ -67,7 +65,7 @@ public interface IFluidRenderer extends IRenderer {
 		}
 	}
 
-	default FluidStack[] fluidArray(FluidStack... fluidStacks) {
+	 default FluidStack[] fluidArray(FluidStack... fluidStacks) {
 		return fluidStacks;
 	}
 }
