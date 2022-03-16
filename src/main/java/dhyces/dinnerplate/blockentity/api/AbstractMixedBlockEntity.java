@@ -2,6 +2,8 @@ package dhyces.dinnerplate.blockentity.api;
 
 import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableList;
+
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
@@ -67,6 +69,14 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	@Override
 	public ItemStack insertItem(ItemStack stack) {
 		var ret = inventory.insertItem(stack);
+		if (!ItemStack.matches(stack, ret))
+			setChanged();
+		return ret;
+	}
+	
+	@Override
+	public ItemStack insertItemAt(ItemStack stack, int slot) {
+		var ret = inventory.insertItemAt(stack, slot);
 		if (!ItemStack.matches(stack, ret))
 			setChanged();
 		return ret;
@@ -164,6 +174,11 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 			setChanged();
 		return ret;
 	}
+	
+	@Override
+	public FluidStack insertFluidAt(FluidStack stack, int slot) {
+		return null;
+	}
 
 	@Override
 	public FluidStack setFluid(int index, FluidStack stack) {
@@ -175,6 +190,14 @@ public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity
 	@Override
 	public Stream<FlutemStack> mixedStream() {
 		return inventory.mixedStream();
+	}
+	
+	public ImmutableList<FluidStack> getFluids() {
+		return ImmutableList.copyOf(inventory.getFluids());
+	}
+	
+	public ImmutableList<ItemStack> getItems() {
+		return ImmutableList.copyOf(inventory.getItems());
 	}
 
 	@Override

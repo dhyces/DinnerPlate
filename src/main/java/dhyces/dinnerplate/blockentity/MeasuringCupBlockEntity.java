@@ -82,6 +82,11 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 		stack.shrink(filled);
 		return stack;
 	}
+	
+	@Override
+	public FluidStack insertFluidAt(FluidStack stack, int slot) {
+		return insertFluid(stack);
+	}
 
 	@Override
 	public FluidStack setFluid(int index, FluidStack stack) {

@@ -25,6 +25,9 @@ public interface IFluidHolder {
 
 	/** Inserts as much of the given fluid as possible and returns what's left */
 	public FluidStack insertFluid(FluidStack stack);
+	
+	/** Inserts as much of the given fluid as possible at the given slot and returns what's left */
+	public FluidStack insertFluidAt(FluidStack stack, int slot);
 
 	/** Sets the fluidstack into the given index*/
 	public FluidStack setFluid(int index, FluidStack stack);
