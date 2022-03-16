@@ -7,7 +7,7 @@ import dhyces.dinnerplate.dinnerunit.FlutemStack;
 public interface IMixedInventory extends IItemHolder, IFluidHolder {
 
 	public Stream<FlutemStack> mixedStream();
-
+	
 	public int getUsed();
 
 	public default int remaining() {

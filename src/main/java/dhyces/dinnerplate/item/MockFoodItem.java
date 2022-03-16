@@ -9,7 +9,7 @@ import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.capability.bitten.IMockFoodProvider;
 import dhyces.dinnerplate.capability.bitten.MockFoodCapability;
 import dhyces.dinnerplate.registry.ItemRegistry;
-import dhyces.dinnerplate.render.item.MockFoodItemRenderer;
+import dhyces.dinnerplate.client.render.item.MockFoodItemRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.particles.ParticleOptions;
