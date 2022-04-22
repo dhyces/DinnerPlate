@@ -1,6 +1,10 @@
 package dhyces.dinnerplate.registry;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
+
+import com.mojang.datafixers.util.Pair;
 
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.bite.BitableProperties;
@@ -26,6 +30,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ItemRegistry {
 
 	private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, DinnerPlate.MODID);
+	public static final List<Pair<Supplier<Item>, Float>> COMPOSTABLES = new LinkedList<>();
 
 	public static final RegistryObject<Item> WHITE_PLATE_ITEM;
 	public static final RegistryObject<Item> ORANGE_PLATE_ITEM;
@@ -65,8 +70,9 @@ public class ItemRegistry {
 	}
 
 	public static RegistryObject<Item> registerCompostable(String id, Supplier<Item> item, float value) {
-		addToComposter(item.get(), value);
-		return register(id, item);
+		var obj = register(id, item);
+		COMPOSTABLES.add(Pair.of(item, value));
+		return obj;
 	}
 
 	static {
@@ -104,15 +110,20 @@ public class ItemRegistry {
 		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(new BitableProperties.Builder()
 																		.addSimpleBite(1, 0.25f)
 																		.build(),
-																	new Item.Properties().tab(DinnerPlate.tab)), 0.1f);
+																	new Item.Properties().tab(DinnerPlate.tab)),
+															0.1f);
 
 		MUSHROOM_STEW_BUCKET = register("mushroom_stew_bucket", () -> simpleBucket(FluidRegistry.MUSHROOM_STEW_FLUID));
 		BEETROOT_SOUP_BUCKET = register("beetroot_soup_bucket", () -> simpleBucket(FluidRegistry.BEETROOT_SOUP_FLUID));
 		RABBIT_STEW_BUCKET = register("rabbit_stew_bucket", () -> simpleBucket(FluidRegistry.RABBIT_STEW_FLUID));
 	}
 
-	public static void addToComposter(Item item, float value) {
-		ComposterBlock.COMPOSTABLES.put(item, value);
+	public static void registerCompostables() {
+		COMPOSTABLES.forEach(ItemRegistry::addToComposter);
+	}
+	
+	private static void addToComposter(Pair<Supplier<Item>, Float> compostPair) {
+		ComposterBlock.COMPOSTABLES.put(compostPair.getFirst().get(), (float)compostPair.getSecond());
 	}
 
 	private static Item simpleBucket(Supplier<? extends Fluid> fluid) {

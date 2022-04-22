@@ -32,9 +32,7 @@ public class FluidRegistry {
 	}
 
 	private static RegistryObject<ForgeFlowingFluid> registerFlowingFluid(String id, Supplier<ForgeFlowingFluid> supplier) {
-		if (supplier.get() instanceof ForgeFlowingFluid)
-			return FLUID_REGISTRY.register(id, supplier);
-		return null;
+		return FLUID_REGISTRY.register(id, supplier);
 	}
 
 	static {

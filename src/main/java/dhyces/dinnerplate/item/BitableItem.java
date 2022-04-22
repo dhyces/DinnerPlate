@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -37,6 +38,12 @@ public class BitableItem extends Item implements IBitableItem {
 			return InteractionResultHolder.consume(stack);
 		}
 		return InteractionResultHolder.pass(stack);
+	}
+	
+	@Override
+	public FoodProperties getFoodProperties(ItemStack stack, LivingEntity entity) {
+		// TODO Auto-generated method stub
+		return super.getFoodProperties(stack, entity);
 	}
 
 	@Override
