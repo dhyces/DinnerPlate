@@ -38,7 +38,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -46,19 +45,16 @@ import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent.MissingMappings;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@SuppressWarnings("deprecation")
 @Mod(DinnerPlate.MODID)
 public class DinnerPlate {
 
@@ -102,7 +98,7 @@ public class DinnerPlate {
 
     }
     
-    private void clientSetup(final FMLClientSetupEvent event) {
+	private void clientSetup(final FMLClientSetupEvent event) {
     	ItemPropertyFunction platePropertyFunction = (stack, level, entity, seed) -> {
 			return (float) BlockHelper.getPropertyFromTag(PlateBlock.PLATES, BlockHelper.getBlockStateTag(stack).orElse(new CompoundTag())) / 8;
 		};
@@ -149,8 +145,7 @@ public class DinnerPlate {
     	prepareSeparateModels();
     }
 
-    // TODO: remove the println. Also I want to only actually get models that are used, aka have a list of edible items and then just add those
-    // the the special model list
+    // TODO: remove the println.
     private void prepareSeparateModels() {
     	edibleItems.stream().filter(c -> !(c instanceof IBitable))
 		.map(c -> {
@@ -181,6 +176,9 @@ public class DinnerPlate {
 
     private void modelBakery(final ModelBakeEvent e) {
     	putCustomInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId());
+    	putCustomInRegistry(e, ItemRegistry.MIXING_BOWL_ITEM.getId());
+    	putCustomInRegistry(e, ItemRegistry.MEASURING_CUP_ITEM.getId());
+    	
     	putCustomInRegistry(e, ItemRegistry.WHITE_PLATE_ITEM.getId());
     	putCustomInRegistry(e, ItemRegistry.ORANGE_PLATE_ITEM.getId());
     	putCustomInRegistry(e, ItemRegistry.MAGENTA_PLATE_ITEM.getId());
@@ -197,8 +195,6 @@ public class DinnerPlate {
     	putCustomInRegistry(e, ItemRegistry.GREEN_PLATE_ITEM.getId());
     	putCustomInRegistry(e, ItemRegistry.RED_PLATE_ITEM.getId());
     	putCustomInRegistry(e, ItemRegistry.BLACK_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.MIXING_BOWL_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.MEASURING_CUP_ITEM.getId());
     }
 
     private BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
@@ -209,9 +205,10 @@ public class DinnerPlate {
     	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, resource)));
     }
 
-    private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
-    	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model);
-    }
+    // TODO: remove if unused
+//    private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
+//    	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model);
+//    }
 
     private void dataGenerators(final GatherDataEvent event) {
     	event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID,  event.getExistingFileHelper()));
