@@ -18,11 +18,18 @@ import dhyces.dinnerplate.item.RenderableNBTBlockItem;
 import dhyces.dinnerplate.client.render.item.MeasuringCupItemRenderer;
 import dhyces.dinnerplate.client.render.item.MixingBowlItemRenderer;
 import dhyces.dinnerplate.util.FluidHelper;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -63,6 +70,7 @@ public class ItemRegistry {
 
 	public static void register(IEventBus bus) {
 		ITEM_REGISTER.register(bus);
+		bus.addListener(ItemRegistry::registerCompostables);
 	}
 
 	private static RegistryObject<Item> register(String id, Supplier<Item> supplier) {
@@ -71,7 +79,7 @@ public class ItemRegistry {
 
 	public static RegistryObject<Item> registerCompostable(String id, Supplier<Item> item, float value) {
 		var obj = register(id, item);
-		COMPOSTABLES.add(Pair.of(item, value));
+		COMPOSTABLES.add(Pair.of(obj, value));
 		return obj;
 	}
 
@@ -118,8 +126,9 @@ public class ItemRegistry {
 		RABBIT_STEW_BUCKET = register("rabbit_stew_bucket", () -> simpleBucket(FluidRegistry.RABBIT_STEW_FLUID));
 	}
 
-	public static void registerCompostables() {
-		COMPOSTABLES.forEach(ItemRegistry::addToComposter);
+	//TODO: ensure this event is a good place to add compostable items
+	public static void registerCompostables(FMLCommonSetupEvent event) {
+		event.enqueueWork(() -> COMPOSTABLES.forEach(ItemRegistry::addToComposter));
 	}
 	
 	private static void addToComposter(Pair<Supplier<Item>, Float> compostPair) {
