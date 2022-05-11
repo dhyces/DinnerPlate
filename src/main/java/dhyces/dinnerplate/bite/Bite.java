@@ -12,7 +12,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.level.Level;
 
 /** Not to be confused with {@link java.lang.Byte}*/
 public class Bite implements IBite {
@@ -40,6 +42,11 @@ public class Bite implements IBite {
 	@Override
 	public List<Pair<MobEffectInstance, Float>> getEffects() {
 		return effectsList;
+	}
+
+	@Override
+	public void onConsume(Level level, LivingEntity entity) {
+		/*NO-OP*/
 	}
 
 	@Override
