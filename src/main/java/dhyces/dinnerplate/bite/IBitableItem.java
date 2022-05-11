@@ -21,8 +21,6 @@ import net.minecraft.world.phys.Vec3;
 
 public interface IBitableItem extends IBitable<ItemStack> {
 
-	public ParticleOptions getParticle(ItemStack stack);
-
 	@Override
 	public default ItemStack eat(ItemStack stack, Player player, Level level) {
 		var returnStack = stack;
@@ -30,8 +28,7 @@ public interface IBitableItem extends IBitable<ItemStack> {
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
 		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
 		level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), getEatingSound(stack), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
-		var pos = getPlayerLocalPos(player, new Vec3(0, player.getEyeY() - player.getY(), 0.05));
-		spawnParticles(level, pos, stack);
+		spawnParticles(level, getPlayerLocalPos(player, new Vec3(0, -0.2, 0.3)), stack);
 		for(Pair<MobEffectInstance, Float> pair : bite.getEffects()) {
 			if (!level.isClientSide && pair.getFirst() != null && level.random.nextFloat() < pair.getSecond()) {
 				FoodHelper.addEffect(player, new MobEffectInstance(pair.getFirst()));
@@ -54,7 +51,7 @@ public interface IBitableItem extends IBitable<ItemStack> {
 		var playerPos = offset;
 		playerPos = playerPos.xRot(-player.getXRot() * (float)(Math.PI / 180));
 		playerPos = playerPos.yRot(-player.getYRot() * (float)(Math.PI / 180));
-		return playerPos.add(player.position().x, player.position().y, player.position().z);
+		return playerPos.add(player.getX(), player.getEyeY(), player.getZ());
 	}
 
 	public default void spawnParticles(Level level, Vec3 pos, ItemStack stack) {

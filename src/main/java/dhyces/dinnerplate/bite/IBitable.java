@@ -3,16 +3,20 @@ package dhyces.dinnerplate.bite;
 import com.mojang.datafixers.util.Pair;
 
 import dhyces.dinnerplate.util.FoodHelper;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public interface IBitable<T> extends IEdible<T> {
+
+	public ParticleOptions getParticle(ItemStack stack);
 
 	public int getBiteCount(T bitable);
 
