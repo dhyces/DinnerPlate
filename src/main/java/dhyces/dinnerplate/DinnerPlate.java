@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.loading.ClientModLoader;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoader;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -74,16 +80,17 @@ public class DinnerPlate {
     	ForgeMod.enableMilkFluid();
 
         bus.addListener(this::setup);
-        bus.addListener(this::clientSetup);
-        bus.addListener(this::modelRegistry);
-        bus.addListener(EventPriority.HIGHEST, this::reloadSeparateModels);
-        bus.addListener(this::entityRenders);
-        bus.addListener(this::modelBakery);
-        bus.addListener(this::dataGenerators);
-        
-        registerRegistries(bus);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			bus.addListener(this::clientSetup);
+			bus.addListener(this::modelRegistry);
+			bus.addListener(EventPriority.HIGHEST, this::reloadSeparateModels);
+			bus.addListener(this::entityRenders);
+			bus.addListener(this::modelBakery);
+		});
 
-        MinecraftForge.EVENT_BUS.register(this);
+		bus.addListener(this::dataGenerators);
+
+        registerRegistries(bus);
     }
 
     private void registerRegistries(final IEventBus bus) {
@@ -215,7 +222,7 @@ public class DinnerPlate {
     	event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
     }
     
-    public static CreativeModeTab tab = new CreativeModeTab(MODID) {
+    public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 
 		@Override
 		public ItemStack makeIcon() {

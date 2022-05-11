@@ -2,6 +2,8 @@ package dhyces.dinnerplate.registry;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
@@ -18,13 +20,20 @@ import dhyces.dinnerplate.item.RenderableNBTBlockItem;
 import dhyces.dinnerplate.client.render.item.MeasuringCupItemRenderer;
 import dhyces.dinnerplate.client.render.item.MixingBowlItemRenderer;
 import dhyces.dinnerplate.util.FluidHelper;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -77,40 +86,38 @@ public class ItemRegistry {
 		return ITEM_REGISTER.register(id, supplier);
 	}
 
-	public static RegistryObject<Item> registerCompostable(String id, Supplier<Item> item, float value) {
+	private static RegistryObject<Item> registerCompostable(String id, Supplier<Item> item, float value) {
 		var obj = register(id, item);
 		COMPOSTABLES.add(Pair.of(obj, value));
 		return obj;
 	}
 
 	static {
-		WHITE_PLATE_ITEM = register("white_plate", () -> new PlateItem(BlockRegistry.WHITE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		ORANGE_PLATE_ITEM = register("orange_plate", () -> new PlateItem(BlockRegistry.ORANGE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		MAGENTA_PLATE_ITEM = register("magenta_plate", () -> new PlateItem(BlockRegistry.MAGENTA_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		LIGHT_BLUE_PLATE_ITEM = register("light_blue_plate", () -> new PlateItem(BlockRegistry.LIGHT_BLUE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		YELLOW_PLATE_ITEM = register("yellow_plate", () -> new PlateItem(BlockRegistry.YELLOW_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		LIME_PLATE_ITEM = register("lime_plate", () -> new PlateItem(BlockRegistry.LIME_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		PINK_PLATE_ITEM = register("pink_plate", () -> new PlateItem(BlockRegistry.PINK_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		GRAY_PLATE_ITEM = register("gray_plate", () -> new PlateItem(BlockRegistry.GRAY_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		LIGHT_GRAY_PLATE_ITEM = register("light_gray_plate", () -> new PlateItem(BlockRegistry.LIGHT_GRAY_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		CYAN_PLATE_ITEM = register("cyan_plate", () -> new PlateItem(BlockRegistry.CYAN_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		PURPLE_PLATE_ITEM = register("purple_plate", () -> new PlateItem(BlockRegistry.PURPLE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		BLUE_PLATE_ITEM = register("blue_plate", () -> new PlateItem(BlockRegistry.BLUE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		BROWN_PLATE_ITEM = register("brown_plate", () -> new PlateItem(BlockRegistry.BROWN_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		GREEN_PLATE_ITEM = register("green_plate", () -> new PlateItem(BlockRegistry.GREEN_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		RED_PLATE_ITEM = register("red_plate", () -> new PlateItem(BlockRegistry.RED_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
-		BLACK_PLATE_ITEM = register("black_plate", () -> new PlateItem(BlockRegistry.BLACK_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.tab)));
+		WHITE_PLATE_ITEM = register("white_plate", () -> new PlateItem(BlockRegistry.WHITE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		ORANGE_PLATE_ITEM = register("orange_plate", () -> new PlateItem(BlockRegistry.ORANGE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		MAGENTA_PLATE_ITEM = register("magenta_plate", () -> new PlateItem(BlockRegistry.MAGENTA_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		LIGHT_BLUE_PLATE_ITEM = register("light_blue_plate", () -> new PlateItem(BlockRegistry.LIGHT_BLUE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		YELLOW_PLATE_ITEM = register("yellow_plate", () -> new PlateItem(BlockRegistry.YELLOW_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		LIME_PLATE_ITEM = register("lime_plate", () -> new PlateItem(BlockRegistry.LIME_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		PINK_PLATE_ITEM = register("pink_plate", () -> new PlateItem(BlockRegistry.PINK_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		GRAY_PLATE_ITEM = register("gray_plate", () -> new PlateItem(BlockRegistry.GRAY_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		LIGHT_GRAY_PLATE_ITEM = register("light_gray_plate", () -> new PlateItem(BlockRegistry.LIGHT_GRAY_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		CYAN_PLATE_ITEM = register("cyan_plate", () -> new PlateItem(BlockRegistry.CYAN_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		PURPLE_PLATE_ITEM = register("purple_plate", () -> new PlateItem(BlockRegistry.PURPLE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		BLUE_PLATE_ITEM = register("blue_plate", () -> new PlateItem(BlockRegistry.BLUE_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		BROWN_PLATE_ITEM = register("brown_plate", () -> new PlateItem(BlockRegistry.BROWN_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		GREEN_PLATE_ITEM = register("green_plate", () -> new PlateItem(BlockRegistry.GREEN_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		RED_PLATE_ITEM = register("red_plate", () -> new PlateItem(BlockRegistry.RED_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
+		BLACK_PLATE_ITEM = register("black_plate", () -> new PlateItem(BlockRegistry.BLACK_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
 		
-		MIXING_BOWL_ITEM = register("mixing_bowl", () -> new RenderableNBTBlockItem(
-																(stack, tag) -> new MixedCapability.Item(stack, new MixedInventory(9)), 
+		MIXING_BOWL_ITEM = register("mixing_bowl", () -> new RenderableNBTBlockItem((stack, tag) -> new MixedCapability.Item(stack, new MixedInventory(9)),
 																new MixingBowlItemRenderer(),
 																BlockRegistry.MIXING_BOWL_BLOCK.get(),
-																new Item.Properties().stacksTo(1).tab(DinnerPlate.tab)));
-		MEASURING_CUP_ITEM = register("measuring_cup", () -> new RenderableNBTBlockItem(
-																(stack, tag) -> new MeasuredFluidCapability(stack, 1000, FluidHelper.PILE),
+																new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB)));
+		MEASURING_CUP_ITEM = register("measuring_cup", () -> new RenderableNBTBlockItem((stack, tag) -> new MeasuredFluidCapability(stack, 1000, FluidHelper.PILE),
 																new MeasuringCupItemRenderer(),
 																BlockRegistry.MEASURING_CUP_BLOCK.get(),
-																new Item.Properties().stacksTo(1).tab(DinnerPlate.tab)));
+																new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB)));
 
 		MOCK_FOOD_ITEM = register("mock_food", MockFoodItem::new);
 		BITABLE_ITEM = register("bitable_item", () -> new BitableItem(new BitableProperties.Builder().build(), new Item.Properties()));
@@ -118,7 +125,7 @@ public class ItemRegistry {
 		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(new BitableProperties.Builder()
 																		.addSimpleBite(1, 0.25f)
 																		.build(),
-																	new Item.Properties().tab(DinnerPlate.tab)),
+																	new Item.Properties().tab(DinnerPlate.TAB)),
 															0.1f);
 
 		MUSHROOM_STEW_BUCKET = register("mushroom_stew_bucket", () -> simpleBucket(FluidRegistry.MUSHROOM_STEW_FLUID));
@@ -136,7 +143,6 @@ public class ItemRegistry {
 	}
 
 	private static Item simpleBucket(Supplier<? extends Fluid> fluid) {
-		return new BucketItem(fluid, new Item.Properties().stacksTo(1).tab(DinnerPlate.tab));
-
+		return new BucketItem(fluid, new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB));
 	}
 }
