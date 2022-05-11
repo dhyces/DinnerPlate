@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.item;
 
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.util.api.INBTMapper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -17,7 +17,9 @@ public class NBTBlockItem extends BlockItem {
 	@Override
 	protected boolean placeBlock(BlockPlaceContext pContext, BlockState pState) {
 		if (super.placeBlock(pContext, pState)) {
-			pContext.getItemInHand().getOrCreateTag().merge(INBTMapper.WRAP_BLOCK_ENTITY.apply(pContext.getItemInHand().getOrCreateTag()));
+			var tag = new CompoundTag();
+			tag.put(Constants.TAG_BLOCK_ENTITY, pContext.getItemInHand().getOrCreateTag());
+			pContext.getItemInHand().getOrCreateTag().merge(tag);
 			pContext.getItemInHand().removeTagKey(Constants.TAG_SINGLE_ITEM);
 			return true;
 		}
