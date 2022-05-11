@@ -17,13 +17,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/** TODO: this would be an item that can take an array of bites from the constructor. acts like a singleton form of the mockfooditem behavior.*/
 public class BitableItem extends Item implements IBitableItem {
 
 	protected final BitableProperties biteProperties;
 
 	public BitableItem(BitableProperties biteProperties, Properties pProperties) {
-		super(pProperties.food(biteProperties.toFoodProperties()));
+		super(pProperties.food(biteProperties));
 		this.biteProperties = biteProperties;
 	}
 
@@ -31,7 +30,6 @@ public class BitableItem extends Item implements IBitableItem {
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 		var stack = pPlayer.getItemInHand(pUsedHand);
 		if (pPlayer.canEat(canAlwaysEat(stack))) {
-			//if (!pLevel.isClientSide)
 				eat(stack, pPlayer, pLevel);
 			if (!pPlayer.getAbilities().instabuild)
 				stack.shrink(1);
@@ -92,7 +90,7 @@ public class BitableItem extends Item implements IBitableItem {
 
 	@Override
 		public boolean canBeFast(ItemStack stack) {
-			return biteProperties.isFast();
+			return biteProperties.isFastFood();
 		}
 
 	@Override
