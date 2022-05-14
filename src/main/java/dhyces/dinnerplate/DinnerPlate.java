@@ -10,6 +10,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLModContainer;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,7 +89,8 @@ public class DinnerPlate {
 			bus.addListener(this::modelBakery);
 		});
 
-		bus.addListener(this::dataGenerators);
+		if (FMLLoader.getLaunchHandler().isData())
+			bus.addListener(this::dataGenerators);
 
         registerRegistries(bus);
     }
@@ -131,11 +133,6 @@ public class DinnerPlate {
     	event.enqueueWork(() -> ItemProperties.register(ItemRegistry.MOCK_FOOD_ITEM.get(), new ResourceLocation(DinnerPlate.MODID, "bites"), (stack, level, entity, seed) -> {
     		var cap = stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve().get();
 			return (float) cap.getBiteCount(stack) / cap.getMaxBiteCount(stack);
-		}));
-    	event.enqueueWork(() -> ItemProperties.register(ItemRegistry.BITABLE_ITEM.get(), new ResourceLocation(DinnerPlate.MODID, "bites"), (stack, level, entity, seed) -> {
-			if (stack.getItem() instanceof BitableItem b)
-				return (float) b.getBiteCount(stack) / b.getMaxBiteCount(stack);
-			return 1.0f;
 		}));
     	event.enqueueWork(() -> setRenderLayers());
     }
