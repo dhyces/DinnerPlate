@@ -34,12 +34,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class MockFoodItem extends Item implements IBitableItem {
-
-	private final MockFoodItemRenderer renderer = new MockFoodItemRenderer();
 
 	public MockFoodItem() {
 		super(new Item.Properties().food(new FoodProperties.Builder().build()).stacksTo(1));
@@ -202,7 +202,7 @@ public class MockFoodItem extends Item implements IBitableItem {
 		consumer.accept(new IItemRenderProperties() {
 			@Override
 			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-				return renderer;
+				return new MockFoodItemRenderer();
 			}
 		});
 	}
