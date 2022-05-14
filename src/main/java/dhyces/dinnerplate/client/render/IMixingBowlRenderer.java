@@ -1,9 +1,6 @@
 package dhyces.dinnerplate.client.render;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import dhyces.dinnerplate.client.render.util.RectPrism;
 import net.minecraft.client.Minecraft;
@@ -15,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.Random;
 
 public interface IMixingBowlRenderer extends IFluidRenderer {
 

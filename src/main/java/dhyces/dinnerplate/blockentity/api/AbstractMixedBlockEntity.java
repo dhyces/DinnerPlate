@@ -1,9 +1,6 @@
 package dhyces.dinnerplate.blockentity.api;
 
-import java.util.stream.Stream;
-
 import com.google.common.collect.ImmutableList;
-
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
@@ -16,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.stream.Stream;
 
 public abstract class AbstractMixedBlockEntity extends AbstractDinnerBlockEntity implements IMixedInventory {
 

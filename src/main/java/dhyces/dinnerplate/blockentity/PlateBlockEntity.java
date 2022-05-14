@@ -1,14 +1,10 @@
 package dhyces.dinnerplate.blockentity;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
 import dhyces.dinnerplate.blockentity.api.IDishware;
-import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.inventory.api.ISingleItemHolder;
 import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.registry.BEntityRegistry;
@@ -19,6 +15,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDishware, ISingleItemHolder, IItemHandler {
 

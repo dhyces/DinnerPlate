@@ -1,11 +1,11 @@
 package dhyces.dinnerplate.util;
 
-import java.util.Optional;
-
 import dhyces.dinnerplate.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
+
+import java.util.Optional;
 
 public class BlockHelper {
 

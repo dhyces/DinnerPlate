@@ -1,13 +1,5 @@
 package dhyces.dinnerplate.inventory;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Stack;
-import java.util.stream.Stream;
-
-import com.google.common.collect.ImmutableList;
-
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
@@ -21,6 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Stack;
+import java.util.stream.Stream;
 
 // TODO: name could be changed since it's somewhat ambiguous. "what is mixed?", well in this case its both item and fluid stacks
 public class MixedInventory implements IMixedInventory, INBTSerializable<CompoundTag> {

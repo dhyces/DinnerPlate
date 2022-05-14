@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.datagen;
 
-import java.util.function.BiFunction;
-
 import dhyces.dinnerplate.DinnerPlate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;

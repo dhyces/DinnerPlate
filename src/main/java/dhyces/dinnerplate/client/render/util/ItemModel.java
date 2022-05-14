@@ -1,16 +1,15 @@
 package dhyces.dinnerplate.client.render.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
 import com.mojang.blaze3d.platform.NativeImage;
-
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public class ItemModel {
 

@@ -1,12 +1,6 @@
 package dhyces.dinnerplate.registry;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.mojang.datafixers.util.Pair;
-
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
@@ -24,6 +18,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
 @EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)

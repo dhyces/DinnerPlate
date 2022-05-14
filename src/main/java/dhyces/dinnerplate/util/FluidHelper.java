@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.util;
 
-import java.util.stream.Stream;
-
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -12,6 +10,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+
+import java.util.stream.Stream;
 
 public final class FluidHelper {
 

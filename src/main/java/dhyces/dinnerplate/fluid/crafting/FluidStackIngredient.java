@@ -1,19 +1,18 @@
 package dhyces.dinnerplate.fluid.crafting;
 
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class FluidStackIngredient implements Predicate<FluidStack> {
 

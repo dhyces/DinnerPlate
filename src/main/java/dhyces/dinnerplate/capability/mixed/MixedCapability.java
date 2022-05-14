@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.capability.mixed;
 
-import java.util.Optional;
-
 import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import net.minecraft.core.Direction;
@@ -16,6 +14,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.Optional;
 
 public class MixedCapability implements ICapabilitySerializable<CompoundTag>, IItemHandler, IFluidHandler {
 

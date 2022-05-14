@@ -1,11 +1,6 @@
 package dhyces.dinnerplate.bite;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.datafixers.util.Pair;
-
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.util.Couple;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +10,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /** Not to be confused with {@link java.lang.Byte}*/
 public class Bite implements IBite {

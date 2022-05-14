@@ -1,11 +1,11 @@
 package dhyces.dinnerplate.dinnerunit.api;
 
-import java.util.function.Predicate;
-
 import dhyces.dinnerplate.dinnerunit.DinnerUnitFluidStack;
 import dhyces.dinnerplate.dinnerunit.DinnerUnitItemStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.function.Predicate;
 
 public interface IDinnerUnit<T> extends Predicate<Class<T>> {
 

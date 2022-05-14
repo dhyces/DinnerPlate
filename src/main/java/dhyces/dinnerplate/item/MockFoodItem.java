@@ -1,15 +1,12 @@
 package dhyces.dinnerplate.item;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.capability.bitten.IMockFoodProvider;
 import dhyces.dinnerplate.capability.bitten.MockFoodCapability;
-import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.client.render.item.MockFoodItemRenderer;
+import dhyces.dinnerplate.registry.ItemRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.particles.ParticleOptions;
@@ -34,10 +31,11 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class MockFoodItem extends Item implements IBitableItem {
 

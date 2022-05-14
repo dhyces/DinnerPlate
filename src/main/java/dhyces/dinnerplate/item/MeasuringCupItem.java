@@ -1,13 +1,10 @@
 package dhyces.dinnerplate.item;
 
-import dhyces.dinnerplate.block.api.IForkedInteractAdapter;
 import dhyces.dinnerplate.capability.fluid.MeasuredFluidCapability;
 import dhyces.dinnerplate.client.render.item.MeasuringCupItemRenderer;
-import dhyces.dinnerplate.registry.BlockRegistry;
 import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.client.IItemRenderProperties;
 
 import java.util.function.Consumer;

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import dhyces.dinnerplate.client.render.util.RectPrism;
 import dhyces.dinnerplate.client.render.util.RenderTypes;

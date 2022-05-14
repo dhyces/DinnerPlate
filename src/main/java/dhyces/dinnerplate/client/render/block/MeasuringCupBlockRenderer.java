@@ -1,7 +1,6 @@
 package dhyces.dinnerplate.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;

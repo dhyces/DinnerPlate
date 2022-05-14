@@ -1,7 +1,6 @@
 package dhyces.dinnerplate.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import dhyces.dinnerplate.client.render.IMixingBowlRenderer;
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import dhyces.dinnerplate.util.Util;

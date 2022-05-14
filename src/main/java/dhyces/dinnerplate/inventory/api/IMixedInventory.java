@@ -1,8 +1,8 @@
 package dhyces.dinnerplate.inventory.api;
 
-import java.util.stream.Stream;
-
 import dhyces.dinnerplate.dinnerunit.FlutemStack;
+
+import java.util.stream.Stream;
 
 public interface IMixedInventory extends IItemHolder, IFluidHolder {
 

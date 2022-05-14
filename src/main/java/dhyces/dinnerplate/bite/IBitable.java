@@ -1,7 +1,6 @@
 package dhyces.dinnerplate.bite;
 
 import com.mojang.datafixers.util.Pair;
-
 import dhyces.dinnerplate.util.FoodHelper;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;

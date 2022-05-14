@@ -1,12 +1,8 @@
 package dhyces.dinnerplate.bite;
 
-import java.util.Optional;
-
 import com.mojang.datafixers.util.Pair;
-
 import dhyces.dinnerplate.util.FoodHelper;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Optional;
 
 public interface IBitableItem extends IBitable<ItemStack> {
 

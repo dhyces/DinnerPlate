@@ -1,12 +1,12 @@
 package dhyces.dinnerplate.network;
 
-import java.util.function.Supplier;
-
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
 import dhyces.dinnerplate.capability.bitten.IMockFoodProvider;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public record CapabilityMessage(LazyOptional<IMockFoodProvider> cap) {
 

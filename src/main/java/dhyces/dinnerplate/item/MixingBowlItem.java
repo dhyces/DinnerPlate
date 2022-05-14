@@ -4,13 +4,9 @@ import dhyces.dinnerplate.capability.mixed.MixedCapability;
 import dhyces.dinnerplate.client.render.item.MixingBowlItemRenderer;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class MixingBowlItem extends CapabilityNBTBlockItem {

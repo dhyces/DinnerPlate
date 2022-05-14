@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.fluid;
 
-import java.util.function.Supplier;
-
 import dhyces.dinnerplate.DinnerPlate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -11,6 +9,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+
+import java.util.function.Supplier;
 
 public abstract class StewFluid extends ForgeFlowingFluid {
 

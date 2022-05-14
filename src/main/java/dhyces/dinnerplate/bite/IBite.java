@@ -1,15 +1,14 @@
 package dhyces.dinnerplate.bite;
 
-import java.util.List;
-
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
+
+import java.util.List;
 
 public interface IBite extends INBTSerializable<CompoundTag> {
 

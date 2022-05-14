@@ -1,16 +1,12 @@
 package dhyces.dinnerplate.item;
 
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nullable;
+import java.util.function.BiFunction;
 
 public class CapabilityNBTBlockItem extends NBTBlockItem {
 

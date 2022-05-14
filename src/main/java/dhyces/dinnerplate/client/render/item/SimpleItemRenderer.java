@@ -1,10 +1,6 @@
 package dhyces.dinnerplate.client.render.item;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import dhyces.dinnerplate.client.render.util.IRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

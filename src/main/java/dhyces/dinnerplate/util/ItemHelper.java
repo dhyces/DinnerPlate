@@ -1,12 +1,12 @@
 package dhyces.dinnerplate.util;
 
-import java.util.Optional;
-
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
+
+import java.util.Optional;
 
 public class ItemHelper {
 

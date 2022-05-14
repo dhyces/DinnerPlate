@@ -1,18 +1,9 @@
 package dhyces.dinnerplate.registry;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.mojang.datafixers.util.Pair;
-
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.bite.BitableProperties;
-import dhyces.dinnerplate.capability.fluid.MeasuredFluidCapability;
-import dhyces.dinnerplate.capability.mixed.MixedCapability;
-import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.item.*;
-import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -22,6 +13,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class ItemRegistry {
 

@@ -1,7 +1,5 @@
 package dhyces.dinnerplate.block;
 
-import java.util.Optional;
-
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.util.FluidHelper;
@@ -22,6 +20,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+
+import java.util.Optional;
 
 public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEntity> {
 

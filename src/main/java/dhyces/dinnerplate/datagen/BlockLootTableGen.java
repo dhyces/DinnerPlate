@@ -1,13 +1,7 @@
 package dhyces.dinnerplate.datagen;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.registry.BlockRegistry;
 import net.minecraft.data.DataGenerator;
@@ -25,6 +19,11 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BlockLootTableGen extends BlockLoot {
 

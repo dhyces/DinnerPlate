@@ -1,12 +1,9 @@
 package dhyces.dinnerplate.block;
 
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
-import dhyces.dinnerplate.item.MockFoodItem;
 import dhyces.dinnerplate.item.PlateItem;
-import dhyces.dinnerplate.registry.ItemRegistry;
 import dhyces.dinnerplate.registry.SoundRegistry;
 import dhyces.dinnerplate.sound.DinnerSoundTypes;
 import dhyces.dinnerplate.util.BlockHelper;

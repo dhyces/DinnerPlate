@@ -1,13 +1,12 @@
 package dhyces.dinnerplate.capability.fluid;
 
-import java.util.Optional;
-import java.util.function.Function;
-
 import com.google.common.base.Supplier;
-
 import dhyces.dinnerplate.inventory.api.IFluidHolder;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 @Deprecated(forRemoval = true) /** Unused in the current iteration, if it is unused in the next few iterations, remove*/
 public class ListenedMultiFluidTank implements IFluidHandler {
