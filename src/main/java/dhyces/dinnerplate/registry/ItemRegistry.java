@@ -2,8 +2,6 @@ package dhyces.dinnerplate.registry;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
@@ -13,32 +11,14 @@ import dhyces.dinnerplate.bite.BitableProperties;
 import dhyces.dinnerplate.capability.fluid.MeasuredFluidCapability;
 import dhyces.dinnerplate.capability.mixed.MixedCapability;
 import dhyces.dinnerplate.inventory.MixedInventory;
-import dhyces.dinnerplate.item.BitableItem;
-import dhyces.dinnerplate.item.MockFoodItem;
-import dhyces.dinnerplate.item.PlateItem;
-import dhyces.dinnerplate.item.RenderableNBTBlockItem;
-import dhyces.dinnerplate.client.render.item.MeasuringCupItemRenderer;
-import dhyces.dinnerplate.client.render.item.MixingBowlItemRenderer;
+import dhyces.dinnerplate.item.*;
 import dhyces.dinnerplate.util.FluidHelper;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -69,7 +49,6 @@ public class ItemRegistry {
 	public static final RegistryObject<Item> MEASURING_CUP_ITEM;
 
 	public static final RegistryObject<Item> MOCK_FOOD_ITEM;
-	public static final RegistryObject<Item> BITABLE_ITEM;
 
 	public static final RegistryObject<Item> CUT_CARROT_ITEM;
 
@@ -110,17 +89,10 @@ public class ItemRegistry {
 		RED_PLATE_ITEM = register("red_plate", () -> new PlateItem(BlockRegistry.RED_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
 		BLACK_PLATE_ITEM = register("black_plate", () -> new PlateItem(BlockRegistry.BLACK_PLATE_BLOCK.get(), new Item.Properties().stacksTo(8).tab(DinnerPlate.TAB)));
 		
-		MIXING_BOWL_ITEM = register("mixing_bowl", () -> new RenderableNBTBlockItem((stack, tag) -> new MixedCapability.Item(stack, new MixedInventory(9)),
-																new MixingBowlItemRenderer(),
-																BlockRegistry.MIXING_BOWL_BLOCK.get(),
-																new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB)));
-		MEASURING_CUP_ITEM = register("measuring_cup", () -> new RenderableNBTBlockItem((stack, tag) -> new MeasuredFluidCapability(stack, 1000, FluidHelper.PILE),
-																new MeasuringCupItemRenderer(),
-																BlockRegistry.MEASURING_CUP_BLOCK.get(),
-																new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB)));
+		MIXING_BOWL_ITEM = register("mixing_bowl", () -> new MixingBowlItem(BlockRegistry.MIXING_BOWL_BLOCK.get(), new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB)));
+		MEASURING_CUP_ITEM = register("measuring_cup", () -> new MeasuringCupItem(BlockRegistry.MEASURING_CUP_BLOCK.get(), new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB)));
 
 		MOCK_FOOD_ITEM = register("mock_food", MockFoodItem::new);
-		BITABLE_ITEM = register("bitable_item", () -> new BitableItem(new BitableProperties.Builder().build(), new Item.Properties()));
 
 		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(new BitableProperties.Builder()
 																		.addSimpleBite(1, 0.25f)
