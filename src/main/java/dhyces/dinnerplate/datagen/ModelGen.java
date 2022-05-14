@@ -77,6 +77,11 @@ public class ModelGen extends ItemModelProvider {
 		put(threeBite(bittenRL("golden_apple")));
 		put(threeBite(bittenRL("mutton")));
 		put(threeBite(bittenRL("cooked_mutton")));
+		put(threeBite(bittenRL("cod")));
+		put(threeBite(bittenRL("salmon")));
+		put(threeBite(bittenRL("tropical_fish")));
+		put(threeBite(bittenRL("cooked_cod")));
+		put(threeBite(bittenRL("cooked_salmon")));
 
 		put(withExistingParent("item/bitten/bitten_dried_kelp", "dried_kelp"));
 

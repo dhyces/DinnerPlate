@@ -17,19 +17,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public class BitableItem extends Item implements IBitableItem {
 
-	protected final BitableProperties biteProperties;
-
-	public BitableItem(BitableProperties biteProperties, Properties pProperties) {
-		super(pProperties.food(biteProperties));
-		this.biteProperties = biteProperties;
+	public BitableItem(Function<BitableProperties.Builder, BitableProperties.Builder> biteProperties, Properties pProperties) {
+		super(pProperties.food(biteProperties.apply(new BitableProperties.Builder()).build()));
 	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 		var stack = pPlayer.getItemInHand(pUsedHand);
-		if (pPlayer.canEat(canAlwaysEat(stack))) {
+		if (pPlayer.canEat(canAlwaysEat(stack, pPlayer))) {
 				eat(stack, pPlayer, pLevel);
 			if (!pPlayer.getAbilities().instabuild)
 				stack.shrink(1);
@@ -37,11 +37,9 @@ public class BitableItem extends Item implements IBitableItem {
 		}
 		return InteractionResultHolder.pass(stack);
 	}
-	
-	@Override
-	public FoodProperties getFoodProperties(ItemStack stack, LivingEntity entity) {
-		// TODO Auto-generated method stub
-		return super.getFoodProperties(stack, entity);
+
+	public BitableProperties getBitableProperties(ItemStack stack, LivingEntity entity) {
+		return (BitableProperties) getFoodProperties(stack, entity);
 	}
 
 	@Override
@@ -60,7 +58,7 @@ public class BitableItem extends Item implements IBitableItem {
 	}
 
 	@Override
-	public void setBiteCount(ItemStack stack, int count) {
+	public void setBiteCount(ItemStack stack, LivingEntity entity, int count) {
 		if (count == 0)
 			stack.getOrCreateTag().remove(Constants.TAG_BITE_COUNT);
 		else
@@ -73,33 +71,33 @@ public class BitableItem extends Item implements IBitableItem {
 	}
 
 	@Override
-	public int getMaxBites(ItemStack stack) {
-		return biteProperties.getBiteSize();
+	public int getMaxBites(ItemStack stack, LivingEntity entity) {
+		return getBitableProperties(stack, entity).getBiteSize();
 	}
 
 	@Override
-	public boolean incrementBiteCount(ItemStack stack) {
-		setBiteCount(stack, getBiteCount(stack) + 1);
-		return getBiteCount(stack) >= getMaxBiteCount(stack);
+	public boolean incrementBiteCount(ItemStack stack, LivingEntity entity) {
+		setBiteCount(stack, entity,getBiteCount(stack) + 1);
+		return getBiteCount(stack) >= getMaxBiteCount(stack, entity);
 	}
 
 	@Override
-	public IBite getBite(ItemStack stack, int chew) {
-		return biteProperties.getBite(getBiteCount(stack));
+	public IBite getBite(ItemStack stack, LivingEntity entity, int chew) {
+		return getBitableProperties(stack, entity).getBite(getBiteCount(stack));
 	}
 
 	@Override
-		public boolean canBeFast(ItemStack stack) {
-			return biteProperties.isFastFood();
+		public boolean canBeFast(ItemStack stack, LivingEntity entity) {
+			return getBitableProperties(stack, entity).isFastFood();
 		}
 
 	@Override
-	public boolean isMeat(ItemStack stack) {
-		return biteProperties.isMeat();
+	public boolean isMeat(ItemStack stack, LivingEntity entity) {
+		return getBitableProperties(stack, entity).isMeat();
 	}
 
 	@Override
-	public boolean canAlwaysEat(ItemStack stack) {
-		return biteProperties.canAlwaysEat();
+	public boolean canAlwaysEat(ItemStack stack, LivingEntity entity) {
+		return getBitableProperties(stack, entity).canAlwaysEat();
 	}
 }
