@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,7 @@ public interface IMixingBowlRenderer extends IFluidRenderer {
 
 	public default void renderItems(PoseStack poseStack, MultiBufferSource source, float fluidHeight, int packedLight, int packedOverlay, ItemStack... stacks) {
 		poseStack.pushPose();
-		poseStack.translate(fromPixel(7), fromPixel(fluidHeight) + 0.075, fromPixel(7));
+		poseStack.translate(fromPixel(8), fromPixel(fluidHeight + 2.5F), fromPixel(8));
 		poseStack.scale(.25f, .25f, .25f);
 		for (int i = 0; i < stacks.length; i++) {
 			Random r = new Random(i);
@@ -36,11 +37,7 @@ public interface IMixingBowlRenderer extends IFluidRenderer {
 			// TODO: rotations
 			poseStack.translate(nd, 0, nd1);
 			poseStack.mulPose(doubleQuaternion(nd * 50, nd * 50, nd * 50, true));
-			if (itemModel.isCustomRenderer()) {
-				RenderProperties.get(item).getItemStackRenderer().renderByItem(item, TransformType.NONE, poseStack, source, packedLight, packedOverlay);
-			} else {
-				Minecraft.getInstance().getItemRenderer().renderModelLists(itemModel, item, packedLight, packedOverlay, poseStack, source.getBuffer(RenderType.itemEntityTranslucentCull(atlas())));
-			}
+			Minecraft.getInstance().getItemRenderer().render(item, TransformType.NONE, false, poseStack, source, packedLight, packedOverlay, itemModel);
 			poseStack.popPose();
 		}
 		poseStack.popPose();
@@ -48,7 +45,7 @@ public interface IMixingBowlRenderer extends IFluidRenderer {
 	
 	public default void renderFluids(BlockPos pos, MultiBufferSource source, PoseStack poseStack, float fluidHeight, float partialTick, int packedLight, FluidStack... fluids) {
 		tessalateFluids(fluids, pos, RectPrism.fromPixel(3, 2, 3).toPixel(13, 2.1 + fluidHeight, 13),
-				source.getBuffer(RenderType.itemEntityTranslucentCull(atlas())), poseStack, partialTick, packedLight, Direction.UP);
+				source.getBuffer(RenderType.translucentNoCrumbling()), poseStack, partialTick, packedLight, Direction.UP);
 	}
 	
 }

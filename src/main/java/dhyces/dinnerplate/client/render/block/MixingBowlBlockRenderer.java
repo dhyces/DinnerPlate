@@ -26,10 +26,10 @@ public class MixingBowlBlockRenderer extends SimpleBlockRenderer<MixingBowlBlock
 		if (!bEntity.hasLevel() || bEntity.getBlockPos() == null)
 			return;
 		var fluidHeight = ((bEntity.updateRenderable("", 0.05f)/100) * 0.4375f);
+		if (bEntity.hasFluid())
+			renderFluids(bEntity.getBlockPos(), pBufferSource, poseStack, fluidHeight, pPartialTick, pPackedLight, bEntity.mixedStream().filter(FlutemStack::isFluid).map(c -> c.getFluidStack()).toArray(FluidStack[]::new));
 		if (bEntity.hasItem()) {
 			renderItems(poseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, bEntity.getItems().toArray(ItemStack[]::new));
 		}
-		if (bEntity.hasFluid())
-			renderFluids(bEntity.getBlockPos(), pBufferSource, poseStack, fluidHeight, pPartialTick, pPackedLight, bEntity.mixedStream().filter(FlutemStack::isFluid).map(c -> c.getFluidStack()).toArray(FluidStack[]::new));
 	}
 }
