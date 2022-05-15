@@ -55,7 +55,7 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 						return InteractionResult.sidedSuccess(isClient);
 				}
 			}
-			if (!preferredStack.is(Tags.COOK_WARE_BLACKLIST)) {
+			if (!preferredStack.is(Tags.COOKWARE_BLACKLIST)) {
 				if (!isClient) {
 					var itemCopy = ItemHandlerHelper.copyStackWithSize(preferredStack, 1);
 					var ret = bEntity.insertItem(itemCopy);

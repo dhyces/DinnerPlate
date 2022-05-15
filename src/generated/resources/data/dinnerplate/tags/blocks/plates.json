@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "dinnerplate:white_plate",
+    "dinnerplate:orange_plate",
+    "dinnerplate:magenta_plate",
+    "dinnerplate:light_blue_plate",
+    "dinnerplate:yellow_plate",
+    "dinnerplate:lime_plate",
+    "dinnerplate:pink_plate",
+    "dinnerplate:gray_plate",
+    "dinnerplate:light_gray_plate",
+    "dinnerplate:cyan_plate",
+    "dinnerplate:purple_plate",
+    "dinnerplate:blue_plate",
+    "dinnerplate:brown_plate",
+    "dinnerplate:green_plate",
+    "dinnerplate:red_plate",
+    "dinnerplate:black_plate"
+  ]
+}

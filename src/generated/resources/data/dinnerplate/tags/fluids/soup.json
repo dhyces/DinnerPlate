@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "dinnerplate:beetroot_soup",
+    "dinnerplate:flowing_beetroot_soup",
+    "dinnerplate:mushroom_stew",
+    "dinnerplate:flowing_mushroom_stew",
+    "dinnerplate:rabbit_stew",
+    "dinnerplate:flowing_rabbit_stew"
+  ]
+}
