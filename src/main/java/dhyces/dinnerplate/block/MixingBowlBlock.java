@@ -2,6 +2,7 @@ package dhyces.dinnerplate.block;
 
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
+import dhyces.dinnerplate.tags.Tags;
 import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +25,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> {
 
-	private static final IntegerProperty MIX_POSITION = IntegerProperty.create("mix_pos", 0, 2);
+	public static final IntegerProperty MIX_POSITION = IntegerProperty.create("mix_pos", 0, 2);
 
 	public MixingBowlBlock(Properties properties) {
 		super(properties);
@@ -54,13 +55,15 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 						return InteractionResult.sidedSuccess(isClient);
 				}
 			}
-			if (!isClient) {
-				var itemCopy = ItemHandlerHelper.copyStackWithSize(preferredStack, 1);
-				var ret = bEntity.insertItem(itemCopy);
-				if (ret.isEmpty() && !player.getAbilities().instabuild)
-					preferredStack.shrink(1);
+			if (!preferredStack.is(Tags.COOK_WARE_BLACKLIST)) {
+				if (!isClient) {
+					var itemCopy = ItemHandlerHelper.copyStackWithSize(preferredStack, 1);
+					var ret = bEntity.insertItem(itemCopy);
+					if (ret.isEmpty() && !player.getAbilities().instabuild)
+						preferredStack.shrink(1);
+				}
+				return InteractionResult.sidedSuccess(isClient);
 			}
-			return InteractionResult.sidedSuccess(isClient);
 		}
 		if (bEntity.hasRecipe()) {
 			level.setBlockAndUpdate(pos, state.cycle(MIX_POSITION));

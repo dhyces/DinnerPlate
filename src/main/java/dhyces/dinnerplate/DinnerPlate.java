@@ -9,6 +9,7 @@ import dhyces.dinnerplate.client.render.block.MixingBowlBlockRenderer;
 import dhyces.dinnerplate.client.render.block.PlateBlockRenderer;
 import dhyces.dinnerplate.datagen.BlockLootTableGen;
 import dhyces.dinnerplate.datagen.ModelGen;
+import dhyces.dinnerplate.datagen.TagGen;
 import dhyces.dinnerplate.registry.*;
 import dhyces.dinnerplate.util.BlockHelper;
 import dhyces.dinnerplate.util.ResourceHelper;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -206,7 +208,12 @@ public class DinnerPlate {
     private void dataGenerators(final GatherDataEvent event) {
     	event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID,  event.getExistingFileHelper()));
     	event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
+		event.getGenerator().addProvider(new TagGen(event.getGenerator(), new BlockTagsProvider(event.getGenerator()), MODID, event.getExistingFileHelper()));
     }
+
+	public static ResourceLocation modLoc(String path) {
+		return new ResourceLocation(MODID, path);
+	}
     
     public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 

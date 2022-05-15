@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class BlockRegistry {
 
-	private static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, DinnerPlate.MODID);
+	public static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, DinnerPlate.MODID);
 
 	public static final RegistryObject<Block> WHITE_PLATE_BLOCK;
 	public static final RegistryObject<Block> ORANGE_PLATE_BLOCK;
