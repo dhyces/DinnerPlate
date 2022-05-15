@@ -83,6 +83,7 @@ public class ModelGen extends ItemModelProvider {
 		put(threeBite(bittenRL("cooked_cod")));
 		put(threeBite(bittenRL("cooked_salmon")));
 
+
 		put(withExistingParent("item/bitten/bitten_dried_kelp", "dried_kelp"));
 
 		put(withExistingParent("item/bitten/bitten_mock_food", "air"));
@@ -99,7 +100,7 @@ public class ModelGen extends ItemModelProvider {
 	}
 	
 	public ResourceLocation bittenRL(String item) {
-		return new ResourceLocation(modid, "bitten_" + item);
+		return modLoc("bitten_" + item);
 	}
 
 	public ItemModelBuilder threeBite(ResourceLocation location) {
