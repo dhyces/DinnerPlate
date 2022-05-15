@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
@@ -63,7 +64,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
 			var bittenModel = Minecraft.getInstance().getModelManager().getModel(bittenInvRL);
 			if (!bittenModel.equals(Minecraft.getInstance().getModelManager().getMissingModel()) && !bittenModel.getOverrides().equals(ItemOverrides.EMPTY)) {
-				model = bittenModel.getOverrides().resolve(bittenModel, pStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
+				model = bittenModel.getOverrides().resolve(bittenModel, pStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 42);
 			} else if (testGen) {
 				var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
 
@@ -90,7 +91,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 			}
 		}
 		pPoseStack.pushPose();
-		var consumer = pBuffer.getBuffer(RenderType.itemEntityTranslucentCull(atlas()));
+		var consumer = ItemRenderer.getFoilBufferDirect(pBuffer, RenderType.itemEntityTranslucentCull(atlas()), false, realStack.hasFoil());
 		Minecraft.getInstance().getItemRenderer().renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, consumer);
 		
 		pPoseStack.popPose();
