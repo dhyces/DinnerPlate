@@ -13,13 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends BlockEntityWithoutLevelRenderer implements BlockEntityRenderer<T> {
 
     public SimpleBlockItemRenderer() {
-        this(Minecraft.getInstance() != null ? Minecraft.getInstance().getBlockEntityRenderDispatcher() : null,
-                Minecraft.getInstance() != null ? Minecraft.getInstance().getEntityModels() : null);
+        this(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
     }
 
     public SimpleBlockItemRenderer(BlockEntityRendererProvider.Context context) {
@@ -31,8 +31,8 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
     }
 
     @Override
-    public void renderByItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack,
-                             MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemTransforms.TransformType pTransformType, @NotNull PoseStack pPoseStack,
+                             @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         render(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
     }
 

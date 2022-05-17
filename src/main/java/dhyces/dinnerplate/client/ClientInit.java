@@ -6,9 +6,9 @@ import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.client.model.SimpleCustomBakedModelWrapper;
+import dhyces.dinnerplate.client.render.MeasuringCupRenderer;
 import dhyces.dinnerplate.client.render.MixingBowlRenderer;
-import dhyces.dinnerplate.client.render.block.MeasuringCupBlockRenderer;
-import dhyces.dinnerplate.client.render.block.PlateBlockRenderer;
+import dhyces.dinnerplate.client.render.PlateRenderer;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.registry.BlockRegistry;
 import dhyces.dinnerplate.registry.ItemRegistry;
@@ -105,9 +105,9 @@ public class ClientInit {
     }
 
     private void entityRenders(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(BEntityRegistry.PLATE_ENTITY.get(), PlateBlockRenderer::new);
+        event.registerBlockEntityRenderer(BEntityRegistry.PLATE_ENTITY.get(), PlateRenderer::new);
         event.registerBlockEntityRenderer(BEntityRegistry.MIXING_BOWL_ENTITY.get(), MixingBowlRenderer::new);
-        event.registerBlockEntityRenderer(BEntityRegistry.MEASURING_CUP_ENTITY.get(), MeasuringCupBlockRenderer::new);
+        event.registerBlockEntityRenderer(BEntityRegistry.MEASURING_CUP_ENTITY.get(), MeasuringCupRenderer::new);
     }
 
     private void modelBakery(final ModelBakeEvent e) {

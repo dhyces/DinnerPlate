@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.item;
 
 import dhyces.dinnerplate.capability.fluid.MeasuredFluidCapability;
-import dhyces.dinnerplate.client.render.item.MeasuringCupItemRenderer;
+import dhyces.dinnerplate.client.render.MeasuringCupRenderer;
 import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
@@ -20,7 +20,7 @@ public class MeasuringCupItem extends CapabilityNBTBlockItem {
 		consumer.accept(new IItemRenderProperties() {
 			@Override
 			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-				return new MeasuringCupItemRenderer();
+				return new MeasuringCupRenderer();
 			}
 		});
 	}

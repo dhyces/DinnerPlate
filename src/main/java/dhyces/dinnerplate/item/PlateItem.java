@@ -1,6 +1,6 @@
 package dhyces.dinnerplate.item;
 
-import dhyces.dinnerplate.client.render.item.PlateItemRenderer;
+import dhyces.dinnerplate.client.render.PlateRenderer;
 import dhyces.dinnerplate.sound.DinnerSoundTypes;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.Direction;
@@ -32,7 +32,7 @@ public class PlateItem extends CapabilityNBTBlockItem {
 		consumer.accept(new IItemRenderProperties() {
 			@Override
 			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-				return new PlateItemRenderer();
+				return new PlateRenderer();
 			}
 		});
 	}
