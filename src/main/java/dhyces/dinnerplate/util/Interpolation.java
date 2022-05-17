@@ -2,32 +2,36 @@ package dhyces.dinnerplate.util;
 
 import net.minecraft.util.Mth;
 
+import java.util.function.Supplier;
+
 public class Interpolation {
 
 	private float previous;
-	private float goal;
+	private Supplier<Float> goal;
 	protected Chaser chaser;
 
 
-	public Interpolation(float goal) {
+	public Interpolation(Supplier<Float> goal) {
 		this(0, goal);
 	}
 
-	public Interpolation(float from, float goal) {
+	public Interpolation(float from, Supplier<Float> goal) {
 		this(from, goal, (c, p, v) -> Mth.lerp(c, p, v));
 	}
 
-	public Interpolation(float from, float goal, Chaser chaser) {
+	public Interpolation(float from, Supplier<Float> goal, Chaser chaser) {
+		this.previous = from;
 		this.goal = goal;
 		this.chaser = chaser;
 	}
 
 	public float updateChase(float partial) {
-		if (Mth.equal(previous, goal)) {
-			return this.goal;
+		var goalResolved = goal.get();
+		if (Mth.equal(previous, goalResolved)) {
+			return this.previous = goalResolved;
 		}
 		var prev = this.previous;
-		this.previous = chaser.chase(partial, previous, goal);
+		this.previous = chaser.chase(partial, previous, goalResolved);
 		return prev;
 	}
 
@@ -35,7 +39,7 @@ public class Interpolation {
 		return this.previous;
 	}
 
-	public void setVals(float from, float goal) {
+	public void setVals(float from, Supplier<Float> goal) {
 		previous = from;
 		this.goal = goal;
 	}
