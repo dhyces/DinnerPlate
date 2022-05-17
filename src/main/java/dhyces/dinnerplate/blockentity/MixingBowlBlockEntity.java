@@ -11,7 +11,10 @@ import dhyces.dinnerplate.util.Interpolation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -22,7 +25,8 @@ import net.minecraftforge.items.IItemHandler;
 public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory, IRenderableTracker {
 
 	private byte mixes = 0;
-	public Interpolation renderedFluid = new Interpolation(1);
+	@OnlyIn(Dist.CLIENT)
+	Interpolation renderedFluid = new Interpolation(() -> (float)getFluidAmount());
 	private MixedCapability cap = new MixedCapability(this);
 	private LazyOptional<IFluidHandler> lazyFluid = LazyOptional.of(() -> cap);
 	private LazyOptional<IItemHandler> lazyItem = LazyOptional.of(() -> cap);
@@ -51,14 +55,6 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 	public void read(CompoundTag tag) {
 		super.read(tag);
 		mixes = tag.getByte(Constants.TAG_MIX_STATE);
-	}
-
-	@Override
-	public void readClient(CompoundTag tag) {
-		var fluidPrev = getFluidAmount();
-		super.readClient(tag);
-		if (fluidPrev != getFluidAmount())
-			renderedFluid.setVals(fluidPrev, getFluidAmount());
 	}
 
 	@Override
