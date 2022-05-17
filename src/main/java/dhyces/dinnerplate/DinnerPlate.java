@@ -1,15 +1,20 @@
 package dhyces.dinnerplate;
 
 import dhyces.dinnerplate.bite.IBitable;
+import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.capability.CapabilityEventSubscriber;
+import dhyces.dinnerplate.client.ClientInit;
 import dhyces.dinnerplate.client.model.SimpleCustomBakedModelWrapper;
+import dhyces.dinnerplate.client.render.MixingBowlRenderer;
+import dhyces.dinnerplate.client.render.SimpleBlockItemRenderer;
 import dhyces.dinnerplate.client.render.block.MeasuringCupBlockRenderer;
 import dhyces.dinnerplate.client.render.block.MixingBowlBlockRenderer;
 import dhyces.dinnerplate.client.render.block.PlateBlockRenderer;
 import dhyces.dinnerplate.datagen.BlockLootTableGen;
 import dhyces.dinnerplate.datagen.ModelGen;
 import dhyces.dinnerplate.datagen.TagGen;
+import dhyces.dinnerplate.item.BitableItem;
 import dhyces.dinnerplate.registry.*;
 import dhyces.dinnerplate.util.BlockHelper;
 import dhyces.dinnerplate.util.ResourceHelper;
@@ -58,8 +63,6 @@ public class DinnerPlate {
 
 	public static final String MODID = "dinnerplate";
 
-	private List<Item> edibleItems;
-
     public static final Logger LOGGER = LogManager.getLogger(DinnerPlate.class);
 
     public static void LOG_INFO(String str) {
@@ -73,11 +76,7 @@ public class DinnerPlate {
 
         bus.addListener(this::setup);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			bus.addListener(this::clientSetup);
-			bus.addListener(this::modelRegistry);
-			bus.addListener(EventPriority.HIGHEST, this::reloadSeparateModels);
-			bus.addListener(this::entityRenders);
-			bus.addListener(this::modelBakery);
+			new ClientInit(bus);
 		});
 
 		if (FMLLoader.getLaunchHandler().isData())
@@ -97,118 +96,14 @@ public class DinnerPlate {
     private void setup(final FMLCommonSetupEvent event) {
 
     }
-    
-	private void clientSetup(final FMLClientSetupEvent event) {
-    	ItemPropertyFunction platePropertyFunction = (stack, level, entity, seed) -> {
-			return (float) BlockHelper.getPropertyFromTag(PlateBlock.PLATES, BlockHelper.getBlockStateTag(stack).orElse(new CompoundTag())) / 8;
-		};
-		var platePropertyRL = new ResourceLocation(DinnerPlate.MODID, "plates");
-    	event.enqueueWork(() -> {
-    		ItemProperties.register(ItemRegistry.WHITE_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.ORANGE_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.MAGENTA_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.LIGHT_BLUE_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.YELLOW_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.LIME_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.PINK_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.GRAY_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.LIGHT_GRAY_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.CYAN_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.PURPLE_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.BLUE_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.BROWN_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.GREEN_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.RED_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		ItemProperties.register(ItemRegistry.BLACK_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-    		});
-    	event.enqueueWork(() -> ItemProperties.register(ItemRegistry.MOCK_FOOD_ITEM.get(), new ResourceLocation(DinnerPlate.MODID, "bites"), (stack, level, entity, seed) -> {
-    		var cap = stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve().get();
-			return (float) cap.getBiteCount(stack) / cap.getMaxBiteCount(stack);
-		}));
-    	event.enqueueWork(() -> setRenderLayers());
-    }
-
-    private void setRenderLayers() {
-    	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MEASURING_CUP_BLOCK.get(), RenderType.translucent());
-    	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MUSHROOM_STEW_FLUID_BLOCK.get(), RenderType.translucent());
-    	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BEETROOT_SOUP_FLUID_BLOCK.get(), RenderType.translucent());
-    	ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RABBIT_STEW_FLUID_BLOCK.get(), RenderType.translucent());
-    }
-
-    private void modelRegistry(final ModelRegistryEvent event) {
-    	edibleItems = ForgeRegistries.ITEMS.getEntries().stream().filter(c -> c.getValue().isEdible()).map(c -> c.getValue()).toList();
-    	prepareSeparateModels();
-    }
-
-    // TODO: remove the println.
-    private void prepareSeparateModels() {
-    	edibleItems.stream().filter(c -> !(c instanceof IBitable))
-		.map(c -> {
-			var n = new ResourceLocation(MODID, "item/bitten/bitten_" + c.getRegistryName().getPath());
-			System.out.println(c + " new one " + n);
-			return n;
-			})
-		.forEach(ForgeModelBakery::addSpecialModel);
-    }
-
-    private void reloadSeparateModels(final RegisterClientReloadListenersEvent event) {
-    	event.registerReloadListener(new PreparableReloadListener() {
-
-			@Override
-			public CompletableFuture<Void> reload(PreparationBarrier pPreparationBarrier, ResourceManager pResourceManager,
-					ProfilerFiller pPreparationsProfiler, ProfilerFiller pReloadProfiler, Executor pBackgroundExecutor,
-					Executor pGameExecutor) {
-				return pPreparationBarrier.wait(Unit.INSTANCE).thenRunAsync(() -> prepareSeparateModels());
-			}
-		});
-    }
-
-    private void entityRenders(final EntityRenderersEvent.RegisterRenderers event) {
-    	event.registerBlockEntityRenderer(BEntityRegistry.PLATE_ENTITY.get(), PlateBlockRenderer::new);
-    	event.registerBlockEntityRenderer(BEntityRegistry.MIXING_BOWL_ENTITY.get(), MixingBowlBlockRenderer::new);
-    	event.registerBlockEntityRenderer(BEntityRegistry.MEASURING_CUP_ENTITY.get(), MeasuringCupBlockRenderer::new);
-    }
-
-    private void modelBakery(final ModelBakeEvent e) {
-    	putCustomInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.MIXING_BOWL_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.MEASURING_CUP_ITEM.getId());
-    	
-    	putCustomInRegistry(e, ItemRegistry.WHITE_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.ORANGE_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.MAGENTA_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.LIGHT_BLUE_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.YELLOW_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.LIME_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.PINK_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.GRAY_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.LIGHT_GRAY_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.CYAN_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.PURPLE_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.BLUE_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.BROWN_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.GREEN_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.RED_PLATE_ITEM.getId());
-    	putCustomInRegistry(e, ItemRegistry.BLACK_PLATE_ITEM.getId());
-    }
-
-    private BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
-    	return e.getModelManager().getModel(ResourceHelper.inventoryModel(resource));
-    }
-
-    private void putCustomInRegistry(final ModelBakeEvent e, ResourceLocation resource) {
-    	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, resource)));
-    }
-
-    // TODO: remove if unused
-//    private void putInRegistry(final ModelBakeEvent e, ResourceLocation resource, BakedModel model) {
-//    	e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), model);
-//    }
 
     private void dataGenerators(final GatherDataEvent event) {
     	event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID,  event.getExistingFileHelper()));
     	event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
-		event.getGenerator().addProvider(new TagGen(event.getGenerator(), new BlockTagsProvider(event.getGenerator()), MODID, event.getExistingFileHelper()));
+		var blockGen = new TagGen.BlockTag(event.getGenerator(), MODID, event.getExistingFileHelper());
+		event.getGenerator().addProvider(blockGen);
+		event.getGenerator().addProvider(new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
+		event.getGenerator().addProvider(new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
     }
 
 	public static ResourceLocation modLoc(String path) {
