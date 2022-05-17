@@ -4,6 +4,7 @@ import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
 import dhyces.dinnerplate.tags.Tags;
 import dhyces.dinnerplate.util.FluidHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -87,6 +88,8 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
 		if (bEntity.hasItem()) {
 			var i = bEntity.removeLastItem();
 			insertInvOrSpawn(level, pos, 0.25, player.getInventory(), i);
+			if (isClient)
+				Minecraft.getInstance().getItemInHandRenderer().itemUsed(hand);
 			return InteractionResult.CONSUME;
 		}
 		return super.shiftRightClick(state, bEntity, level, pos, player, hand, res, isClient);
