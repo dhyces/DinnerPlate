@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.Quaternion;
+import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -78,7 +79,7 @@ public interface IRenderer {
 		var base = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
 		return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), new Random(42L).nextInt());
 	}
-	
+
 	public default void renderItem(ItemStack stack, PoseStack poseStack, VertexConsumer consumer, int packedLight, int packedOverlay) {
 		var model = getResolvedItemModel(stack);
 		Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, consumer);
@@ -98,6 +99,10 @@ public interface IRenderer {
 
 	public default LocalPlayer clientPlayer() {
 		return Minecraft.getInstance().player;
+	}
+
+	public default boolean isFabulous() {
+		return Minecraft.getInstance().options.graphicsMode.equals(GraphicsStatus.FABULOUS);
 	}
 
 	public default ResourceLocation atlas() {
