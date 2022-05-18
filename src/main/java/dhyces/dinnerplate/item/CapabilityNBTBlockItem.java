@@ -12,10 +12,6 @@ public class CapabilityNBTBlockItem extends NBTBlockItem {
 
 	protected final BiFunction<ItemStack, CompoundTag, ICapabilityProvider> cap;
 
-	public CapabilityNBTBlockItem(Block pBlock, Properties pProperties) {
-		this((i, c) -> null, pBlock, pProperties);
-	}
-
 	public CapabilityNBTBlockItem(BiFunction<ItemStack, CompoundTag, ICapabilityProvider> capability, Block pBlock, Properties pProperties) {
 		super(pBlock, pProperties);
 		this.cap = capability;
