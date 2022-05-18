@@ -1,5 +1,6 @@
 package dhyces.dinnerplate.capability.bitten;
 
+import dhyces.dinnerplate.bite.BitableProperties;
 import dhyces.dinnerplate.bite.Bite;
 import dhyces.dinnerplate.bite.IBite;
 import dhyces.dinnerplate.util.Couple;
@@ -28,13 +29,13 @@ public class MockFoodProvider implements IMockFoodProvider {
 	}
 
 	@Override
-	public void initialize(ItemStack stack, int chewCount) {
+	public void initialize(ItemStack stack, LivingEntity entity, int chewCount) {
 		if (!stack.isEdible()) return;
 		this.stack = stack;
-		var biteList = new Bite.Builder().build().splitInto(stack.getItem().getFoodProperties(), chewCount);
+		var biteProps = BitableProperties.threeBite(stack.getItem().getFoodProperties(stack, entity));
 		// TODO: there's an issue here in the case there is an array out of bounds error if the splitInto method returns a list with a
-		// size less than 2
-		this.bites = Couple.coupleOf(biteList.get(0), biteList.get(1));
+		//  size less than 2
+		this.bites = Couple.coupleOf(biteProps.getBite(0), biteProps.getBite(1));
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class MockFoodProvider implements IMockFoodProvider {
 
 	@Override
 	public boolean incrementBiteCount() {
-		return ++chewCount >= getMaxBiteCount(stack);
+		return ++chewCount >= getMaxBiteCount(stack, null);
 	}
 
 	@Override

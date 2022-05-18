@@ -5,6 +5,7 @@ import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.util.Couple;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +22,10 @@ public class Bite implements IBite {
 	private int nutrition;
 	private float saturationMod;
 	private List<Pair<MobEffectInstance, Float>> effectsList;
+
+	Bite(int nutrition, float saturationMod) {
+		this(nutrition, saturationMod, List.of());
+	}
 
 	Bite(int nutritionIn, float saturationModIn, List<Pair<MobEffectInstance, Float>> effectsListIn) {
 		this.nutrition = nutritionIn;
@@ -69,7 +74,7 @@ public class Bite implements IBite {
 	public void deserializeNBT(CompoundTag nbt) {
 		this.nutrition = nbt.getInt(Constants.TAG_NUTRITION);
 		this.saturationMod = nbt.getFloat(Constants.TAG_SATURATION_MOD);
-		var effectsTag = nbt.getList(Constants.TAG_EFFECTS_LIST, 10);
+		var effectsTag = nbt.getList(Constants.TAG_EFFECTS_LIST, Tag.TAG_COMPOUND);
 		effectsTag.forEach(c -> {
 			CompoundTag castedTag = (CompoundTag) c;
 			effectsList.add(Pair.of(MobEffectInstance.load(castedTag), castedTag.getFloat(Constants.TAG_EFFECT_CHANCE)));
@@ -82,58 +87,6 @@ public class Bite implements IBite {
 		string += ", Saturation Mod: " + saturationMod;
 		string += ", Effects: " + Arrays.toString(effectsList.toArray());
 		return string;
-	}
-
-	/** This splits as best it can and the last entry contains whatever could not be evenly divided*/
-	@Override
-	public List<IBite> splitInto(FoodProperties propertiesToSplit, int amount) {
-		var list = new ArrayList<IBite>();
-		var couple = split(propertiesToSplit.getNutrition(), propertiesToSplit.getNutrition(), propertiesToSplit.getEffects(), amount);
-		list.add(couple.getFirst());
-		list.add(couple.getSecond());
-		return list;
-	}
-
-	private Couple<IBite> split(int nutrition, int saturation, List<Pair<MobEffectInstance, Float>> effects, int splitTo) {
-		var builder = new Builder();
-		var flooredNutrition = (int)((double)nutrition / (double)splitTo);
-		builder.nutrition(flooredNutrition)
-			   .saturation(nutrition / (float)splitTo);
-
-		var builderLast = new Builder();
-		builderLast.nutrition(flooredNutrition + (nutrition % splitTo))
-			   .saturation(nutrition / (float)splitTo);
-
-		if (!effects.isEmpty()) {
-			var effectsCouple = splitAllEffects(effects, splitTo);
-			for (Pair<MobEffectInstance, Float> pair : effectsCouple.getFirst()) {
-				builder.addEffect(pair.getFirst(), pair.getSecond());
-			}
-			for (Pair<MobEffectInstance, Float> pair : effectsCouple.getSecond()) {
-				builderLast.addEffect(pair.getFirst(), pair.getSecond());
-			}
-		}
-		return Couple.coupleOf(builder.build(), builderLast.build());
-	}
-
-	private Couple<List<Pair<MobEffectInstance, Float>>> splitAllEffects(List<Pair<MobEffectInstance, Float>> effects, int splitTo) {
-		var list = new ArrayList<Pair<MobEffectInstance, Float>>();
-		var listLast = new ArrayList<Pair<MobEffectInstance, Float>>();
-		for (Pair<MobEffectInstance, Float> pair : effects) {
-			var splitEffect = splitEffect(pair, splitTo);
-			list.add(splitEffect.getFirst());
-			listLast.add(splitEffect.getSecond());
-		}
-		return Couple.coupleOf(list, listLast);
-	}
-
-	private Couple<Pair<MobEffectInstance, Float>> splitEffect(Pair<MobEffectInstance, Float> effect, int splitTo) {
-		var original = effect.getFirst();
-		int modifiedDuration = (int) ((double)original.getDuration() / (double)splitTo);
-		var modified = new MobEffectInstance(original.getEffect(), modifiedDuration, original.getAmplifier());
-		var last = original.getDuration() % splitTo;
-		var modifiedLast = new MobEffectInstance(original.getEffect(), modifiedDuration + last, original.getAmplifier());
-		return Couple.coupleOf(Pair.of(modified, effect.getSecond()), Pair.of(modifiedLast, effect.getSecond()));
 	}
 
 	public static class Builder {

@@ -4,8 +4,12 @@ import com.mojang.datafixers.util.Pair;
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.bite.BitableProperties;
 import dhyces.dinnerplate.item.*;
+import net.minecraft.core.Registry;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SolidBucketItem;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,7 +24,7 @@ import java.util.function.Supplier;
 
 public class ItemRegistry {
 
-	private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, DinnerPlate.MODID);
+	private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(Registry.ITEM_REGISTRY, DinnerPlate.MODID);
 	public static final List<Pair<Supplier<Item>, Float>> COMPOSTABLES = new LinkedList<>();
 
 	public static final RegistryObject<Item> WHITE_PLATE_ITEM;
@@ -89,9 +93,7 @@ public class ItemRegistry {
 
 		MOCK_FOOD_ITEM = register("mock_food", MockFoodItem::new);
 
-		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(new BitableProperties.Builder()
-																		.addSimpleBite(1, 0.25f)
-																		.build(),
+		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(c -> c.addSimpleBite(1, 0.25f),
 																	new Item.Properties().tab(DinnerPlate.TAB)),
 															0.1f);
 

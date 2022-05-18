@@ -23,7 +23,11 @@ import java.util.function.Function;
 public class BitableItem extends Item implements IBitableItem {
 
 	public BitableItem(Function<BitableProperties.Builder, BitableProperties.Builder> biteProperties, Properties pProperties) {
-		super(pProperties.food(biteProperties.apply(new BitableProperties.Builder()).build()));
+		this(biteProperties.apply(new BitableProperties.Builder()).build(), pProperties);
+	}
+
+	public BitableItem(BitableProperties biteProperties, Properties pProperties) {
+		super(pProperties.food(biteProperties));
 	}
 
 	@Override

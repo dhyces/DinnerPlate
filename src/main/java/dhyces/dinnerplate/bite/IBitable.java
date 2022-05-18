@@ -19,23 +19,23 @@ public interface IBitable<T> extends IEdible<T> {
 
 	public int getBiteCount(T bitable);
 
-	abstract int getMaxBites(T bitable);
+	int getMaxBites(T bitable, LivingEntity entity);
 
-	public default int getMaxBiteCount(T bitable) {
-		return isFast(bitable) ? 1 : getMaxBites(bitable);
+	default int getMaxBiteCount(T bitable, LivingEntity entity) {
+		return isFast(bitable, entity) ? 1 : getMaxBites(bitable, entity);
 	}
 
-	public boolean incrementBiteCount(T bitable);
+	public boolean incrementBiteCount(T bitable, LivingEntity entity);
 
-	public void setBiteCount(T bitable, int count);
+	public void setBiteCount(T bitable, LivingEntity entity, int count);
 
-	public IBite getBite(T bitable, int chew);
+	public IBite getBite(T bitable, LivingEntity entity, int chew);
 
-	boolean canBeFast(T bitable);
+	boolean canBeFast(T bitable, LivingEntity entity);
 
 	@Override
-	public default boolean isFast(T bitable) {
-		return getMaxBites(bitable) == 1 && canBeFast(bitable);
+	public default boolean isFast(T bitable, LivingEntity entity) {
+		return getMaxBites(bitable, entity) == 1 && canBeFast(bitable, entity);
 	}
 
 	public SoundEvent getEatingSound(T bitable);
@@ -45,8 +45,8 @@ public interface IBitable<T> extends IEdible<T> {
 
 	public default T eat(T bitable, Player player, Level level) {
 		var returnStack = bitable;
-		// TODO: this breaks MockFood
-		var bite = getBite(bitable, getBiteCount(bitable));
+		// TODO: ~~this breaks MockFood~~ Haven't noticed anything breaking, I must have fixed whatever was breaking a while ago. Left note here though, just in case.
+		var bite = getBite(bitable, player, getBiteCount(bitable));
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
 		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
 		level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), getEatingSound(bitable), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
@@ -56,11 +56,11 @@ public interface IBitable<T> extends IEdible<T> {
 			}
 		}
 
-		if (incrementBiteCount(bitable)) {
+		if (incrementBiteCount(bitable, player)) {
 			returnStack = finish(bitable, level, player);
 			level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
 		}
-		setBiteCount(bitable, getBiteCount(bitable) % getMaxBiteCount(bitable));
+		setBiteCount(bitable, player, getBiteCount(bitable) % getMaxBiteCount(bitable, player));
 		return returnStack;
 	}
 }

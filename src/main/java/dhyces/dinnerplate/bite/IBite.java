@@ -20,9 +20,6 @@ public interface IBite extends INBTSerializable<CompoundTag> {
 
 	// TODO: figure out whether this could be useful or not. I don't see anywhere that I wrote down
 	//  what this was supposed to be for, so I assume it was for the last bite, but it kind of feels like it
-	//  goes against the purpose of this interface and the underlying class
+	//  goes against the purpose of this interface and the parenting classes
 	public void onConsume(Level level, LivingEntity entity);
-
-	public List<IBite> splitInto(FoodProperties propertiesToSplit, int amount);
-
 }

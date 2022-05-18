@@ -34,7 +34,7 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 		if (platedItem.isEdible() && !(platedItem.getItem() instanceof IBitable) && !(platedItem.getItem() instanceof MockFoodItem))
 			// TODO: Try to change this to get a value from some map in case someone wants to change the number of bites it takes to eat. I'm
 			// just worried about exceeding the number of tags in an item
-			platedItem = MockFoodItem.mockFoodStack(platedItem, 3);
+			platedItem = MockFoodItem.mockFoodStack(platedItem, player, 3);
 		if (platedItem.getItem() instanceof IBitableItem e) {
 			var ret = e.eat(platedItem, player, level);
 			if (!ret.equals(platedItem)) {
@@ -46,7 +46,7 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 	
 	@Override
 	public boolean canBite(Player player) {
-		return platedItem.isEdible() && player.canEat(getBitable().map(c -> c.canAlwaysEat(platedItem)).orElse(platedItem.getItem().getFoodProperties().canAlwaysEat()));
+		return platedItem.isEdible() && player.canEat(getBitable().map(c -> c.canAlwaysEat(platedItem,  player)).orElse(platedItem.getItem().getFoodProperties().canAlwaysEat()));
 	}
 
 	@Override

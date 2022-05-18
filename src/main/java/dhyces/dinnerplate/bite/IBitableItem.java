@@ -20,20 +20,20 @@ import java.util.Optional;
 public interface IBitableItem extends IBitable<ItemStack> {
 
 	@Override
-	public default ItemStack eat(ItemStack stack, Player player, Level level) {
+	default ItemStack eat(ItemStack stack, Player player, Level level) {
 		var returnStack = stack;
-		var bite = getBite(stack, getBiteCount(stack));
+		var bite = getBite(stack, player, getBiteCount(stack));
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
 		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
 		level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), getEatingSound(stack), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
-		spawnParticles(level, getPlayerLocalPos(player, new Vec3(0, -0.2, 0.3)), stack);
+		spawnParticles(level, getPlayerLocalPos(player, new Vec3(0, -0.1, 0.3)), stack);
 		for(Pair<MobEffectInstance, Float> pair : bite.getEffects()) {
 			if (!level.isClientSide && pair.getFirst() != null && level.random.nextFloat() < pair.getSecond()) {
 				FoodHelper.addEffect(player, new MobEffectInstance(pair.getFirst()));
 			}
 		}
 
-		if (incrementBiteCount(stack)) {
+		if (incrementBiteCount(stack, player)) {
 			returnStack = finish(stack, level, player);
 			player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 			level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
@@ -41,7 +41,7 @@ public interface IBitableItem extends IBitable<ItemStack> {
 				CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
 			}
 		}
-		setBiteCount(stack, getBiteCount(stack) % getMaxBiteCount(stack));
+		setBiteCount(stack, player, getBiteCount(stack) % getMaxBiteCount(stack, player));
 		return returnStack;
 	}
 

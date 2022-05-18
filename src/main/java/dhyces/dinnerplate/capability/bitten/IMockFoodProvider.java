@@ -2,13 +2,14 @@ package dhyces.dinnerplate.capability.bitten;
 
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.bite.IBite;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public interface IMockFoodProvider extends IBitableItem {
 
 	public ItemStack getRealStack();
 
-	public void initialize(ItemStack stack, int chewCount);
+	public void initialize(ItemStack stack, LivingEntity entity, int chewCount);
 
 	public int getBiteCount();
 
@@ -32,37 +33,37 @@ public interface IMockFoodProvider extends IBitableItem {
 	}
 
 	@Override
-	default int getMaxBites(ItemStack stack) {
+	default int getMaxBites(ItemStack stack, LivingEntity entity) {
 		return getMaxBites();
 	}
 
 	@Override
-	default boolean incrementBiteCount(ItemStack stack) {
+	default boolean incrementBiteCount(ItemStack stack, LivingEntity entity) {
 		return incrementBiteCount();
 	}
 
 	@Override
-	default void setBiteCount(ItemStack stack, int count) {
+	default void setBiteCount(ItemStack stack, LivingEntity entity, int count) {
 		setBiteCount(count);
 	}
 
 	@Override
-	default IBite getBite(ItemStack stack, int chew) {
+	default IBite getBite(ItemStack stack, LivingEntity entity, int chew) {
 		return getBite(chew);
 	}
 
 	@Override
-	default boolean canBeFast(ItemStack stack) {
+	default boolean canBeFast(ItemStack stack, LivingEntity entity) {
 		return canBeFast();
 	}
 
 	@Override
-	default boolean isMeat(ItemStack stack) {
+	default boolean isMeat(ItemStack stack, LivingEntity entity) {
 		return isMeat();
 	}
 
 	@Override
-	default boolean canAlwaysEat(ItemStack stack) {
+	default boolean canAlwaysEat(ItemStack stack, LivingEntity entity) {
 		return canAlwaysEat();
 	}
 }
