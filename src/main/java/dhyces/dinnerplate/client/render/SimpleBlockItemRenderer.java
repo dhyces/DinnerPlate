@@ -1,6 +1,7 @@
 package dhyces.dinnerplate.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -9,8 +10,10 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -38,4 +41,30 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
 
     public abstract void render(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack,
                                 MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay);
+
+    public void renderItem(ItemStack pStack, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel) {
+            Minecraft.getInstance().getItemRenderer().render(pStack, ItemTransforms.TransformType.NONE, false, pMatrixStack, pBuffer, pCombinedLight, pCombinedOverlay, pModel);
+    }
+
+    public boolean shouldRenderItems(T pBlockEntity, Vec3 pPlayerEyePos) {
+        return closerThan(pBlockEntity, pPlayerEyePos, getViewDistance());
+    }
+
+    public boolean shouldRenderFluids(T pBlockEntity, Vec3 pCameraPos) {
+        return closerThan(pBlockEntity, pCameraPos, getViewDistance());
+    }
+
+    public boolean closerThan(T pBlockEntity, Vec3 pCameraPos, int viewDistance) {
+        return Vec3.atCenterOf(pBlockEntity.getBlockPos()).closerThan(pCameraPos, viewDistance);
+    }
+
+    // TODO: possibly make this a config option, fast and fancy graphics settings for the view distance of items and fluids
+    @Override
+    public int getViewDistance() {
+        return isGraphicsMode(GraphicsStatus.FAST) ? 32 : BlockEntityRenderer.super.getViewDistance();
+    }
+
+    public boolean isGraphicsMode(GraphicsStatus graphicsStatus) {
+        return Minecraft.getInstance().options.graphicsMode.equals(graphicsStatus);
+    }
 }
