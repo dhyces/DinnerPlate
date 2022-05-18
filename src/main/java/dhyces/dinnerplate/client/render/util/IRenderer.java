@@ -101,10 +101,6 @@ public interface IRenderer {
 		return Minecraft.getInstance().player;
 	}
 
-	public default boolean isFabulous() {
-		return Minecraft.getInstance().options.graphicsMode.equals(GraphicsStatus.FABULOUS);
-	}
-
 	public default ResourceLocation atlas() {
 		return TextureAtlas.LOCATION_BLOCKS;
 	}
