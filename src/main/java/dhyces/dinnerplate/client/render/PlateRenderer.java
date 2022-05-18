@@ -16,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.RenderProperties;
 
 public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> implements IRenderer {
 
@@ -33,36 +32,32 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> imp
         var model = Minecraft.getInstance().getItemRenderer().getModel(pStack, (Level)null, (LivingEntity)null, 0);
         var hasItem = pStack.getTagElement(Constants.TAG_SINGLE_ITEM) != null;
 
-        var vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(pStack, true), true, false);
+        var vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(pStack, true), true, pStack.hasFoil());
         pPoseStack.pushPose();
         Minecraft.getInstance().getItemRenderer().renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer);
         pPoseStack.popPose();
         if (hasItem) {
             var platedItem = ItemStack.of(pStack.getTagElement(Constants.TAG_SINGLE_ITEM));
-            var platedItemModel = Minecraft.getInstance().getModelManager().getModel(ResourceHelper.inventoryModel(platedItem.getItem().getRegistryName()));
-            platedItemModel = platedItemModel.getOverrides().resolve(platedItemModel, platedItem, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
-            var vertexConsumer1 = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(platedItem, true), true, platedItem.hasFoil());
+            var platedItemModel = getResolvedItemModel(platedItem);
 
             pPoseStack.pushPose();
             if (!platedItemModel.isGui3d()) {
                 pPoseStack.scale(0.5F, 0.5F, 0.5F);
-                pPoseStack.translate(0.5F, -0.35F, 1.5F);
+                pPoseStack.translate(1.0F, 0.15F, 1.0F);
                 pPoseStack.mulPose(new Quaternion(-90, 0, 0, true));
             } else {
                 pPoseStack.scale(0.25F, 0.25F, 0.25F);
-                pPoseStack.translate(1.5F, 0.25F, 1.5F);
+                pPoseStack.translate(2.0F, 0.75F, 2.0F);
             }
-            if (!platedItemModel.isCustomRenderer())
-                Minecraft.getInstance().getItemRenderer().renderModelLists(platedItemModel, platedItem, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer1);
-            else
-                RenderProperties.get(platedItem).getItemStackRenderer().renderByItem(platedItem, ItemTransforms.TransformType.NONE, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+
+            Minecraft.getInstance().getItemRenderer().render(platedItem, ItemTransforms.TransformType.NONE,false, pPoseStack, pBuffer, pPackedLight, pPackedOverlay, platedItemModel);
             pPoseStack.popPose();
         }
     }
 
     @Override
     public void render(PlateBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        if (!pBlockEntity.hasItem())
+        if (!pBlockEntity.hasItem() || !shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition()))
             return;
         var item = pBlockEntity.getLastItem();
         var model = getResolvedItemModel(item);
@@ -77,7 +72,7 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> imp
             pPoseStack.translate(0, .45, 0);
             pPoseStack.mulPose(new Quaternion(0, 180, 0, true));
         }
-        Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.NONE, false, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, model);
+        renderItem(item, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, model);
         pPoseStack.popPose();
     }
 }
