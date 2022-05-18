@@ -4,15 +4,22 @@ import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.util.FluidHelper;
 import dhyces.dinnerplate.util.LoosePair;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -25,8 +32,11 @@ import java.util.Optional;
 
 public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEntity> {
 
+	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+
 	public MeasuringCupBlock(Properties properties) {
 		super(properties);
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 
 	@Override
@@ -65,7 +75,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 						player.setItemInHand(hand, itemHandler.getContainer());
 					}
 				}
-				return InteractionResult.sidedSuccess(isClient);
+				return InteractionResult.CONSUME;
 			}
 		}
 		return super.shiftRightClick(state, bEntity, level, pos, player, hand, res, isClient);
@@ -89,8 +99,18 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
 	}
 
 	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		return defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getCounterClockWise());
+	}
+
+	@Override
 	public boolean propagatesSkylightDown(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return true;
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+		pBuilder.add(FACING);
 	}
 
 	@Override

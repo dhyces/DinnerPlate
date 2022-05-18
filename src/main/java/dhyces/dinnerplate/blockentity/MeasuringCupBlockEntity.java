@@ -2,9 +2,11 @@ package dhyces.dinnerplate.blockentity;
 
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.blockentity.api.AbstractDinnerBlockEntity;
+import dhyces.dinnerplate.blockentity.api.IRenderableTracker;
 import dhyces.dinnerplate.inventory.api.IFluidHolder;
 import dhyces.dinnerplate.registry.BEntityRegistry;
 import dhyces.dinnerplate.util.FluidHelper;
+import dhyces.dinnerplate.util.Interpolation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,8 +20,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implements IFluidHolder {
+public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implements IFluidHolder, IRenderableTracker {
 
+	Interpolation renderedFluid = new Interpolation(() -> (float)getFluidAmount());
 	protected ListenedTank tank = new ListenedTank(FluidHelper.BUCKET);
 	private final LazyOptional<IFluidHandler> tankLazy = LazyOptional.of(() -> tank);
 
@@ -115,6 +118,11 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 		if ((side == null || side.equals(Direction.UP)) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return tankLazy.cast();
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public float updateRenderable(String id, float partial) {
+		return renderedFluid.updateChase(partial);
 	}
 
 	class ListenedTank extends FluidTank {
