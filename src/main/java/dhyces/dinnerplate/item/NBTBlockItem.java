@@ -19,8 +19,7 @@ public class NBTBlockItem extends BlockItem {
 		if (super.placeBlock(pContext, pState)) {
 			var tag = new CompoundTag();
 			tag.put(Constants.TAG_BLOCK_ENTITY, pContext.getItemInHand().getOrCreateTag());
-			pContext.getItemInHand().getOrCreateTag().merge(tag);
-			pContext.getItemInHand().removeTagKey(Constants.TAG_SINGLE_ITEM);
+			pContext.getItemInHand().setTag(tag);
 			return true;
 		}
 		return false;
@@ -30,8 +29,7 @@ public class NBTBlockItem extends BlockItem {
 	public InteractionResult place(BlockPlaceContext pContext) {
 		var res = super.place(pContext);
 		if (res.consumesAction()) {
-			pContext.getItemInHand().getOrCreateTag().merge(pContext.getItemInHand().getOrCreateTagElement(Constants.TAG_BLOCK_ENTITY));
-			pContext.getItemInHand().removeTagKey(Constants.TAG_BLOCK_ENTITY);
+			pContext.getItemInHand().setTag(pContext.getItemInHand().getOrCreateTagElement(Constants.TAG_BLOCK_ENTITY));
 		}
 		return res;
 	}
