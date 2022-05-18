@@ -22,119 +22,119 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implements IFluidHolder, IRenderableTracker {
 
-	Interpolation renderedFluid = new Interpolation(() -> (float)getFluidAmount());
-	protected ListenedTank tank = new ListenedTank(FluidHelper.BUCKET);
-	private final LazyOptional<IFluidHandler> tankLazy = LazyOptional.of(() -> tank);
+    protected ListenedTank tank = new ListenedTank(FluidHelper.BUCKET);
+    private final LazyOptional<IFluidHandler> tankLazy = LazyOptional.of(() -> tank);
+    Interpolation renderedFluid = new Interpolation(() -> (float) getFluidAmount());
 
-	public MeasuringCupBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-		super(BEntityRegistry.MEASURING_CUP_ENTITY.get(), pWorldPosition, pBlockState);
-	}
+    public MeasuringCupBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(BEntityRegistry.MEASURING_CUP_ENTITY.get(), pWorldPosition, pBlockState);
+    }
 
-	@Override
-	public void write(CompoundTag tag) {
-		if (!tank.isEmpty()) {
-			var tTag = new CompoundTag();
-			tank.writeToNBT(tTag);
-			tag.put(Constants.TAG_SINGLE_FLUID, tTag);
-		}
-	}
+    @Override
+    public void write(CompoundTag tag) {
+        if (!tank.isEmpty()) {
+            var tTag = new CompoundTag();
+            tank.writeToNBT(tTag);
+            tag.put(Constants.TAG_SINGLE_FLUID, tTag);
+        }
+    }
 
-	@Override
-	public void read(CompoundTag tag) {
-		tank.readFromNBT(tag.getCompound(Constants.TAG_SINGLE_FLUID));
-	}
+    @Override
+    public void read(CompoundTag tag) {
+        tank.readFromNBT(tag.getCompound(Constants.TAG_SINGLE_FLUID));
+    }
 
-	@Override
-	public boolean hasFluid() {
-		return !tank.isEmpty();
-	}
+    @Override
+    public boolean hasFluid() {
+        return !tank.isEmpty();
+    }
 
-	@Override
-	public boolean containsFluidStack(FluidStack stack) {
-		return tank.getFluid().isFluidEqual(stack);
-	}
+    @Override
+    public boolean containsFluidStack(FluidStack stack) {
+        return tank.getFluid().isFluidEqual(stack);
+    }
 
-	@Override
-	public boolean containsFluid(Fluid fluid) {
-		return tank.getFluid().getFluid().isSame(fluid);
-	}
+    @Override
+    public boolean containsFluid(Fluid fluid) {
+        return tank.getFluid().getFluid().isSame(fluid);
+    }
 
-	@Override
-	public FluidStack getLastFluid() {
-		return tank.getFluid();
-	}
+    @Override
+    public FluidStack getLastFluid() {
+        return tank.getFluid();
+    }
 
-	@Override
-	public FluidStack getFluidStack(int index) {
-		return getLastFluid();
-	}
+    @Override
+    public FluidStack getFluidStack(int index) {
+        return getLastFluid();
+    }
 
-	@Override
-	public FluidStack removeFluid(int index) {
-		return removeLastFluid(tank.getCapacity());
-	}
+    @Override
+    public FluidStack removeFluid(int index) {
+        return removeLastFluid(tank.getCapacity());
+    }
 
-	@Override
-	public FluidStack removeLastFluid(int capacity) {
-		return tank.drain(capacity, FluidAction.EXECUTE);
-	}
+    @Override
+    public FluidStack removeLastFluid(int capacity) {
+        return tank.drain(capacity, FluidAction.EXECUTE);
+    }
 
-	@Override
-	public FluidStack insertFluid(FluidStack stack) {
-		var filled = tank.fill(stack, FluidAction.EXECUTE);
-		stack.shrink(filled);
-		return stack;
-	}
-	
-	@Override
-	public FluidStack insertFluidAt(FluidStack stack, int slot) {
-		return insertFluid(stack);
-	}
+    @Override
+    public FluidStack insertFluid(FluidStack stack) {
+        var filled = tank.fill(stack, FluidAction.EXECUTE);
+        stack.shrink(filled);
+        return stack;
+    }
 
-	@Override
-	public FluidStack setFluid(int index, FluidStack stack) {
-		var old = tank.getFluid();
-		tank.setFluid(stack);
-		return old;
-	}
+    @Override
+    public FluidStack insertFluidAt(FluidStack stack, int slot) {
+        return insertFluid(stack);
+    }
 
-	@Override
-	public int getFluidAmount() {
-		return tank.getFluidAmount();
-	}
+    @Override
+    public FluidStack setFluid(int index, FluidStack stack) {
+        var old = tank.getFluid();
+        tank.setFluid(stack);
+        return old;
+    }
 
-	@Override
-	public int getFluidSize() {
-		return hasFluid() ? 1 : 0;
-	}
+    @Override
+    public int getFluidAmount() {
+        return tank.getFluidAmount();
+    }
 
-	@Override
-	public int getFluidCapacity() {
-		return 1;
-	}
+    @Override
+    public int getFluidSize() {
+        return hasFluid() ? 1 : 0;
+    }
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if ((side == null || side.equals(Direction.UP)) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return tankLazy.cast();
-		return super.getCapability(cap, side);
-	}
+    @Override
+    public int getFluidCapacity() {
+        return 1;
+    }
 
-	@Override
-	public float updateRenderable(String id, float partial) {
-		return renderedFluid.updateChase(partial);
-	}
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if ((side == null || side.equals(Direction.UP)) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return tankLazy.cast();
+        return super.getCapability(cap, side);
+    }
 
-	class ListenedTank extends FluidTank {
+    @Override
+    public float updateRenderable(String id, float partial) {
+        return renderedFluid.updateChase(partial);
+    }
 
-		public ListenedTank(int capacity) {
-			super(capacity);
-		}
+    class ListenedTank extends FluidTank {
 
-		@Override
-		protected void onContentsChanged() {
-			MeasuringCupBlockEntity.this.setChanged();
-		}
+        public ListenedTank(int capacity) {
+            super(capacity);
+        }
 
-	}
+        @Override
+        protected void onContentsChanged() {
+            MeasuringCupBlockEntity.this.setChanged();
+        }
+
+    }
 }

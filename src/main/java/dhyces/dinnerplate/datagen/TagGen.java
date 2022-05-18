@@ -1,6 +1,5 @@
 package dhyces.dinnerplate.datagen;
 
-import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.registry.BlockRegistry;
 import dhyces.dinnerplate.registry.FluidRegistry;
 import dhyces.dinnerplate.registry.ItemRegistry;
@@ -9,10 +8,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.FluidTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 

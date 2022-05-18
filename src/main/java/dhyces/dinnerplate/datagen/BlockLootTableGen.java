@@ -9,7 +9,7 @@ import dhyces.dinnerplate.registry.BlockRegistry;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.*;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -38,143 +38,143 @@ import java.util.function.Supplier;
 
 public class BlockLootTableGen implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
 
-	Map<ResourceLocation, LootTable.Builder> map = new HashMap<>();
+    Map<ResourceLocation, LootTable.Builder> map = new HashMap<>();
 
-	protected void addTables() {
+    protected void addTables() {
 //		add(BlockRegistry.MIXING_BOWL_BLOCK.get(), LootTable.lootTable()
 //														.withPool(LootPool.lootPool()
 //																		.setRolls(ConstantValue.exactly(1.0f))
 //																		.));
-		addPlateDrop(BlockRegistry.WHITE_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.ORANGE_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.MAGENTA_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.LIGHT_BLUE_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.YELLOW_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.LIME_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.PINK_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.GRAY_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.LIGHT_GRAY_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.CYAN_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.PURPLE_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.BLUE_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.BROWN_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.GREEN_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.RED_PLATE_BLOCK.get());
-		addPlateDrop(BlockRegistry.BLACK_PLATE_BLOCK.get());
-		
-		// TODO
-		add(BlockRegistry.MIXING_BOWL_BLOCK.get(), c -> oopsItsJustFunctions(c, copyItemsFunc(),
-																				copyFluidsFunc(),
-																				copyDataFunc("MixState"),
-																				copyDataFunc("UsedSize"),
-																				copyStateFunc(c, MixingBowlBlock.MIX_POSITION)));
-		add(BlockRegistry.MEASURING_CUP_BLOCK.get(), c -> oopsItsJustFunctions(c, copyFluidFunc()));
-	}
-	
-	protected void addPlateDrop(Block plateBlock) {
-		add(plateBlock, LootTable.lootTable()
-				.withPool(singleRollPool()
-						.add(AlternativesEntry.alternatives(
-								LootItem.lootTableItem(plateBlock.asItem())
-										.apply(copyItemFunc())
-										.when(stateCondition(plateBlock, PlateBlock.PLATES, 1)),
-								LootItem.lootTableItem(plateBlock.asItem())
-										.apply(copyStateFunc(plateBlock, PlateBlock.PLATES))))));
-	}
+        addPlateDrop(BlockRegistry.WHITE_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.ORANGE_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.MAGENTA_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.LIGHT_BLUE_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.YELLOW_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.LIME_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.PINK_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.GRAY_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.LIGHT_GRAY_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.CYAN_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.PURPLE_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.BLUE_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.BROWN_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.GREEN_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.RED_PLATE_BLOCK.get());
+        addPlateDrop(BlockRegistry.BLACK_PLATE_BLOCK.get());
 
-	protected LootTable.Builder oopsItsJustFunctions(Block block, LootItemFunction.Builder... functions) {
-		var lootItem = LootItem.lootTableItem(block);
-		Arrays.stream(functions).forEach(lootItem::apply);
-		return LootTable.lootTable()
-				.withPool(singleRollPool()
-						.add(lootItem));
-	}
+        // TODO
+        add(BlockRegistry.MIXING_BOWL_BLOCK.get(), c -> oopsItsJustFunctions(c, copyItemsFunc(),
+                copyFluidsFunc(),
+                copyDataFunc("MixState"),
+                copyDataFunc("UsedSize"),
+                copyStateFunc(c, MixingBowlBlock.MIX_POSITION)));
+        add(BlockRegistry.MEASURING_CUP_BLOCK.get(), c -> oopsItsJustFunctions(c, copyFluidFunc()));
+    }
 
-	protected LootItemFunction.Builder copyFluidsFunc() {
-		return copyDataFunc("Fluids");
-	}
+    protected void addPlateDrop(Block plateBlock) {
+        add(plateBlock, LootTable.lootTable()
+                .withPool(singleRollPool()
+                        .add(AlternativesEntry.alternatives(
+                                LootItem.lootTableItem(plateBlock.asItem())
+                                        .apply(copyItemFunc())
+                                        .when(stateCondition(plateBlock, PlateBlock.PLATES, 1)),
+                                LootItem.lootTableItem(plateBlock.asItem())
+                                        .apply(copyStateFunc(plateBlock, PlateBlock.PLATES))))));
+    }
 
-	protected LootItemFunction.Builder copyFluidFunc() {
-		return copyDataFunc("Fluid");
-	}
+    protected LootTable.Builder oopsItsJustFunctions(Block block, LootItemFunction.Builder... functions) {
+        var lootItem = LootItem.lootTableItem(block);
+        Arrays.stream(functions).forEach(lootItem::apply);
+        return LootTable.lootTable()
+                .withPool(singleRollPool()
+                        .add(lootItem));
+    }
 
-	protected LootItemFunction.Builder copyItemsFunc() {
-		return copyDataFunc("Items");
-	}
+    protected LootItemFunction.Builder copyFluidsFunc() {
+        return copyDataFunc("Fluids");
+    }
 
-	protected LootItemFunction.Builder copyItemFunc() {
-		return copyDataFunc("Item");
-	}
+    protected LootItemFunction.Builder copyFluidFunc() {
+        return copyDataFunc("Fluid");
+    }
 
-	protected LootPool.Builder singleRollPool() {
-		return LootPool.lootPool().setRolls(ConstantValue.exactly(1.0f));
-	}
+    protected LootItemFunction.Builder copyItemsFunc() {
+        return copyDataFunc("Items");
+    }
 
-	protected LootItemCondition.Builder stateCondition(Block block, Property<Integer> property, int value) {
-		return LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-				.setProperties(StatePropertiesPredicate.Builder.properties()
-						.hasProperty(property, value));
-	}
+    protected LootItemFunction.Builder copyItemFunc() {
+        return copyDataFunc("Item");
+    }
 
-	protected LootItemFunction.Builder copyStateFunc(Block block, Property<?> property) {
-		return CopyBlockState.copyState(block).copy(property);
-	}
+    protected LootPool.Builder singleRollPool() {
+        return LootPool.lootPool().setRolls(ConstantValue.exactly(1.0f));
+    }
 
-	protected LootItemFunction.Builder copyDataFunc(String data) {
-		return copyDataFunc(data, data);
-	}
+    protected LootItemCondition.Builder stateCondition(Block block, Property<Integer> property, int value) {
+        return LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                .setProperties(StatePropertiesPredicate.Builder.properties()
+                        .hasProperty(property, value));
+    }
 
-	protected LootItemFunction.Builder copyDataFunc(String sourceData, String targetData) {
-		return CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(sourceData, targetData);
-	}
+    protected LootItemFunction.Builder copyStateFunc(Block block, Property<?> property) {
+        return CopyBlockState.copyState(block).copy(property);
+    }
 
-	protected LootTable.Builder noDrop() {
-		return LootTable.lootTable();
-	}
+    protected LootItemFunction.Builder copyDataFunc(String data) {
+        return copyDataFunc(data, data);
+    }
 
-	protected void add(Block block, Function<Block, LootTable.Builder> function) {
-		add(block, function.apply(block));
-	}
+    protected LootItemFunction.Builder copyDataFunc(String sourceData, String targetData) {
+        return CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(sourceData, targetData);
+    }
 
-	protected void add(Block block, LootTable.Builder lootTableBuilder) {
-		map.put(block.getLootTable(), lootTableBuilder);
-	}
+    protected LootTable.Builder noDrop() {
+        return LootTable.lootTable();
+    }
 
-	public void accept(BiConsumer<ResourceLocation, LootTable.Builder> p_124179_) {
-		this.addTables();
-		Set<ResourceLocation> set = Sets.newHashSet();
+    protected void add(Block block, Function<Block, LootTable.Builder> function) {
+        add(block, function.apply(block));
+    }
 
-		for(Block block : BlockRegistry.BLOCK_REGISTER.getEntries().stream().map(c -> c.get()).toList()) {
-			ResourceLocation resourcelocation = block.getLootTable();
-			if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
-				LootTable.Builder loottable$builder = map.remove(block.getLootTable());
-				if (loottable$builder == null) {
-					throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", resourcelocation, Registry.BLOCK.getKey(block)));
-				}
+    protected void add(Block block, LootTable.Builder lootTableBuilder) {
+        map.put(block.getLootTable(), lootTableBuilder);
+    }
 
-				p_124179_.accept(resourcelocation, loottable$builder);
-			}
-		}
+    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> p_124179_) {
+        this.addTables();
+        Set<ResourceLocation> set = Sets.newHashSet();
 
-		if (!this.map.isEmpty()) {
-			throw new IllegalStateException("Created block loot tables for non-blocks: " + this.map.keySet());
-		}
-	}
+        for (Block block : BlockRegistry.BLOCK_REGISTER.getEntries().stream().map(c -> c.get()).toList()) {
+            ResourceLocation resourcelocation = block.getLootTable();
+            if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
+                LootTable.Builder loottable$builder = map.remove(block.getLootTable());
+                if (loottable$builder == null) {
+                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", resourcelocation, Registry.BLOCK.getKey(block)));
+                }
 
-	public static class BlockLootTableProvider extends LootTableProvider {
+                p_124179_.accept(resourcelocation, loottable$builder);
+            }
+        }
 
-		public BlockLootTableProvider(DataGenerator pGenerator) {
-			super(pGenerator);
-		}
-		
-		@Override
-		protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-			return ImmutableList.of(Pair.of(BlockLootTableGen::new, LootContextParamSets.BLOCK));
-		}
+        if (!this.map.isEmpty()) {
+            throw new IllegalStateException("Created block loot tables for non-blocks: " + this.map.keySet());
+        }
+    }
 
-		@Override
-		protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationTracker) {
-			// NO_OP
-		}
-	}
+    public static class BlockLootTableProvider extends LootTableProvider {
+
+        public BlockLootTableProvider(DataGenerator pGenerator) {
+            super(pGenerator);
+        }
+
+        @Override
+        protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
+            return ImmutableList.of(Pair.of(BlockLootTableGen::new, LootContextParamSets.BLOCK));
+        }
+
+        @Override
+        protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationTracker) {
+            // NO_OP
+        }
+    }
 }

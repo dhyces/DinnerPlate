@@ -18,40 +18,41 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 public class CapabilityEventSubscriber {
 
-	public static final Capability<IMockFoodProvider> MOCK_FOOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<IMockFoodProvider>() {});
-	
-	@EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)
-	public class ModSided {
+    public static final Capability<IMockFoodProvider> MOCK_FOOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<IMockFoodProvider>() {
+    });
 
-		@SubscribeEvent
-		public static void registerCapability(final RegisterCapabilitiesEvent event) {
-			event.register(IMockFoodProvider.class);
-		}
-	}
+    @EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)
+    public class ModSided {
 
-	@EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.FORGE)
-	public class ForgeSided {
+        @SubscribeEvent
+        public static void registerCapability(final RegisterCapabilitiesEvent event) {
+            event.register(IMockFoodProvider.class);
+        }
+    }
 
-		public static final ResourceLocation SOUP_CAP_ID = new ResourceLocation(DinnerPlate.MODID, "soup");
+    @EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.FORGE)
+    public class ForgeSided {
 
-		@SubscribeEvent
-		public static void attachCapability(final AttachCapabilitiesEvent<ItemStack> event) {
-			var stack = event.getObject();
-			if (stack.getItem().equals(Items.MUSHROOM_STEW)) {
-				event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.MUSHROOM_STEW_FLUID.get()));
-			}
-			if (stack.getItem().equals(Items.BEETROOT_SOUP)) {
-				event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.BEETROOT_SOUP_FLUID.get()));
-			}
-			if (stack.getItem().equals(Items.RABBIT_STEW)) {
-				event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.RABBIT_STEW_FLUID.get()));
-			}
-		}
+        public static final ResourceLocation SOUP_CAP_ID = new ResourceLocation(DinnerPlate.MODID, "soup");
 
-		private static ICapabilityProvider bowlOf(ItemStack stack, Fluid fluid) {
-			var handler = new FluidHandlerItemStackSimple.SwapEmpty(stack, new ItemStack(Items.BOWL), 100);
-			handler.fill(new FluidStack(fluid, 100), FluidAction.EXECUTE);
-			return handler;
-		}
-	}
+        @SubscribeEvent
+        public static void attachCapability(final AttachCapabilitiesEvent<ItemStack> event) {
+            var stack = event.getObject();
+            if (stack.getItem().equals(Items.MUSHROOM_STEW)) {
+                event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.MUSHROOM_STEW_FLUID.get()));
+            }
+            if (stack.getItem().equals(Items.BEETROOT_SOUP)) {
+                event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.BEETROOT_SOUP_FLUID.get()));
+            }
+            if (stack.getItem().equals(Items.RABBIT_STEW)) {
+                event.addCapability(SOUP_CAP_ID, bowlOf(stack, FluidRegistry.RABBIT_STEW_FLUID.get()));
+            }
+        }
+
+        private static ICapabilityProvider bowlOf(ItemStack stack, Fluid fluid) {
+            var handler = new FluidHandlerItemStackSimple.SwapEmpty(stack, new ItemStack(Items.BOWL), 100);
+            handler.fill(new FluidStack(fluid, 100), FluidAction.EXECUTE);
+            return handler;
+        }
+    }
 }

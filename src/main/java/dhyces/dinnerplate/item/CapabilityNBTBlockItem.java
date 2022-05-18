@@ -10,16 +10,16 @@ import java.util.function.BiFunction;
 
 public class CapabilityNBTBlockItem extends NBTBlockItem {
 
-	protected final BiFunction<ItemStack, CompoundTag, ICapabilityProvider> cap;
+    protected final BiFunction<ItemStack, CompoundTag, ICapabilityProvider> cap;
 
-	public CapabilityNBTBlockItem(BiFunction<ItemStack, CompoundTag, ICapabilityProvider> capability, Block pBlock, Properties pProperties) {
-		super(pBlock, pProperties);
-		this.cap = capability;
-	}
+    public CapabilityNBTBlockItem(BiFunction<ItemStack, CompoundTag, ICapabilityProvider> capability, Block pBlock, Properties pProperties) {
+        super(pBlock, pProperties);
+        this.cap = capability;
+    }
 
-	@Nullable
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
-		return cap.apply(stack, nbt);
-	}
+    @Nullable
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+        return cap.apply(stack, nbt);
+    }
 }

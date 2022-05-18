@@ -12,25 +12,25 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(modid = DinnerPlate.MODID)
 public class EventOverrides {
 
-	@SubscribeEvent
-	public static void shiftLeftClick(final PlayerInteractEvent.LeftClickBlock e) {
-		var blockState = e.getWorld().getBlockState(e.getPos());
-		if (e.getPlayer().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract base) {
-			if (e.getWorld().getBlockEntity(e.getPos()) instanceof AbstractDinnerBlockEntity bEntity) {
-				var result = base.shiftLeftClick(blockState, bEntity, e.getWorld(), e.getPos(), e.getPlayer(), e.getSide().isClient());
-				if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
-					return;
-				}
-			}
-			e.setCanceled(true);
-		}
-	}
+    @SubscribeEvent
+    public static void shiftLeftClick(final PlayerInteractEvent.LeftClickBlock e) {
+        var blockState = e.getWorld().getBlockState(e.getPos());
+        if (e.getPlayer().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract base) {
+            if (e.getWorld().getBlockEntity(e.getPos()) instanceof AbstractDinnerBlockEntity bEntity) {
+                var result = base.shiftLeftClick(blockState, bEntity, e.getWorld(), e.getPos(), e.getPlayer(), e.getSide().isClient());
+                if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
+                    return;
+                }
+            }
+            e.setCanceled(true);
+        }
+    }
 
-	@SubscribeEvent
-	public static void shiftRightClick(final PlayerInteractEvent.RightClickBlock e) {
-		var blockState = e.getWorld().getBlockState(e.getPos());
-		if (e.getPlayer().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract) {
-			e.setUseBlock(Result.ALLOW);
-		}
-	}
+    @SubscribeEvent
+    public static void shiftRightClick(final PlayerInteractEvent.RightClickBlock e) {
+        var blockState = e.getWorld().getBlockState(e.getPos());
+        if (e.getPlayer().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract) {
+            e.setUseBlock(Result.ALLOW);
+        }
+    }
 }

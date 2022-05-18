@@ -5,12 +5,12 @@ import net.minecraft.world.item.ItemStack;
 
 public class DinnerUnitItemStack extends AbstractDinnerUnit<ItemStack> {
 
-	public DinnerUnitItemStack(ItemStack wrappedStack) {
-		super(wrappedStack);
-	}
+    public DinnerUnitItemStack(ItemStack wrappedStack) {
+        super(wrappedStack);
+    }
 
-	@Override
-	public int getAmount() {
-		return unit.getCount();
-	}
+    @Override
+    public int getAmount() {
+        return unit.getCount();
+    }
 }

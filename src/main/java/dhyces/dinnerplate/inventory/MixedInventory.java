@@ -22,345 +22,345 @@ import java.util.stream.Stream;
 // TODO: name could be changed since it's somewhat ambiguous. "what is mixed?", well in this case its both item and fluid stacks
 public class MixedInventory implements IMixedInventory, INBTSerializable<CompoundTag> {
 
-	private final int size;
-	private int usedSize = 0;
-	private Stack<ItemStack> itemInventory;
-	private Stack<FluidStack> fluidInventory;
+    private final int size;
+    private int usedSize = 0;
+    private final Stack<ItemStack> itemInventory;
+    private final Stack<FluidStack> fluidInventory;
 
-	public MixedInventory(int sizeIn) {
-		size = sizeIn;
-		itemInventory = makeStackWithCapacity(sizeIn);
-		fluidInventory = makeStackWithCapacity(sizeIn);
-	}
+    public MixedInventory(int sizeIn) {
+        size = sizeIn;
+        itemInventory = makeStackWithCapacity(sizeIn);
+        fluidInventory = makeStackWithCapacity(sizeIn);
+    }
 
-	private <T> Stack<T> makeStackWithCapacity(int cap) {
-		var stack = new Stack<T>();
-		stack.ensureCapacity(cap);
-		return stack;
-	}
+    private <T> Stack<T> makeStackWithCapacity(int cap) {
+        var stack = new Stack<T>();
+        stack.ensureCapacity(cap);
+        return stack;
+    }
 
-	@Override
-	public Stream<FlutemStack> mixedStream() {
-		Stream.Builder<FlutemStack> builder = Stream.builder();
-		itemInventory.stream().map(FlutemStack::new).forEach(builder::add);
-		fluidInventory.stream().map(FlutemStack::new).forEach(builder::add);
-		return builder.build();
-	}
+    @Override
+    public Stream<FlutemStack> mixedStream() {
+        Stream.Builder<FlutemStack> builder = Stream.builder();
+        itemInventory.stream().map(FlutemStack::new).forEach(builder::add);
+        fluidInventory.stream().map(FlutemStack::new).forEach(builder::add);
+        return builder.build();
+    }
 
-	@Override
-	public int getItemSize() {
-		return itemInventory.size();
-	}
+    @Override
+    public int getItemSize() {
+        return itemInventory.size();
+    }
 
-	@Override
-	public boolean hasItem() {
-		return itemInventory.size() > 0;
-	}
+    @Override
+    public boolean hasItem() {
+        return itemInventory.size() > 0;
+    }
 
-	@Override
-	public boolean containsItemStack(ItemStack stack) {
-		return itemInventory.stream().anyMatch(p -> ItemStack.isSame(p, stack));
-	}
+    @Override
+    public boolean containsItemStack(ItemStack stack) {
+        return itemInventory.stream().anyMatch(p -> ItemStack.isSame(p, stack));
+    }
 
-	@Override
-	public boolean containsItem(Item item) {
-		return itemInventory.stream().anyMatch(p -> p.is(item));
-	}
+    @Override
+    public boolean containsItem(Item item) {
+        return itemInventory.stream().anyMatch(p -> p.is(item));
+    }
 
-	@Override
-	public ItemStack getLastItem() {
-		return itemInventory.peek();
-	}
+    @Override
+    public ItemStack getLastItem() {
+        return itemInventory.peek();
+    }
 
-	public Optional<ItemStack> getMatching(ItemStack stack) {
-		for (ItemStack invStack : itemInventory) {
-			if (ItemStack.isSame(invStack, stack))
-				return Optional.of(invStack);
-		}
-		return Optional.empty();
-	}
+    public Optional<ItemStack> getMatching(ItemStack stack) {
+        for (ItemStack invStack : itemInventory) {
+            if (ItemStack.isSame(invStack, stack))
+                return Optional.of(invStack);
+        }
+        return Optional.empty();
+    }
 
-	@Override
-	public ItemStack removeLastItem() {
-		if (itemInventory.empty())
-			return ItemStack.EMPTY;
-		usedSize--;
-		var peekedItem = itemInventory.peek();
-		if (peekedItem.getCount() == 1)
-			return itemInventory.pop();
-		return peekedItem.split(1);
-	}
+    @Override
+    public ItemStack removeLastItem() {
+        if (itemInventory.empty())
+            return ItemStack.EMPTY;
+        usedSize--;
+        var peekedItem = itemInventory.peek();
+        if (peekedItem.getCount() == 1)
+            return itemInventory.pop();
+        return peekedItem.split(1);
+    }
 
-	@Override
-	public ItemStack insertItem(ItemStack stack) {
-		if (usedSize < size && !stack.isEmpty()) {
-			var amount = stack.getCount();
-			var safeAmount = Math.min(remaining(), amount);
-			var copy = stack.copy();
-			var split = copy.split(safeAmount);
-			itemInventory.push(split);
-			usedSize += safeAmount;
-			return copy;
-		}
-		return stack;
-	}
+    @Override
+    public ItemStack insertItem(ItemStack stack) {
+        if (usedSize < size && !stack.isEmpty()) {
+            var amount = stack.getCount();
+            var safeAmount = Math.min(remaining(), amount);
+            var copy = stack.copy();
+            var split = copy.split(safeAmount);
+            itemInventory.push(split);
+            usedSize += safeAmount;
+            return copy;
+        }
+        return stack;
+    }
 
-	@Override
-	public ItemStack insertItemAt(ItemStack stack, int slot) {
-		if (usedSize < size && !stack.isEmpty()) {
-			var amount = stack.getCount();
-			var safeAmount = Math.min(remaining(), amount);
-			var split = stack.split(safeAmount);
-			itemInventory.insertElementAt(split, slot);
-			usedSize += safeAmount;
-		}
-		return stack;
-	}
+    @Override
+    public ItemStack insertItemAt(ItemStack stack, int slot) {
+        if (usedSize < size && !stack.isEmpty()) {
+            var amount = stack.getCount();
+            var safeAmount = Math.min(remaining(), amount);
+            var split = stack.split(safeAmount);
+            itemInventory.insertElementAt(split, slot);
+            usedSize += safeAmount;
+        }
+        return stack;
+    }
 
-	@Override
-	public int getFluidSize() {
-		return fluidInventory.size();
-	}
+    @Override
+    public int getFluidSize() {
+        return fluidInventory.size();
+    }
 
-	@Override
-	public int getFluidAmount() {
-		return getFluidSize() * 100;
-	}
+    @Override
+    public int getFluidAmount() {
+        return getFluidSize() * 100;
+    }
 
-	@Override
-	public int getFluidCapacity() {
-		return 900;
-	}
+    @Override
+    public int getFluidCapacity() {
+        return 900;
+    }
 
-	@Override
-	public boolean hasFluid() {
-		return fluidInventory.size() > 0;
-	}
+    @Override
+    public boolean hasFluid() {
+        return fluidInventory.size() > 0;
+    }
 
-	@Override
-	public boolean containsFluidStack(FluidStack stack) {
-		return fluidInventory.stream().anyMatch(p -> p.isFluidEqual(stack));
-	}
+    @Override
+    public boolean containsFluidStack(FluidStack stack) {
+        return fluidInventory.stream().anyMatch(p -> p.isFluidEqual(stack));
+    }
 
-	@Override
-	public boolean containsFluid(Fluid fluid) {
-		return fluidInventory.stream().anyMatch(p -> p.getFluid() == fluid);
-	}
+    @Override
+    public boolean containsFluid(Fluid fluid) {
+        return fluidInventory.stream().anyMatch(p -> p.getFluid() == fluid);
+    }
 
-	@Override
-	public FluidStack getLastFluid() {
-		if (fluidInventory.isEmpty())
-			return FluidStack.EMPTY;
-		return fluidInventory.peek();
-	}
+    @Override
+    public FluidStack getLastFluid() {
+        if (fluidInventory.isEmpty())
+            return FluidStack.EMPTY;
+        return fluidInventory.peek();
+    }
 
-	@Override
-	public FluidStack getFluidStack(int index) {
-		if (fluidInventory.isEmpty() || index < 0 || index >= fluidInventory.size())
-			return FluidStack.EMPTY;
-		return fluidInventory.get(index);
-	}
+    @Override
+    public FluidStack getFluidStack(int index) {
+        if (fluidInventory.isEmpty() || index < 0 || index >= fluidInventory.size())
+            return FluidStack.EMPTY;
+        return fluidInventory.get(index);
+    }
 
-	public Optional<FluidStack> getMatching(FluidStack stack) {
-		for (FluidStack invStack : fluidInventory) {
-			if (invStack.isFluidEqual(stack))
-				return Optional.of(invStack);
-		}
-		return Optional.empty();
-	}
+    public Optional<FluidStack> getMatching(FluidStack stack) {
+        for (FluidStack invStack : fluidInventory) {
+            if (invStack.isFluidEqual(stack))
+                return Optional.of(invStack);
+        }
+        return Optional.empty();
+    }
 
-	@Override
-	public FluidStack removeLastFluid(int capacity) {
-		if (fluidInventory.empty())
-			return FluidStack.EMPTY;
-		usedSize--;
-		return fluidInventory.pop();
-	}
+    @Override
+    public FluidStack removeLastFluid(int capacity) {
+        if (fluidInventory.empty())
+            return FluidStack.EMPTY;
+        usedSize--;
+        return fluidInventory.pop();
+    }
 
-	@Override
-	public FluidStack removeFluid(int index) {
-		if (fluidInventory.empty() || index < 0 || index > fluidInventory.size())
-			return FluidStack.EMPTY;
-		usedSize--;
-		return fluidInventory.remove(index);
-	}
+    @Override
+    public FluidStack removeFluid(int index) {
+        if (fluidInventory.empty() || index < 0 || index > fluidInventory.size())
+            return FluidStack.EMPTY;
+        usedSize--;
+        return fluidInventory.remove(index);
+    }
 
-	@Override
-	public FluidStack insertFluid(FluidStack stack) {
-		if (usedSize < size && !stack.isEmpty()) {
-			var fluidAmount = stack.getAmount();
-			var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
-			var amount = fluidAmount / 100;
-			var safeAmount = Math.min(remaining(), amount);
-			fluidInventory.push(FluidHelper.copyStackWithSize(stack, safeFluidAmount));
-			usedSize += safeAmount;
-			var retStack = stack.copy();
-			retStack.shrink(safeFluidAmount);
-			return retStack;
-		}
-		return stack;
-	}
-	
-	@Override
-	public FluidStack insertFluidAt(FluidStack stack, int slot) {
-		if (usedSize < size && !stack.isEmpty()) {
-			var fluidAmount = stack.getAmount();
-			var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
-			var amount = fluidAmount / 100;
-			var safeAmount = Math.min(remaining(), amount);
-			fluidInventory.insertElementAt(FluidHelper.copyStackWithSize(stack, safeFluidAmount), slot);
-			usedSize += safeAmount;
-			var retStack = stack.copy();
-			retStack.shrink(safeFluidAmount);
-			return retStack;
-		}
-		return stack;
-	}
+    @Override
+    public FluidStack insertFluid(FluidStack stack) {
+        if (usedSize < size && !stack.isEmpty()) {
+            var fluidAmount = stack.getAmount();
+            var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
+            var amount = fluidAmount / 100;
+            var safeAmount = Math.min(remaining(), amount);
+            fluidInventory.push(FluidHelper.copyStackWithSize(stack, safeFluidAmount));
+            usedSize += safeAmount;
+            var retStack = stack.copy();
+            retStack.shrink(safeFluidAmount);
+            return retStack;
+        }
+        return stack;
+    }
 
-	@Override
-	public FluidStack setFluid(int index, FluidStack stack) {
-		var ret = fluidInventory.get(index) == null ? FluidStack.EMPTY : fluidInventory.get(index);
-		fluidInventory.set(index, stack);
-		return ret;
-	}
+    @Override
+    public FluidStack insertFluidAt(FluidStack stack, int slot) {
+        if (usedSize < size && !stack.isEmpty()) {
+            var fluidAmount = stack.getAmount();
+            var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
+            var amount = fluidAmount / 100;
+            var safeAmount = Math.min(remaining(), amount);
+            fluidInventory.insertElementAt(FluidHelper.copyStackWithSize(stack, safeFluidAmount), slot);
+            usedSize += safeAmount;
+            var retStack = stack.copy();
+            retStack.shrink(safeFluidAmount);
+            return retStack;
+        }
+        return stack;
+    }
 
-	@Override
-	public int getUsed() {
-		return usedSize;
-	}
+    @Override
+    public FluidStack setFluid(int index, FluidStack stack) {
+        var ret = fluidInventory.get(index) == null ? FluidStack.EMPTY : fluidInventory.get(index);
+        fluidInventory.set(index, stack);
+        return ret;
+    }
 
-	public List<FluidStack> getFluids() {
-		if (fluidInventory.isEmpty())
-			return List.of();
-		return List.copyOf(fluidInventory);
-	}
+    @Override
+    public int getUsed() {
+        return usedSize;
+    }
 
-	public List<ItemStack> getItems() {
-		if (itemInventory.isEmpty())
-			return List.of();
-		return List.copyOf(itemInventory);
-	}
+    public List<FluidStack> getFluids() {
+        if (fluidInventory.isEmpty())
+            return List.of();
+        return List.copyOf(fluidInventory);
+    }
 
-	@Override
-	public int getContainerSize() {
-		return size;
-	}
+    public List<ItemStack> getItems() {
+        if (itemInventory.isEmpty())
+            return List.of();
+        return List.copyOf(itemInventory);
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return size == 0;
-	}
+    @Override
+    public int getContainerSize() {
+        return size;
+    }
 
-	@Override
-	public ItemStack getItem(int pIndex) {
-		return itemInventory.get(pIndex);
-	}
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
-	@Override
-	public ItemStack removeItem(int pIndex, int pCount) {
-		if (pIndex > itemInventory.size() || pIndex < 0) {
-			throw new ArrayIndexOutOfBoundsException("asked for index " + pIndex + ", but index is out of bounds");
-		}
-		if (pCount == 0) {
-			throw new IllegalStateException("count cannot equal zero");
-		}
-		usedSize--;
-		var stack = itemInventory.get(pIndex);
-		var count = Math.min(stack.getCount(), pCount);
-		var copy = stack.copy();
-		copy.setCount(count);
-		stack.shrink(count);
-		setChanged();
-		return copy;
-	}
+    @Override
+    public ItemStack getItem(int pIndex) {
+        return itemInventory.get(pIndex);
+    }
 
-	@Override
-	public ItemStack removeItemNoUpdate(int pIndex) {
-		var stackCopy = itemInventory.get(pIndex).copy();
-		itemInventory.remove(pIndex);
-		return stackCopy;
-	}
+    @Override
+    public ItemStack removeItem(int pIndex, int pCount) {
+        if (pIndex > itemInventory.size() || pIndex < 0) {
+            throw new ArrayIndexOutOfBoundsException("asked for index " + pIndex + ", but index is out of bounds");
+        }
+        if (pCount == 0) {
+            throw new IllegalStateException("count cannot equal zero");
+        }
+        usedSize--;
+        var stack = itemInventory.get(pIndex);
+        var count = Math.min(stack.getCount(), pCount);
+        var copy = stack.copy();
+        copy.setCount(count);
+        stack.shrink(count);
+        setChanged();
+        return copy;
+    }
 
-	@Override
-	public void setItem(int pIndex, ItemStack pStack) {
-		itemInventory.set(pIndex, pStack);
-		setChanged();
-	}
+    @Override
+    public ItemStack removeItemNoUpdate(int pIndex) {
+        var stackCopy = itemInventory.get(pIndex).copy();
+        itemInventory.remove(pIndex);
+        return stackCopy;
+    }
 
-	@Override
-	public void setChanged() {
-	}
+    @Override
+    public void setItem(int pIndex, ItemStack pStack) {
+        itemInventory.set(pIndex, pStack);
+        setChanged();
+    }
 
-	@Override
-	public boolean stillValid(Player pPlayer) {
-		return true;
-	}
+    @Override
+    public void setChanged() {
+    }
 
-	@Override
-	public void clearContent() {
-		itemInventory.removeAllElements();
-		fluidInventory.removeAllElements();
-		setChanged();
-	}
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return true;
+    }
 
-	@Override
-	public CompoundTag serializeNBT() {
-		var tag = new CompoundTag();
-		if (hasFluid()) {
-			var fluidsTag = new ListTag();
-			var slot = 0;
-			for (FluidStack stack : fluidInventory) {
-				var nbt = new CompoundTag();
-				nbt.putInt(Constants.TAG_SLOT, slot++);
-				nbt.put(Constants.TAG_SINGLE_FLUID, stack.writeToNBT(new CompoundTag()));
-				fluidsTag.add(nbt);
-			}
-			tag.put(Constants.TAG_FLUIDS, fluidsTag);
-		}
-		if (hasItem()) {
-			var itemsTag = new ListTag();
-			var slot = 0;
-			for (ItemStack stack : itemInventory) {
-				var nbt = new CompoundTag();
-				nbt.putInt(Constants.TAG_SLOT, slot++);
-				nbt.put(Constants.TAG_SINGLE_ITEM, stack.serializeNBT());
-				itemsTag.add(nbt);
-			}
-			tag.put(Constants.TAG_ITEMS, itemsTag);
-		}
-		if (usedSize > 0)
-			tag.putInt(Constants.TAG_USED_SIZE, usedSize);
-		return tag;
-	}
+    @Override
+    public void clearContent() {
+        itemInventory.removeAllElements();
+        fluidInventory.removeAllElements();
+        setChanged();
+    }
 
-	@Override
-	public void deserializeNBT(CompoundTag tag) {
-		usedSize = tag.getInt(Constants.TAG_USED_SIZE);
-		clearContent();
-		if (usedSize == 0) {
-			return;
-		}
-		var fluidsTag = tag.getList(Constants.TAG_FLUIDS, Tag.TAG_COMPOUND);
-		if (!fluidsTag.isEmpty()) {
-			for (Tag compoundTag : fluidsTag) {
-				var slot = ((CompoundTag)compoundTag).getInt(Constants.TAG_SLOT);
-				var fluid = FluidStack.loadFluidStackFromNBT(((CompoundTag)compoundTag).getCompound(Constants.TAG_SINGLE_FLUID));
-				if (fluidInventory.size() <= slot)
-					fluidInventory.push(fluid);
-				else
-					fluidInventory.set(slot, fluid);
-			}
-		}
-		var itemsTag = tag.getList(Constants.TAG_ITEMS, Tag.TAG_COMPOUND);
-		if (!itemsTag.isEmpty()) {
-			for (Tag compoundTag : itemsTag) {
-				var slot = ((CompoundTag)compoundTag).getInt(Constants.TAG_SLOT);
-				var item = ItemStack.of(((CompoundTag)compoundTag).getCompound(Constants.TAG_SINGLE_ITEM));
-				if (itemInventory.size() <= slot)
-					itemInventory.push(item);
-				else
-					itemInventory.set(slot, item);
-			}
-		}
-	}
+    @Override
+    public CompoundTag serializeNBT() {
+        var tag = new CompoundTag();
+        if (hasFluid()) {
+            var fluidsTag = new ListTag();
+            var slot = 0;
+            for (FluidStack stack : fluidInventory) {
+                var nbt = new CompoundTag();
+                nbt.putInt(Constants.TAG_SLOT, slot++);
+                nbt.put(Constants.TAG_SINGLE_FLUID, stack.writeToNBT(new CompoundTag()));
+                fluidsTag.add(nbt);
+            }
+            tag.put(Constants.TAG_FLUIDS, fluidsTag);
+        }
+        if (hasItem()) {
+            var itemsTag = new ListTag();
+            var slot = 0;
+            for (ItemStack stack : itemInventory) {
+                var nbt = new CompoundTag();
+                nbt.putInt(Constants.TAG_SLOT, slot++);
+                nbt.put(Constants.TAG_SINGLE_ITEM, stack.serializeNBT());
+                itemsTag.add(nbt);
+            }
+            tag.put(Constants.TAG_ITEMS, itemsTag);
+        }
+        if (usedSize > 0)
+            tag.putInt(Constants.TAG_USED_SIZE, usedSize);
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag tag) {
+        usedSize = tag.getInt(Constants.TAG_USED_SIZE);
+        clearContent();
+        if (usedSize == 0) {
+            return;
+        }
+        var fluidsTag = tag.getList(Constants.TAG_FLUIDS, Tag.TAG_COMPOUND);
+        if (!fluidsTag.isEmpty()) {
+            for (Tag compoundTag : fluidsTag) {
+                var slot = ((CompoundTag) compoundTag).getInt(Constants.TAG_SLOT);
+                var fluid = FluidStack.loadFluidStackFromNBT(((CompoundTag) compoundTag).getCompound(Constants.TAG_SINGLE_FLUID));
+                if (fluidInventory.size() <= slot)
+                    fluidInventory.push(fluid);
+                else
+                    fluidInventory.set(slot, fluid);
+            }
+        }
+        var itemsTag = tag.getList(Constants.TAG_ITEMS, Tag.TAG_COMPOUND);
+        if (!itemsTag.isEmpty()) {
+            for (Tag compoundTag : itemsTag) {
+                var slot = ((CompoundTag) compoundTag).getInt(Constants.TAG_SLOT);
+                var item = ItemStack.of(((CompoundTag) compoundTag).getCompound(Constants.TAG_SINGLE_ITEM));
+                if (itemInventory.size() <= slot)
+                    itemInventory.push(item);
+                else
+                    itemInventory.set(slot, item);
+            }
+        }
+    }
 }

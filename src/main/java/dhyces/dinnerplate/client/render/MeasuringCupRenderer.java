@@ -7,7 +7,6 @@ import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import dhyces.dinnerplate.client.render.util.RectPrism;
 import dhyces.dinnerplate.client.render.util.RenderTypes;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -47,7 +46,7 @@ public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBl
             return;
 
         var fluid = fluidArray(cap.resolve().get().getFluidInTank(0));
-        var fluidHeight = ((fluid[0].getAmount()/100) * 0.4375f);
+        var fluidHeight = ((fluid[0].getAmount() / 100) * 0.4375f);
         var prism = RectPrism.fromPixel(6, 1, 6).toPixel(10, 1.1 + fluidHeight, 10);
         pPoseStack.pushPose();
         tessalateItemFluids(fluid, prism, pBuffer.getBuffer(RenderTypes.fluid()), pPoseStack, pPackedOverlay, pPackedLight, Direction.values());
@@ -58,7 +57,7 @@ public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBl
     public void render(MeasuringCupBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         if (pBlockEntity.hasFluid())
             tessalateFluids(fluidArray(pBlockEntity.getLastFluid()), pBlockEntity.getBlockPos(), new Vec3(6, 1, 6),
-                    new Vec3(10, 1.1 + ((float)(pBlockEntity.updateRenderable("", pPartialTick / 10)/100) * 0.4375f), 10), pBufferSource.getBuffer(RenderType.translucent()), pPoseStack, pPartialTick, pPackedLight,
+                    new Vec3(10, 1.1 + ((pBlockEntity.updateRenderable("", pPartialTick / 10) / 100) * 0.4375f), 10), pBufferSource.getBuffer(RenderType.translucent()), pPoseStack, pPartialTick, pPackedLight,
                     Direction.values());
     }
 }

@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import dhyces.dinnerplate.client.render.util.RectPrism;
-import dhyces.dinnerplate.client.render.util.RenderTypes;
-import dhyces.dinnerplate.dinnerunit.FlutemStack;
 import dhyces.dinnerplate.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -25,7 +22,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.Random;
-import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockEntity> implements IFluidRenderer {
@@ -64,7 +60,7 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
     public void render(MixingBowlBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         if (!pBlockEntity.hasLevel() || pBlockEntity.getBlockPos() == null)
             return;
-        var fluidHeight = ((pBlockEntity.updateRenderable("", pPartialTick / 10)/100) * 0.4375f);
+        var fluidHeight = ((pBlockEntity.updateRenderable("", pPartialTick / 10) / 100) * 0.4375f);
         if (pBlockEntity.hasFluid() && shouldRenderFluids(pBlockEntity, clientPlayer().getEyePosition()))
             renderFluids(pBlockEntity.getBlockPos(), pBufferSource, pPoseStack, fluidHeight, pPartialTick, pPackedLight, pBlockEntity.getFluids().toArray(FluidStack[]::new));
         if (pBlockEntity.hasItem() && shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition())) {

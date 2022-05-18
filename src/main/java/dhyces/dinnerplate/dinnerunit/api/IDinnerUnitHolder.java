@@ -4,19 +4,19 @@ import net.minecraft.world.entity.player.Player;
 
 public interface IDinnerUnitHolder {
 
-	public int getMaxUnits();
+    int getMaxUnits();
 
-	public int getFilledUnits();
+    int getFilledUnits();
 
-	public IDinnerUnit<?> getDinnerUnit(int slot);
+    IDinnerUnit<?> getDinnerUnit(int slot);
 
-	public IDinnerUnit<?> getLastUnit();
+    IDinnerUnit<?> getLastUnit();
 
-	public IDinnerUnit<?> removeLastUnit();
+    IDinnerUnit<?> removeLastUnit();
 
-	public IDinnerUnit<?> insertUnit(IDinnerUnit<?> unit);
+    IDinnerUnit<?> insertUnit(IDinnerUnit<?> unit);
 
-	//public boolean hasUnit();
+    //public boolean hasUnit();
 
-	public boolean canTake(Player player);
+    boolean canTake(Player player);
 }

@@ -25,32 +25,43 @@ import org.apache.logging.log4j.Logger;
 @Mod(DinnerPlate.MODID)
 public class DinnerPlate {
 
-	public static final String MODID = "dinnerplate";
+    public static final String MODID = "dinnerplate";
 
     public static final Logger LOGGER = LogManager.getLogger(DinnerPlate.class);
+    public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
 
-    public static void LOG_INFO(String str) {
-    	LOGGER.info(str);
-    }
+        @Override
+        public ItemStack makeIcon() {
+            return ItemRegistry.WHITE_PLATE_ITEM.get().getDefaultInstance();
+        }
+    };
 
     public DinnerPlate() {
-    	var bus = FMLJavaModLoadingContext.get().getModEventBus();
+        var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-    	ForgeMod.enableMilkFluid();
+        ForgeMod.enableMilkFluid();
 
         bus.addListener(this::setup);
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			new ClientInit(bus);
-		});
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            new ClientInit(bus);
+        });
 
-		if (FMLLoader.getLaunchHandler().isData())
-			bus.addListener(this::dataGenerators);
+        if (FMLLoader.getLaunchHandler().isData())
+            bus.addListener(this::dataGenerators);
 
         registerRegistries(bus);
     }
 
+    public static void LOG_INFO(String str) {
+        LOGGER.info(str);
+    }
+
+    public static ResourceLocation modLoc(String path) {
+        return new ResourceLocation(MODID, path);
+    }
+
     private void registerRegistries(final IEventBus bus) {
-    	BlockRegistry.register(bus);
+        BlockRegistry.register(bus);
         BEntityRegistry.register(bus);
         ItemRegistry.register(bus);
         FluidRegistry.register(bus);
@@ -62,24 +73,12 @@ public class DinnerPlate {
     }
 
     private void dataGenerators(final GatherDataEvent event) {
-    	event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID,  event.getExistingFileHelper()));
-    	event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
-		var blockGen = new TagGen.BlockTag(event.getGenerator(), MODID, event.getExistingFileHelper());
-		event.getGenerator().addProvider(blockGen);
-		event.getGenerator().addProvider(new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
-		event.getGenerator().addProvider(new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
-		event.getGenerator().addProvider(new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
+        var blockGen = new TagGen.BlockTag(event.getGenerator(), MODID, event.getExistingFileHelper());
+        event.getGenerator().addProvider(blockGen);
+        event.getGenerator().addProvider(new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
     }
-
-	public static ResourceLocation modLoc(String path) {
-		return new ResourceLocation(MODID, path);
-	}
-    
-    public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
-
-		@Override
-		public ItemStack makeIcon() {
-			return ItemRegistry.WHITE_PLATE_ITEM.get().getDefaultInstance();
-		}
-	};
 }

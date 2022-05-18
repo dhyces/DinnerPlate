@@ -1,7 +1,6 @@
 package dhyces.dinnerplate.tags;
 
 import dhyces.dinnerplate.DinnerPlate;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;

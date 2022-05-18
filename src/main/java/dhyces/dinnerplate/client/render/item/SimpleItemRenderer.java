@@ -10,17 +10,17 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class SimpleItemRenderer extends BlockEntityWithoutLevelRenderer implements IRenderer {
 
-	public SimpleItemRenderer() {
-		super(Minecraft.getInstance() == null ? null : Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-				Minecraft.getInstance() == null ?  null : Minecraft.getInstance().getEntityModels());
-	}
+    public SimpleItemRenderer() {
+        super(Minecraft.getInstance() == null ? null : Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+                Minecraft.getInstance() == null ? null : Minecraft.getInstance().getEntityModels());
+    }
 
-	@Override
-	public void renderByItem(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
-			MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-		render(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
-	}
+    @Override
+    public void renderByItem(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack,
+                             MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+        render(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+    }
 
-	public abstract void render(ItemStack stack, TransformType transformType, PoseStack poseStack,
-			MultiBufferSource bufferSource, int packedLight, int packedOverlay);
+    public abstract void render(ItemStack stack, TransformType transformType, PoseStack poseStack,
+                                MultiBufferSource bufferSource, int packedLight, int packedOverlay);
 }

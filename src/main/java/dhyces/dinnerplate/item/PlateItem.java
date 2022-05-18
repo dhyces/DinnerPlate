@@ -17,28 +17,29 @@ import java.util.function.Consumer;
 
 public class PlateItem extends CapabilityNBTBlockItem {
 
-	public PlateItem(Block block, Properties pProperties) {
-		super((stack, tag) -> {
-			return new ICapabilityProvider() {
-				@Override
-				public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-					return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> new ItemStackHandler(1)));
-				}};
-		}, block, pProperties);
-	}
+    public PlateItem(Block block, Properties pProperties) {
+        super((stack, tag) -> {
+            return new ICapabilityProvider() {
+                @Override
+                public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+                    return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> new ItemStackHandler(1)));
+                }
+            };
+        }, block, pProperties);
+    }
 
-	@Override
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(new IItemRenderProperties() {
-			@Override
-			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-				return new PlateRenderer();
-			}
-		});
-	}
+    @Override
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        consumer.accept(new IItemRenderProperties() {
+            @Override
+            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                return new PlateRenderer();
+            }
+        });
+    }
 
-	@Override
-	public SoundEvent getEquipSound() {
-		return DinnerSoundTypes.PLATE_SOUND_TYPE.getPlaceSound();
-	}
+    @Override
+    public SoundEvent getEquipSound() {
+        return DinnerSoundTypes.PLATE_SOUND_TYPE.getPlaceSound();
+    }
 }

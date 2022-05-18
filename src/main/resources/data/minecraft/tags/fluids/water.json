@@ -1,11 +1,11 @@
 {
-	"replace": false,
-	"values": [
-		"dinnerplate:flowing_mushroom_stew",
-		"dinnerplate:mushroom_stew",
-		"dinnerplate:flowing_beetroot_soup",
-		"dinnerplate:beetroot_soup",
-		"dinnerplate:flowing_rabbit_stew",
-		"dinnerplate:rabbit_stew"
-	]
+  "replace": false,
+  "values": [
+    "dinnerplate:flowing_mushroom_stew",
+    "dinnerplate:mushroom_stew",
+    "dinnerplate:flowing_beetroot_soup",
+    "dinnerplate:beetroot_soup",
+    "dinnerplate:flowing_rabbit_stew",
+    "dinnerplate:rabbit_stew"
+  ]
 }

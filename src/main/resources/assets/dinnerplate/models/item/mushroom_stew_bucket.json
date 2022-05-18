@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "dinnerplate:item/mushroom_stew_bucket"
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dinnerplate:item/mushroom_stew_bucket"
+  }
 }

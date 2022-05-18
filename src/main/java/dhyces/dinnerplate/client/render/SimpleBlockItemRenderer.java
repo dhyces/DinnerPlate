@@ -1,6 +1,7 @@
 package dhyces.dinnerplate.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dhyces.dinnerplate.client.render.util.IRenderer;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -19,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends BlockEntityWithoutLevelRenderer implements BlockEntityRenderer<T> {
+public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends BlockEntityWithoutLevelRenderer implements BlockEntityRenderer<T>, IRenderer {
 
     public SimpleBlockItemRenderer() {
         this(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
@@ -43,7 +44,7 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
                                 MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay);
 
     public void renderItem(ItemStack pStack, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel) {
-            Minecraft.getInstance().getItemRenderer().render(pStack, ItemTransforms.TransformType.NONE, false, pMatrixStack, pBuffer, pCombinedLight, pCombinedOverlay, pModel);
+        Minecraft.getInstance().getItemRenderer().render(pStack, ItemTransforms.TransformType.NONE, false, pMatrixStack, pBuffer, pCombinedLight, pCombinedOverlay, pModel);
     }
 
     public boolean shouldRenderItems(T pBlockEntity, Vec3 pPlayerEyePos) {
@@ -52,6 +53,10 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
 
     public boolean shouldRenderFluids(T pBlockEntity, Vec3 pCameraPos) {
         return closerThan(pBlockEntity, pCameraPos, getViewDistance());
+    }
+
+    public boolean playerCloserThan(T pBlockEntity, int viewDistance) {
+        return closerThan(pBlockEntity, clientPlayer().getEyePosition(), viewDistance);
     }
 
     public boolean closerThan(T pBlockEntity, Vec3 pCameraPos, int viewDistance) {

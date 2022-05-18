@@ -11,9 +11,9 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public interface IEdibleBlock {
 
-	public InteractionResult takeBite(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult res);
+    InteractionResult takeBite(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult res);
 
-	// In case the block wants to utilize an array of IBites to control every bite
-	public IBite getBite(int biteNum);
+    // In case the block wants to utilize an array of IBites to control every bite
+    IBite getBite(int biteNum);
 
 }

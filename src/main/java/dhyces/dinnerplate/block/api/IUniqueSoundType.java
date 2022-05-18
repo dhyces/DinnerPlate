@@ -8,6 +8,6 @@ import net.minecraftforge.common.util.ForgeSoundType;
 
 public interface IUniqueSoundType {
 
-	public ForgeSoundType getUniqueSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity);
+    ForgeSoundType getUniqueSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity);
 
 }

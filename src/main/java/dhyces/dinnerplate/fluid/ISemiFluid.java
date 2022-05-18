@@ -9,6 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface ISemiFluid extends BucketPickup {
 
-	public ItemStack getPile(BlockState state, BlockPos pos, Level level, Player player);
+    ItemStack getPile(BlockState state, BlockPos pos, Level level, Player player);
 
 }

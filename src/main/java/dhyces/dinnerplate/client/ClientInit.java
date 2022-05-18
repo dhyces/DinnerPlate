@@ -1,7 +1,6 @@
 package dhyces.dinnerplate.client;
 
 import dhyces.dinnerplate.DinnerPlate;
-import static dhyces.dinnerplate.DinnerPlate.MODID;
 import dhyces.dinnerplate.bite.IBitable;
 import dhyces.dinnerplate.bite.IBitableItem;
 import dhyces.dinnerplate.block.PlateBlock;
@@ -34,6 +33,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
+
+import static dhyces.dinnerplate.DinnerPlate.MODID;
 
 public class ClientInit {
 
@@ -71,7 +72,7 @@ public class ClientInit {
         });
         event.enqueueWork(() -> {
             edibleItems.stream().filter(i -> i instanceof IBitableItem).forEach(c -> {
-                ItemProperties.register(c, DinnerPlate.modLoc("bites"), (pStack, pLevel, pEntity, pSeed) -> (float)((IBitableItem)c).getBiteCount(pStack) / (float)((IBitableItem)c).getMaxBiteCount(pStack, pEntity));
+                ItemProperties.register(c, DinnerPlate.modLoc("bites"), (pStack, pLevel, pEntity, pSeed) -> (float) ((IBitableItem) c).getBiteCount(pStack) / (float) ((IBitableItem) c).getMaxBiteCount(pStack, pEntity));
             });
         });
         event.enqueueWork(() -> setRenderLayers());

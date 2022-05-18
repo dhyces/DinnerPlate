@@ -11,7 +11,6 @@ import dhyces.dinnerplate.util.Interpolation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,62 +23,62 @@ import net.minecraftforge.items.IItemHandler;
 
 public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory, IRenderableTracker {
 
-	private byte mixes = 0;
-	@OnlyIn(Dist.CLIENT)
-	Interpolation renderedFluid = new Interpolation(() -> (float)getFluidAmount());
-	private MixedCapability cap = new MixedCapability(this);
-	private LazyOptional<IFluidHandler> lazyFluid = LazyOptional.of(() -> cap);
-	private LazyOptional<IItemHandler> lazyItem = LazyOptional.of(() -> cap);
+    @OnlyIn(Dist.CLIENT)
+    Interpolation renderedFluid = new Interpolation(() -> (float) getFluidAmount());
+    private byte mixes = 0;
+    private final MixedCapability cap = new MixedCapability(this);
+    private final LazyOptional<IFluidHandler> lazyFluid = LazyOptional.of(() -> cap);
+    private final LazyOptional<IItemHandler> lazyItem = LazyOptional.of(() -> cap);
 
-	public MixingBowlBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-		super(BEntityRegistry.MIXING_BOWL_ENTITY.get(), pWorldPosition, pBlockState, 9);
-	}
+    public MixingBowlBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(BEntityRegistry.MIXING_BOWL_ENTITY.get(), pWorldPosition, pBlockState, 9);
+    }
 
-	public boolean mix() {
-		mixes++;
-		// TODO: change max mixes to be set in the config
-		var shouldCraft = mixes >= 3;
-		if (shouldCraft)
-			craft();
-		return shouldCraft;
-	}
+    public boolean mix() {
+        mixes++;
+        // TODO: change max mixes to be set in the config
+        var shouldCraft = mixes >= 3;
+        if (shouldCraft)
+            craft();
+        return shouldCraft;
+    }
 
-	@Override
-	public void write(CompoundTag tag) {
-		super.write(tag);
-		if (mixes > 0)
-			tag.putByte(Constants.TAG_MIX_STATE, mixes);
-	}
+    @Override
+    public void write(CompoundTag tag) {
+        super.write(tag);
+        if (mixes > 0)
+            tag.putByte(Constants.TAG_MIX_STATE, mixes);
+    }
 
-	@Override
-	public void read(CompoundTag tag) {
-		super.read(tag);
-		mixes = tag.getByte(Constants.TAG_MIX_STATE);
-	}
+    @Override
+    public void read(CompoundTag tag) {
+        super.read(tag);
+        mixes = tag.getByte(Constants.TAG_MIX_STATE);
+    }
 
-	@Override
-	public void craft() {
+    @Override
+    public void craft() {
 
-	}
+    }
 
-	@Override
-	public boolean hasRecipe() {
-		return true;
-	}
+    @Override
+    public boolean hasRecipe() {
+        return true;
+    }
 
-	@Override
-	public float updateRenderable(String id, float partial) {
-		return renderedFluid.updateChase(partial);
-	}
+    @Override
+    public float updateRenderable(String id, float partial) {
+        return renderedFluid.updateChase(partial);
+    }
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return lazyFluid.cast();
-		}
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return lazyItem.cast();
-		}
-		return super.getCapability(cap, side);
-	}
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return lazyFluid.cast();
+        }
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return lazyItem.cast();
+        }
+        return super.getCapability(cap, side);
+    }
 }

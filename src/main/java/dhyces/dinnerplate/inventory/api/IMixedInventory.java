@@ -6,16 +6,16 @@ import java.util.stream.Stream;
 
 public interface IMixedInventory extends IItemHolder, IFluidHolder {
 
-	public Stream<FlutemStack> mixedStream();
-	
-	public int getUsed();
+    Stream<FlutemStack> mixedStream();
 
-	public default int remaining() {
-		return getContainerSize() - getUsed();
-	}
+    int getUsed();
 
-	public default boolean isFull() {
-		return getUsed() == getContainerSize();
-	}
+    default int remaining() {
+        return getContainerSize() - getUsed();
+    }
+
+    default boolean isFull() {
+        return getUsed() == getContainerSize();
+    }
 
 }

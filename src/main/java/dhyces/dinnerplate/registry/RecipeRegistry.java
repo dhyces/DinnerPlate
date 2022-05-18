@@ -11,19 +11,19 @@ import java.util.function.Supplier;
 
 public class RecipeRegistry {
 
-	private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, DinnerPlate.MODID);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, DinnerPlate.MODID);
 
-	//public static final RegistryObject<RecipeSerializer<?>> MIXING_BOWL_RECIPE;
+    //public static final RegistryObject<RecipeSerializer<?>> MIXING_BOWL_RECIPE;
 
-	public static void register(IEventBus bus) {
-		RECIPE_REGISTRY.register(bus);
-	}
+    static {
+        //MIXING_BOWL_RECIPE = register("mixing_recipe", () -> new MixingRecipe.Serializer());
+    }
 
-	private static RegistryObject<RecipeSerializer<?>> register(String id, Supplier<RecipeSerializer<?>> sup) {
-		return RECIPE_REGISTRY.register(id, sup);
-	}
+    public static void register(IEventBus bus) {
+        RECIPE_REGISTRY.register(bus);
+    }
 
-	static {
-		//MIXING_BOWL_RECIPE = register("mixing_recipe", () -> new MixingRecipe.Serializer());
-	}
+    private static RegistryObject<RecipeSerializer<?>> register(String id, Supplier<RecipeSerializer<?>> sup) {
+        return RECIPE_REGISTRY.register(id, sup);
+    }
 }

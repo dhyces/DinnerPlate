@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.item;
 
 import dhyces.dinnerplate.capability.mixed.MixedCapability;
-import dhyces.dinnerplate.client.render.item.MixingBowlItemRenderer;
+import dhyces.dinnerplate.client.render.MixingBowlRenderer;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
@@ -20,7 +20,7 @@ public class MixingBowlItem extends CapabilityNBTBlockItem {
         consumer.accept(new IItemRenderProperties() {
             @Override
             public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return new MixingBowlItemRenderer();
+                return MixingBowlRenderer.INSTANCE;
             }
         });
     }

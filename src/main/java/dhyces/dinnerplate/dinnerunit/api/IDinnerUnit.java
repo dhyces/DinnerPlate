@@ -9,28 +9,28 @@ import java.util.function.Predicate;
 
 public interface IDinnerUnit<T> extends Predicate<Class<T>> {
 
-	public T getUnderlyingStack();
+    static <E> IDinnerUnit<?> of(E validUnit) {
+        if (validUnit instanceof ItemStack e) {
+            return new DinnerUnitItemStack(e);
+        } else if (validUnit instanceof FluidStack e) {
+            return new DinnerUnitFluidStack(e);
+        }
+        return null;
+    }
 
-	public int getAmount();
+    T getUnderlyingStack();
 
-	public default <E> E castOrDefault(Class<E> castTo, E orElse) {
-		if (getUnderlyingStack().getClass() == castTo) {
-			return castTo.cast(this.getUnderlyingStack());
-		}
-		return orElse;
-	}
+    int getAmount();
 
-	@Override
-	default boolean test(Class<T> t) {
-		return getUnderlyingStack().getClass() == t;
-	}
+    default <E> E castOrDefault(Class<E> castTo, E orElse) {
+        if (getUnderlyingStack().getClass() == castTo) {
+            return castTo.cast(this.getUnderlyingStack());
+        }
+        return orElse;
+    }
 
-	public static <E> IDinnerUnit<?> of(E validUnit) {
-		if (validUnit instanceof ItemStack e) {
-			return new DinnerUnitItemStack(e);
-		} else if (validUnit instanceof FluidStack e) {
-			return new DinnerUnitFluidStack(e);
-		}
-		return null;
-	}
+    @Override
+    default boolean test(Class<T> t) {
+        return getUnderlyingStack().getClass() == t;
+    }
 }
