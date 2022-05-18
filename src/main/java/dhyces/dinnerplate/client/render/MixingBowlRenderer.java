@@ -49,13 +49,13 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
         float fluidHeight = fluidCap.isPresent() ? fluidCap.map(c -> c.getTanks() * 0.4375f).get() : 0;
         var itemCap = pStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 
-        if (itemCap.isPresent()) {
-            var itemHandler = itemCap.resolve().get();
-            renderItems(pPoseStack, pBuffer, fluidHeight, pPackedLight, pPackedOverlay, Util.streamOf(itemHandler::getStackInSlot, itemHandler.getSlots()).toArray(ItemStack[]::new));
-        }
         if (fluidCap.isPresent()) {
             var fluidHandler = fluidCap.resolve().get();
             renderFluids(BlockPos.ZERO, pBuffer, pPoseStack, fluidHeight, pPackedOverlay, pPackedLight, Util.streamOf(fluidHandler::getFluidInTank, fluidHandler.getTanks()).toArray(FluidStack[]::new));
+        }
+        if (itemCap.isPresent()) {
+            var itemHandler = itemCap.resolve().get();
+            renderItems(pPoseStack, pBuffer, fluidHeight, pPackedLight, pPackedOverlay, false, Util.streamOf(itemHandler::getStackInSlot, itemHandler.getSlots()).toArray(ItemStack[]::new));
         }
         pPoseStack.popPose();
     }
@@ -68,11 +68,13 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
         if (pBlockEntity.hasFluid() && shouldRenderFluids(pBlockEntity, clientPlayer().getEyePosition()))
             renderFluids(pBlockEntity.getBlockPos(), pBufferSource, pPoseStack, fluidHeight, pPartialTick, pPackedLight, pBlockEntity.getFluids().toArray(FluidStack[]::new));
         if (pBlockEntity.hasItem() && shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition())) {
-            renderItems(pPoseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, pBlockEntity.getItems().toArray(ItemStack[]::new));
+            // TODO: I want to do more work on when the wave is enabled
+            var flag = !Mth.equal(fluidHeight, 0) && playerCloserThan(pBlockEntity, 24);
+            renderItems(pPoseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, flag, pBlockEntity.getItems().toArray(ItemStack[]::new));
         }
     }
 
-    public void renderItems(PoseStack poseStack, MultiBufferSource source, float fluidHeight, int packedLight, int packedOverlay, ItemStack... stacks) {
+    public void renderItems(PoseStack poseStack, MultiBufferSource source, float fluidHeight, int packedLight, int packedOverlay, boolean shouldWave, ItemStack... stacks) {
         poseStack.pushPose();
         poseStack.translate(fromPixel(8), fromPixel(fluidHeight + 2.5F), fromPixel(8));
         poseStack.scale(.25f, .25f, .25f);
@@ -86,10 +88,10 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
             nd *= Boolean.compare(nb, !nb);
             nd1 *= Boolean.compare(nb1, !nb1);
             var item = stacks[i];
-            var itemModel = Minecraft.getInstance().getItemRenderer().getModel(item, clientLevel(), clientPlayer(), 0);
+            var itemModel = Minecraft.getInstance().getItemRenderer().getModel(item, clientLevel(), clientPlayer(), 42);
             poseStack.pushPose();
             // TODO: rotations
-            poseStack.translate(nd, !Mth.equal(fluidHeight, 0) ? Math.sin(Blaze3D.getTime() + nd + nd1) / 16 : 0, nd1);
+            poseStack.translate(nd, shouldWave ? Math.sin(Blaze3D.getTime() + nd + nd1) / 16 : 0, nd1);
             poseStack.mulPose(doubleQuaternion(nd * 50, nd * 50, nd * 50, true));
             Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.NONE, false, poseStack, source, packedLight, packedOverlay, itemModel);
             poseStack.popPose();
