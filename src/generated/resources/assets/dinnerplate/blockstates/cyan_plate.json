@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "facing=north,plates=1": {
+      "model": "dinnerplate:block/cyan_plate"
+    },
+    "facing=south,plates=1": {
+      "model": "dinnerplate:block/cyan_plate"
+    },
+    "facing=west,plates=1": {
+      "model": "dinnerplate:block/cyan_plate"
+    },
+    "facing=east,plates=1": {
+      "model": "dinnerplate:block/cyan_plate"
+    },
+    "facing=north,plates=2": {
+      "model": "dinnerplate:block/cyan_plate_stacked_1"
+    },
+    "facing=south,plates=2": {
+      "model": "dinnerplate:block/cyan_plate_stacked_1"
+    },
+    "facing=west,plates=2": {
+      "model": "dinnerplate:block/cyan_plate_stacked_1"
+    },
+    "facing=east,plates=2": {
+      "model": "dinnerplate:block/cyan_plate_stacked_1"
+    },
+    "facing=north,plates=3": {
+      "model": "dinnerplate:block/cyan_plate_stacked_2"
+    },
+    "facing=south,plates=3": {
+      "model": "dinnerplate:block/cyan_plate_stacked_2"
+    },
+    "facing=west,plates=3": {
+      "model": "dinnerplate:block/cyan_plate_stacked_2"
+    },
+    "facing=east,plates=3": {
+      "model": "dinnerplate:block/cyan_plate_stacked_2"
+    },
+    "facing=north,plates=4": {
+      "model": "dinnerplate:block/cyan_plate_stacked_3"
+    },
+    "facing=south,plates=4": {
+      "model": "dinnerplate:block/cyan_plate_stacked_3"
+    },
+    "facing=west,plates=4": {
+      "model": "dinnerplate:block/cyan_plate_stacked_3"
+    },
+    "facing=east,plates=4": {
+      "model": "dinnerplate:block/cyan_plate_stacked_3"
+    },
+    "facing=north,plates=5": {
+      "model": "dinnerplate:block/cyan_plate_stacked_4"
+    },
+    "facing=south,plates=5": {
+      "model": "dinnerplate:block/cyan_plate_stacked_4"
+    },
+    "facing=west,plates=5": {
+      "model": "dinnerplate:block/cyan_plate_stacked_4"
+    },
+    "facing=east,plates=5": {
+      "model": "dinnerplate:block/cyan_plate_stacked_4"
+    },
+    "facing=north,plates=6": {
+      "model": "dinnerplate:block/cyan_plate_stacked_5"
+    },
+    "facing=south,plates=6": {
+      "model": "dinnerplate:block/cyan_plate_stacked_5"
+    },
+    "facing=west,plates=6": {
+      "model": "dinnerplate:block/cyan_plate_stacked_5"
+    },
+    "facing=east,plates=6": {
+      "model": "dinnerplate:block/cyan_plate_stacked_5"
+    },
+    "facing=north,plates=7": {
+      "model": "dinnerplate:block/cyan_plate_stacked_6"
+    },
+    "facing=south,plates=7": {
+      "model": "dinnerplate:block/cyan_plate_stacked_6"
+    },
+    "facing=west,plates=7": {
+      "model": "dinnerplate:block/cyan_plate_stacked_6"
+    },
+    "facing=east,plates=7": {
+      "model": "dinnerplate:block/cyan_plate_stacked_6"
+    },
+    "facing=north,plates=8": {
+      "model": "dinnerplate:block/cyan_plate_stacked_7"
+    },
+    "facing=south,plates=8": {
+      "model": "dinnerplate:block/cyan_plate_stacked_7"
+    },
+    "facing=west,plates=8": {
+      "model": "dinnerplate:block/cyan_plate_stacked_7"
+    },
+    "facing=east,plates=8": {
+      "model": "dinnerplate:block/cyan_plate_stacked_7"
+    }
+  }
+}

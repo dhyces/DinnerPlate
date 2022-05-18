@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "dinnerplate:block/measuring_cup"
+    },
+    "facing=south": {
+      "model": "dinnerplate:block/measuring_cup",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "dinnerplate:block/measuring_cup",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "dinnerplate:block/measuring_cup",
+      "y": 90
+    }
+  }
+}

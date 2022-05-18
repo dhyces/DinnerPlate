@@ -3,6 +3,7 @@ package dhyces.dinnerplate;
 import dhyces.dinnerplate.client.ClientInit;
 import dhyces.dinnerplate.datagen.BlockLootTableGen;
 import dhyces.dinnerplate.datagen.ModelGen;
+import dhyces.dinnerplate.datagen.StateGen;
 import dhyces.dinnerplate.datagen.TagGen;
 import dhyces.dinnerplate.registry.*;
 import net.minecraft.resources.ResourceLocation;
@@ -67,6 +68,7 @@ public class DinnerPlate {
 		event.getGenerator().addProvider(blockGen);
 		event.getGenerator().addProvider(new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
 		event.getGenerator().addProvider(new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
+		event.getGenerator().addProvider(new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
     }
 
 	public static ResourceLocation modLoc(String path) {
