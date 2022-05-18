@@ -37,20 +37,20 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class MockFoodItem extends Item implements IBitableItem {
+public class MockFoodItem extends BitableItem {
 
 	public MockFoodItem() {
-		super(new Item.Properties().food(new FoodProperties.Builder().build()).stacksTo(1));
+		super(c -> c, new Item.Properties().stacksTo(1));
 	}
 
-	public static ItemStack mockFoodStack(ItemStack mockStack, int chewCount) {
+	public static ItemStack mockFoodStack(ItemStack mockStack, LivingEntity entity, int chewCount) {
 		if (mockStack.getItem() instanceof MockFoodItem)
 			return mockStack;
 		if (mockStack.isEmpty() || !mockStack.isEdible())
 			throw new IllegalStateException("ItemStack: " + mockStack + " is not a qualifying item. Either empty or not edible.");
 		var stack = ItemRegistry.MOCK_FOOD_ITEM.get().getDefaultInstance().copy();
 		var optional = stack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY);
-		optional.ifPresent(c -> c.initialize(mockStack, chewCount));
+		optional.ifPresent(c -> c.initialize(mockStack, entity, chewCount));
 		return stack;
 	}
 
@@ -60,37 +60,37 @@ public class MockFoodItem extends Item implements IBitableItem {
 	}
 
 	@Override
-	public int getMaxBites(ItemStack stack) {
+	public int getMaxBites(ItemStack stack, LivingEntity entity) {
 		return getCapabilityLowest(stack).getMaxBites();
 	}
 
 	@Override
-	public boolean incrementBiteCount(ItemStack stack) {
+	public boolean incrementBiteCount(ItemStack stack, LivingEntity entity) {
 		return getCapabilityLowest(stack).incrementBiteCount();
 	}
 
 	@Override
-	public void setBiteCount(ItemStack stack, int count) {
+	public void setBiteCount(ItemStack stack, LivingEntity entity, int count) {
 		getCapabilityLowest(stack).setBiteCount(count);
 	}
 
 	@Override
-	public IBite getBite(ItemStack stack, int chew) {
+	public IBite getBite(ItemStack stack, LivingEntity entity, int chew) {
 		return getCapabilityLowest(stack).getBite(chew);
 	}
 
 	@Override
-	public boolean canAlwaysEat(ItemStack stack) {
+	public boolean canAlwaysEat(ItemStack stack, LivingEntity entity) {
 		return getCapabilityLowest(stack).canAlwaysEat();
 	}
 
 	@Override
-	public boolean canBeFast(ItemStack stack) {
+	public boolean canBeFast(ItemStack stack, LivingEntity entity) {
 		return getCapabilityLowest(stack).canBeFast();
 	}
 
 	@Override
-	public boolean isMeat(ItemStack stack) {
+	public boolean isMeat(ItemStack stack, LivingEntity entity) {
 		return getCapabilityLowest(stack).isMeat();
 	}
 
