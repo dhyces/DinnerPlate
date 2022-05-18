@@ -1,6 +1,6 @@
 package dhyces.dinnerplate.inventory.api;
 
-import dhyces.dinnerplate.dinnerunit.FlutemStack;
+import dhyces.dinnerplate.util.FlutemStack;
 
 import java.util.stream.Stream;
 

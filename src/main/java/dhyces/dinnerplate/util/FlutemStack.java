@@ -1,4 +1,4 @@
-package dhyces.dinnerplate.dinnerunit;
+package dhyces.dinnerplate.util;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;

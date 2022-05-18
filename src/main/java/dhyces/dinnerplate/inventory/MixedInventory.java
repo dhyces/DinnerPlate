@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.inventory;
 
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.dinnerunit.FlutemStack;
+import dhyces.dinnerplate.util.FlutemStack;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.nbt.CompoundTag;

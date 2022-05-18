@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.blockentity.api;
 
 import com.google.common.collect.ImmutableList;
-import dhyces.dinnerplate.dinnerunit.FlutemStack;
+import dhyces.dinnerplate.util.FlutemStack;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
 import net.minecraft.core.BlockPos;
