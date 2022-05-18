@@ -17,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -63,10 +64,10 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
     public void render(MixingBowlBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         if (!pBlockEntity.hasLevel() || pBlockEntity.getBlockPos() == null)
             return;
-        var fluidHeight = ((pBlockEntity.updateRenderable("fluid", 0.05f)/100) * 0.4375f);
-        if (pBlockEntity.hasFluid())
+        var fluidHeight = ((pBlockEntity.updateRenderable("", pPartialTick / 10)/100) * 0.4375f);
+        if (pBlockEntity.hasFluid() && shouldRenderFluids(pBlockEntity, clientPlayer().getEyePosition()))
             renderFluids(pBlockEntity.getBlockPos(), pBufferSource, pPoseStack, fluidHeight, pPartialTick, pPackedLight, pBlockEntity.getFluids().toArray(FluidStack[]::new));
-        if (pBlockEntity.hasItem()) {
+        if (pBlockEntity.hasItem() && shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition())) {
             renderItems(pPoseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, pBlockEntity.getItems().toArray(ItemStack[]::new));
         }
     }
