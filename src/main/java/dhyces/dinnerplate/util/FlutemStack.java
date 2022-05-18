@@ -17,7 +17,7 @@ public class FlutemStack {
     /**
      * Matches with the wrapped stack
      *
-     * @param o An itemstack or a fluidstack.
+     * @param oIn An itemstack or a fluidstack.
      */
     public boolean match(Object oIn) {
         return isItem() ? getItemStack().sameItem((ItemStack) oIn) : getFluidStack().isFluidEqual((FluidStack) oIn);
