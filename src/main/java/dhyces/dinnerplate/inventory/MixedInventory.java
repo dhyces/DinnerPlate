@@ -119,7 +119,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 
     @Override
     public int getFluidSize() {
-        return fluidInventory.size();
+        return usedSize - itemInventory.size();
     }
 
     @Override
@@ -300,6 +300,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
     public void clearContent() {
         itemInventory.removeAllElements();
         fluidInventory.removeAllElements();
+        usedSize = 0;
         setChanged();
     }
 
@@ -328,18 +329,12 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             }
             tag.put(Constants.TAG_ITEMS, itemsTag);
         }
-        if (usedSize > 0)
-            tag.putInt(Constants.TAG_USED_SIZE, usedSize);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        usedSize = tag.getInt(Constants.TAG_USED_SIZE);
         clearContent();
-        if (usedSize == 0) {
-            return;
-        }
         var fluidsTag = tag.getList(Constants.TAG_FLUIDS, Tag.TAG_COMPOUND);
         if (!fluidsTag.isEmpty()) {
             for (Tag compoundTag : fluidsTag) {
@@ -362,5 +357,6 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
                     itemInventory.set(slot, item);
             }
         }
+        this.usedSize = itemInventory.stream().mapToInt(c -> c.getCount()).sum() + fluidInventory.stream().mapToInt(c -> c.getAmount() / 100).sum();
     }
 }
