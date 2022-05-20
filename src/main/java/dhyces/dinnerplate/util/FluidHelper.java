@@ -40,6 +40,11 @@ public final class FluidHelper {
         return toFill.fill(toDrain.drain(testFill, action).copy(), action);
     }
 
+    public static int fill(IFluidHandler toFill, IFluidHandler toDrain, FluidAction actionFill, FluidAction actionDrain) {
+        var testFill = toFill.fill(toDrain.drain(Integer.MAX_VALUE, FluidAction.SIMULATE).copy(), FluidAction.SIMULATE);
+        return toFill.fill(toDrain.drain(testFill, actionDrain).copy(), actionFill);
+    }
+
     public static int simFill(IFluidHandler toFill, IFluidHandler toDrain) {
         var test = toDrain.drain(Integer.MAX_VALUE, FluidAction.SIMULATE);
         if (!test.isEmpty()) {

@@ -46,7 +46,7 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
         if (caps.isPresent()) {
             var blockHandler = caps.get().first;
             var itemHandler = caps.get().second;
-            var filled = FluidHelper.fill(blockHandler, itemHandler, FluidHelper.clientAction(isClient));
+            var filled = FluidHelper.fill(blockHandler, itemHandler, FluidHelper.clientAction(isClient), FluidHelper.clientAction(player.getAbilities().instabuild));
             if (filled > 0) {
                 if (!isClient) {
                     if (!itemHandler.getContainer().sameItem(item)) {
