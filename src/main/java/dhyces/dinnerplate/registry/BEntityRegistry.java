@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
+import dhyces.dinnerplate.blockentity.MortarBlockEntity;
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.Block;
@@ -28,13 +29,12 @@ import java.util.function.Supplier;
 @EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)
 public class BEntityRegistry {
 
+    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, DinnerPlate.MODID);
     public static final RegistryObject<BlockEntityType<PlateBlockEntity>> PLATE_ENTITY;
     public static final RegistryObject<BlockEntityType<MixingBowlBlockEntity>> MIXING_BOWL_ENTITY;
     public static final RegistryObject<BlockEntityType<MeasuringCupBlockEntity>> MEASURING_CUP_ENTITY;
-    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(
-            ForgeRegistries.BLOCK_ENTITIES,
-            DinnerPlate.MODID
-    );
+    public static final RegistryObject<BlockEntityType<MortarBlockEntity>> MORTAR_ENTITY;
+
     private static final List<Pair<Supplier<BlockEntityType<BlockEntity>>, BlockEntityRendererProvider<BlockEntity>>> renderers = new LinkedList<>();
 
     static {
@@ -57,6 +57,7 @@ public class BEntityRegistry {
                 BlockRegistry.BLACK_PLATE_BLOCK));
         MIXING_BOWL_ENTITY = register("mixing_bowl", () -> BlockEntityType.Builder.of(MixingBowlBlockEntity::new, BlockRegistry.MIXING_BOWL_BLOCK.get()).build(null));
         MEASURING_CUP_ENTITY = register("measuring_cup", () -> BlockEntityType.Builder.of(MeasuringCupBlockEntity::new, BlockRegistry.MEASURING_CUP_BLOCK.get()).build(null));
+        MORTAR_ENTITY = register("mortar_pestle", () -> BlockEntityType.Builder.of(MortarBlockEntity::new, BlockRegistry.MORTAR_BLOCK.get()).build(null));
     }
 
     public static void register(IEventBus bus) {

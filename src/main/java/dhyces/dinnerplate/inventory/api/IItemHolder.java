@@ -4,7 +4,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public interface IItemHolder extends Container {
+public interface IItemHolder extends Container, IInventory {
 
     /**
      * General query as to whether the object contains any items whatsoever

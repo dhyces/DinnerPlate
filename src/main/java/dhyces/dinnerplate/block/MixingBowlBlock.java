@@ -39,7 +39,7 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
         if (!player.getItemInHand(InteractionHand.OFF_HAND).isEmpty() && hand.equals(InteractionHand.MAIN_HAND))
             return InteractionResult.PASS;
         var preferredStack = getPreferredItemOtherwise(player, InteractionHand.OFF_HAND);
-        if (!preferredStack.isEmpty() && !bEntity.isFull()) {
+        if (!preferredStack.isEmpty() && !bEntity.getInventory().isFull()) {
             var lazyItemFluidHandler = FluidUtil.getFluidHandler(preferredStack);
             if (lazyItemFluidHandler.isPresent()) {
                 var itemHandler = lazyItemFluidHandler.resolve().get();
@@ -59,18 +59,16 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
             if (!preferredStack.is(Tags.COOKWARE_BLACKLIST)) {
                 if (!isClient) {
                     var itemCopy = ItemHandlerHelper.copyStackWithSize(preferredStack, 1);
-                    var ret = bEntity.insertItem(itemCopy);
+                    var ret = bEntity.getInventory().insertItem(itemCopy);
                     if (ret.isEmpty() && !player.getAbilities().instabuild)
                         preferredStack.shrink(1);
                 }
                 return InteractionResult.sidedSuccess(isClient);
             }
         }
-        if (bEntity.hasRecipe()) {
-            level.setBlockAndUpdate(pos, state.cycle(MIX_POSITION));
-            return InteractionResult.sidedSuccess(isClient);
-        }
-        return super.rightClick(state, bEntity, level, pos, player, hand, res, isClient);
+        bEntity.mix(level);
+        level.setBlockAndUpdate(pos, state.cycle(MIX_POSITION));
+        return InteractionResult.sidedSuccess(isClient);
     }
 
     @Override
@@ -85,8 +83,8 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
             if (fill > 0)
                 return InteractionResult.sidedSuccess(isClient);
         }
-        if (bEntity.hasItem()) {
-            var i = bEntity.removeLastItem();
+        if (bEntity.getInventory().hasItem()) {
+            var i = bEntity.getInventory().removeLastItem();
             insertInvOrSpawn(level, pos, 0.25, player.getInventory(), i);
             if (isClient)
                 Minecraft.getInstance().getItemInHandRenderer().itemUsed(hand);

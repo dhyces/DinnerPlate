@@ -3,7 +3,7 @@ package dhyces.dinnerplate.inventory.api;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public interface IFluidHolder {
+public interface IFluidHolder extends IInventory {
 
     /**
      * Returns whether or not the workstation contains any fluids

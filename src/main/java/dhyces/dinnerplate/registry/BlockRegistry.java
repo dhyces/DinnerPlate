@@ -1,11 +1,10 @@
 package dhyces.dinnerplate.registry;
 
 import dhyces.dinnerplate.DinnerPlate;
-import dhyces.dinnerplate.block.MeasuringCupBlock;
-import dhyces.dinnerplate.block.MixingBowlBlock;
-import dhyces.dinnerplate.block.PlateBlock;
+import dhyces.dinnerplate.block.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -39,10 +38,13 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> MIXING_BOWL_BLOCK;
     public static final RegistryObject<Block> MEASURING_CUP_BLOCK;
+    public static final RegistryObject<Block> MORTAR_BLOCK;
 
     public static final RegistryObject<LiquidBlock> MUSHROOM_STEW_FLUID_BLOCK;
     public static final RegistryObject<LiquidBlock> BEETROOT_SOUP_FLUID_BLOCK;
     public static final RegistryObject<LiquidBlock> RABBIT_STEW_FLUID_BLOCK;
+    public static final RegistryObject<LiquidBlock> WHEAT_FLOUR_BLOCK;
+    public static final RegistryObject<Block> DOUGH_BLOCK;
 
     static {
         WHITE_PLATE_BLOCK = register("white_plate", () -> new PlateBlock(Properties.of(Material.CLAY, MaterialColor.QUARTZ).strength(.2F)));
@@ -64,21 +66,20 @@ public class BlockRegistry {
 
         MIXING_BOWL_BLOCK = register("mixing_bowl", () -> new MixingBowlBlock(Properties.of(Material.CLAY, MaterialColor.TERRACOTTA_BROWN).strength(.2F)));
         MEASURING_CUP_BLOCK = register("measuring_cup", () -> new MeasuringCupBlock(Properties.of(Material.GLASS).strength(.2F)));
+        MORTAR_BLOCK = register("mortar_pestle", () -> new MortarBlock(Properties.of(Material.STONE).strength(.2F)));
 
-        MUSHROOM_STEW_FLUID_BLOCK = registerFluid("mushroom_stew", () -> new LiquidBlock(FluidRegistry.MUSHROOM_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_BROWN).strength(100)));
-        BEETROOT_SOUP_FLUID_BLOCK = registerFluid("beetroot_soup", () -> new LiquidBlock(FluidRegistry.BEETROOT_SOUP_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_RED).strength(100)));
-        RABBIT_STEW_FLUID_BLOCK = registerFluid("rabbit_stew", () -> new LiquidBlock(FluidRegistry.RABBIT_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_ORANGE).strength(100)));
+        MUSHROOM_STEW_FLUID_BLOCK = register("mushroom_stew", () -> new LiquidBlock(FluidRegistry.MUSHROOM_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_BROWN).strength(100)));
+        BEETROOT_SOUP_FLUID_BLOCK = register("beetroot_soup", () -> new LiquidBlock(FluidRegistry.BEETROOT_SOUP_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_RED).strength(100)));
+        RABBIT_STEW_FLUID_BLOCK = register("rabbit_stew", () -> new LiquidBlock(FluidRegistry.RABBIT_STEW_FLUID, Properties.of(Material.WATER).noCollission().noDrops().color(MaterialColor.COLOR_ORANGE).strength(100)));
+        WHEAT_FLOUR_BLOCK = register("wheat_flour", () -> new SolidLiquidBlock(FluidRegistry.WHEAT_FLOUR_FLUID, Properties.of(Material.SAND).noDrops().strength(100)));
+        DOUGH_BLOCK = register("dough", () -> new BucketableBlock(ItemRegistry.DOUGH_BUCKET, Properties.of(Material.CLAY)));
     }
 
     public static void register(IEventBus bus) {
         BLOCK_REGISTER.register(bus);
     }
 
-    private static RegistryObject<Block> register(String id, Supplier<Block> supplier) {
-        return BLOCK_REGISTER.register(id, supplier);
-    }
-
-    private static RegistryObject<LiquidBlock> registerFluid(String id, Supplier<LiquidBlock> supplier) {
+    private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> supplier) {
         return BLOCK_REGISTER.register(id, supplier);
     }
 }

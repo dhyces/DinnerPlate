@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import dhyces.dinnerplate.block.MixingBowlBlock;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.registry.BlockRegistry;
+import dhyces.dinnerplate.registry.ItemRegistry;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyBlockState;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -41,10 +43,6 @@ public class BlockLootTableGen implements Consumer<BiConsumer<ResourceLocation, 
     Map<ResourceLocation, LootTable.Builder> map = new HashMap<>();
 
     protected void addTables() {
-//		add(BlockRegistry.MIXING_BOWL_BLOCK.get(), LootTable.lootTable()
-//														.withPool(LootPool.lootPool()
-//																		.setRolls(ConstantValue.exactly(1.0f))
-//																		.));
         addPlateDrop(BlockRegistry.WHITE_PLATE_BLOCK.get());
         addPlateDrop(BlockRegistry.ORANGE_PLATE_BLOCK.get());
         addPlateDrop(BlockRegistry.MAGENTA_PLATE_BLOCK.get());
@@ -62,13 +60,17 @@ public class BlockLootTableGen implements Consumer<BiConsumer<ResourceLocation, 
         addPlateDrop(BlockRegistry.RED_PLATE_BLOCK.get());
         addPlateDrop(BlockRegistry.BLACK_PLATE_BLOCK.get());
 
-        // TODO
         add(BlockRegistry.MIXING_BOWL_BLOCK.get(), c -> oopsItsJustFunctions(c, copyItemsFunc(),
                 copyFluidsFunc(),
                 copyDataFunc("MixState"),
                 copyDataFunc("UsedSize"),
                 copyStateFunc(c, MixingBowlBlock.MIX_POSITION)));
         add(BlockRegistry.MEASURING_CUP_BLOCK.get(), c -> oopsItsJustFunctions(c, copyFluidFunc()));
+
+        add(BlockRegistry.DOUGH_BLOCK.get(), c -> LootTable.lootTable()
+                .withPool(singleRollPool()
+                        .add(LootItem.lootTableItem(ItemRegistry.DOUGH_ITEM.get()))
+                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(9)))));
     }
 
     protected void addPlateDrop(Block plateBlock) {

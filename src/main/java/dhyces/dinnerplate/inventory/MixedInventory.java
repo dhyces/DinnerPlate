@@ -1,9 +1,11 @@
 package dhyces.dinnerplate.inventory;
 
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.util.FlutemStack;
+import dhyces.dinnerplate.util.*;
 import dhyces.dinnerplate.inventory.api.IMixedInventory;
-import dhyces.dinnerplate.util.FluidHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -13,19 +15,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 // TODO: name could be changed since it's somewhat ambiguous. "what is mixed?", well in this case its both item and fluid stacks
-public class MixedInventory implements IMixedInventory, INBTSerializable<CompoundTag> {
+public class MixedInventory implements IMixedInventory {
 
     private final int size;
     private int usedSize = 0;
     private final Stack<ItemStack> itemInventory;
     private final Stack<FluidStack> fluidInventory;
+
+    Runnable onChanged = () -> {};
 
     public MixedInventory(int sizeIn) {
         size = sizeIn;
@@ -86,6 +93,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             return ItemStack.EMPTY;
         usedSize--;
         var peekedItem = itemInventory.peek();
+        setChanged();
         if (peekedItem.getCount() == 1)
             return itemInventory.pop();
         return peekedItem.split(1);
@@ -97,9 +105,11 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             var amount = stack.getCount();
             var safeAmount = Math.min(remaining(), amount);
             var copy = stack.copy();
-            var split = copy.split(safeAmount);
-            itemInventory.push(split);
+            copy.shrink(safeAmount);
+            for (int i : ContiguousSet.closed(1, safeAmount))
+                itemInventory.push(ItemHandlerHelper.copyStackWithSize(stack, 1));
             usedSize += safeAmount;
+            setChanged();
             return copy;
         }
         return stack;
@@ -110,9 +120,13 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
         if (usedSize < size && !stack.isEmpty()) {
             var amount = stack.getCount();
             var safeAmount = Math.min(remaining(), amount);
-            var split = stack.split(safeAmount);
-            itemInventory.insertElementAt(split, slot);
+            var copy = stack.copy();
+            copy.shrink(safeAmount);
+            for (int i : ContiguousSet.closed(1, safeAmount))
+                itemInventory.insertElementAt(ItemHandlerHelper.copyStackWithSize(stack, 1), slot);
             usedSize += safeAmount;
+            setChanged();
+            return copy;
         }
         return stack;
     }
@@ -173,6 +187,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
     public FluidStack removeLastFluid(int capacity) {
         if (fluidInventory.empty())
             return FluidStack.EMPTY;
+        setChanged();
         usedSize--;
         return fluidInventory.pop();
     }
@@ -181,6 +196,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
     public FluidStack removeFluid(int index) {
         if (fluidInventory.empty() || index < 0 || index > fluidInventory.size())
             return FluidStack.EMPTY;
+        setChanged();
         usedSize--;
         return fluidInventory.remove(index);
     }
@@ -192,10 +208,12 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
             var amount = fluidAmount / 100;
             var safeAmount = Math.min(remaining(), amount);
-            fluidInventory.push(FluidHelper.copyStackWithSize(stack, safeFluidAmount));
+            for (int i : ContiguousSet.closed(1, safeAmount))
+                fluidInventory.push(FluidHelper.copyStackWithSize(stack, 100));
             usedSize += safeAmount;
             var retStack = stack.copy();
             retStack.shrink(safeFluidAmount);
+            setChanged();
             return retStack;
         }
         return stack;
@@ -208,10 +226,12 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             var safeFluidAmount = Math.min(remaining() * 100, fluidAmount);
             var amount = fluidAmount / 100;
             var safeAmount = Math.min(remaining(), amount);
-            fluidInventory.insertElementAt(FluidHelper.copyStackWithSize(stack, safeFluidAmount), slot);
+            for (int i : ContiguousSet.closed(1, safeAmount))
+                fluidInventory.insertElementAt(FluidHelper.copyStackWithSize(stack, 100), slot);
             usedSize += safeAmount;
             var retStack = stack.copy();
             retStack.shrink(safeFluidAmount);
+            setChanged();
             return retStack;
         }
         return stack;
@@ -221,6 +241,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
     public FluidStack setFluid(int index, FluidStack stack) {
         var ret = fluidInventory.get(index) == null ? FluidStack.EMPTY : fluidInventory.get(index);
         fluidInventory.set(index, stack);
+        setChanged();
         return ret;
     }
 
@@ -289,6 +310,7 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
 
     @Override
     public void setChanged() {
+        onChanged.run();
     }
 
     @Override
@@ -358,5 +380,10 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             }
         }
         this.usedSize = itemInventory.stream().mapToInt(c -> c.getCount()).sum() + fluidInventory.stream().mapToInt(c -> c.getAmount() / 100).sum();
+    }
+
+    @Override
+    public void setOnChanged(Runnable methodToCall) {
+        this.onChanged = methodToCall;
     }
 }

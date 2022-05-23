@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public abstract class AbstractDinnerBlock<T extends AbstractDinnerBlockEntity> extends BaseEntityBlock implements IForkedInteract<T> {
 
-    protected AbstractDinnerBlock(Properties properties) {
+    public AbstractDinnerBlock(Properties properties) {
         super(properties);
     }
 

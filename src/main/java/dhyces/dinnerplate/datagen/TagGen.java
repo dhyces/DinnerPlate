@@ -67,6 +67,7 @@ public class TagGen {
             tag(Tags.SOUP).add(FluidRegistry.BEETROOT_SOUP_FLUID.get(), FluidRegistry.BEETROOT_SOUP_FLUID_FLOWING.get(),
                     FluidRegistry.MUSHROOM_STEW_FLUID.get(), FluidRegistry.MUSHROOM_STEW_FLUID_FLOWING.get(),
                     FluidRegistry.RABBIT_STEW_FLUID.get(), FluidRegistry.RABBIT_STEW_FLUID_FLOWING.get());
+            tag(Tags.FLOUR).add(FluidRegistry.WHEAT_FLOUR_FLUID.get(), FluidRegistry.WHEAT_FLOUR_FLUID_FLOWING.get());
         }
     }
 }

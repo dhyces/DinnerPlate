@@ -59,7 +59,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         var biteCount = capability.get().getBiteCount();
         if (biteCount > 0) {
             var itemRL = realStack.getItem().getRegistryName();
-            var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath());
+            var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, itemRL.getPath() + "_bitten");
 
             var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
             var bittenModel = Minecraft.getInstance().getModelManager().getModel(bittenInvRL);

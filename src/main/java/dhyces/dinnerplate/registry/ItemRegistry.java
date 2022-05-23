@@ -9,13 +9,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SolidBucketItem;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.LinkedList;
@@ -50,10 +49,14 @@ public class ItemRegistry {
 	public static final RegistryObject<Item> MOCK_FOOD_ITEM;
 
 	public static final RegistryObject<Item> CUT_CARROT_ITEM;
+	//public static final RegistryObject<Item> WHEAT_FLOUR;
+	public static final RegistryObject<Item> DOUGH_ITEM;
 
 	public static final RegistryObject<Item> MUSHROOM_STEW_BUCKET;
 	public static final RegistryObject<Item> BEETROOT_SOUP_BUCKET;
 	public static final RegistryObject<Item> RABBIT_STEW_BUCKET;
+	public static final RegistryObject<Item> WHEAT_FLOUR_BUCKET;
+	public static final RegistryObject<Item> DOUGH_BUCKET;
 
 	public static void register(IEventBus bus) {
 		ITEM_REGISTER.register(bus);
@@ -93,13 +96,15 @@ public class ItemRegistry {
 
 		MOCK_FOOD_ITEM = register("mock_food", MockFoodItem::new);
 
-		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(c -> c.addSimpleBite(1, 0.25f),
-																	new Item.Properties().tab(DinnerPlate.TAB)),
-															0.1f);
+		CUT_CARROT_ITEM = registerCompostable("cut_carrot", () -> new BitableItem(c -> c.addSimpleBite(1, 0.25f), new Item.Properties().tab(DinnerPlate.TAB)), 0.1f);
+		//WHEAT_FLOUR = register("wheat_flour", () -> new FluidBitableItem());
+		DOUGH_ITEM = register("dough", () -> new FluidBitableItem(FluidRegistry.DOUGH_FLUID, new BitableProperties.Builder().addSimpleBite(1, .75F).build(0, 0, 0), new Item.Properties().tab(DinnerPlate.TAB)));
 
 		MUSHROOM_STEW_BUCKET = register("mushroom_stew_bucket", () -> simpleBucket(FluidRegistry.MUSHROOM_STEW_FLUID));
 		BEETROOT_SOUP_BUCKET = register("beetroot_soup_bucket", () -> simpleBucket(FluidRegistry.BEETROOT_SOUP_FLUID));
 		RABBIT_STEW_BUCKET = register("rabbit_stew_bucket", () -> simpleBucket(FluidRegistry.RABBIT_STEW_FLUID));
+		WHEAT_FLOUR_BUCKET = register("wheat_flour_bucket", () -> simpleBucket(FluidRegistry.WHEAT_FLOUR_FLUID));
+		DOUGH_BUCKET = register("dough_bucket", () -> simpleSolidBucket(BlockRegistry.DOUGH_BLOCK.get()));
 	}
 
 	//TODO: ensure this event is a good place to add compostable items
@@ -113,5 +118,9 @@ public class ItemRegistry {
 
 	private static Item simpleBucket(Supplier<? extends Fluid> fluid) {
 		return new BucketItem(fluid, new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB));
+	}
+
+	private static Item simpleSolidBucket(Block block) {
+		return new SolidBucketItem(block, SoundEvents.BUCKET_EMPTY_POWDER_SNOW, new Item.Properties().stacksTo(1).tab(DinnerPlate.TAB));
 	}
 }

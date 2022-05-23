@@ -56,9 +56,9 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
 
     @Override
     public void render(PlateBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        if (!pBlockEntity.hasItem() || !shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition()))
+        if (!pBlockEntity.getInventory().hasItem() || !shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition()))
             return;
-        var item = pBlockEntity.getLastItem();
+        var item = pBlockEntity.getInventory().getLastItem();
         var model = getResolvedItemModel(item);
         pPoseStack.pushPose();
         pPoseStack.scale(.5F, .5F, .5F);

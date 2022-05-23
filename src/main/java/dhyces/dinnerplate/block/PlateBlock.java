@@ -51,8 +51,8 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
     @Override
     public InteractionResult rightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos,
                                         Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
-        if (plateEntity.hasItem()) {
-            var item = plateEntity.getLastItem();
+        if (plateEntity.getInventory().hasItem()) {
+            var item = plateEntity.getInventory().getLastItem();
             if (item.isEdible() && plateEntity.canBite(player)) {
                 if (!isClient)
                     plateEntity.bite(player);
@@ -83,7 +83,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
             } else if (levelProperty == 1) {
                 if (!isClient) {
                     var itemToSet = preferredItem.copy().split(1);
-                    plateEntity.setItem(itemToSet);
+                    plateEntity.getInventory().setItem(itemToSet);
                     if (!player.getAbilities().instabuild)
                         preferredItem.shrink(1);
                 }
@@ -100,9 +100,9 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
     public InteractionResult shiftRightClick(BlockState state, PlateBlockEntity plateEntity, Level level, BlockPos pos,
                                              Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
         var platesProperty = state.getValue(PLATES);
-        if (plateEntity.hasItem()) {
+        if (plateEntity.getInventory().hasItem()) {
             if (!isClient) {
-                var stack = plateEntity.removeLastItem();
+                var stack = plateEntity.getInventory().removeLastItem();
                 insertInvOrSpawn(level, pos, -0.25, player.getInventory(), stack);
             }
             level.playSound(player, pos, DinnerSoundTypes.PLATE_SOUND_TYPE.getStepSound(), SoundSource.BLOCKS, 1f, 1.2f);

@@ -4,7 +4,7 @@ import dhyces.dinnerplate.util.FlutemStack;
 
 import java.util.stream.Stream;
 
-public interface IMixedInventory extends IItemHolder, IFluidHolder {
+public interface IMixedInventory extends IItemHolder, IFluidHolder, IInventory {
 
     Stream<FlutemStack> mixedStream();
 

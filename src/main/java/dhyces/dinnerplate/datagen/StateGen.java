@@ -42,6 +42,8 @@ public class StateGen extends BlockStateProvider {
         plateBlock(BlockRegistry.GREEN_PLATE_BLOCK.get());
         plateBlock(BlockRegistry.RED_PLATE_BLOCK.get());
         plateBlock(BlockRegistry.BLACK_PLATE_BLOCK.get());
+
+        simpleBlock(BlockRegistry.DOUGH_BLOCK.get());
     }
 
     private void plateBlock(Block block) {

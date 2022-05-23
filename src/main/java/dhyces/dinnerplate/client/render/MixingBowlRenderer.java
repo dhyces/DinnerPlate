@@ -61,12 +61,12 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
         if (!pBlockEntity.hasLevel() || pBlockEntity.getBlockPos() == null)
             return;
         var fluidHeight = ((pBlockEntity.updateRenderable("", pPartialTick / 10) / 100) * 0.4375f);
-        if (pBlockEntity.hasFluid() && shouldRenderFluids(pBlockEntity, clientPlayer().getEyePosition()))
-            renderFluids(pBlockEntity.getBlockPos(), pBufferSource, pPoseStack, fluidHeight, pPartialTick, pPackedLight, pBlockEntity.getFluids().toArray(FluidStack[]::new));
-        if (pBlockEntity.hasItem() && shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition())) {
+        if (pBlockEntity.getInventory().hasFluid() && shouldRenderFluids(pBlockEntity, clientPlayer().getEyePosition()))
+            renderFluids(pBlockEntity.getBlockPos(), pBufferSource, pPoseStack, fluidHeight, pPartialTick, pPackedLight, pBlockEntity.getInventory().getFluids().toArray(FluidStack[]::new));
+        if (pBlockEntity.getInventory().hasItem() && shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition())) {
             // TODO: I want to do more work on when the wave is enabled
             var flag = !Mth.equal(fluidHeight, 0) && playerCloserThan(pBlockEntity, 24);
-            renderItems(pPoseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, flag, pBlockEntity.getItems().toArray(ItemStack[]::new));
+            renderItems(pPoseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, flag, pBlockEntity.getInventory().getItems().toArray(ItemStack[]::new));
         }
     }
 

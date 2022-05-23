@@ -125,6 +125,10 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
         return renderedFluid.updateChase(partial);
     }
 
+    @Override
+    public void setOnChanged(Runnable methodToCall) {
+    }
+
     class ListenedTank extends FluidTank {
 
         public ListenedTank(int capacity) {
