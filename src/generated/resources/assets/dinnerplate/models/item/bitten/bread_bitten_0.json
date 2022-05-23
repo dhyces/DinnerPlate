@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dinnerplate:item/bitten/bread_bitten_0"
+  }
+}

@@ -94,7 +94,7 @@ public class ClientInit {
     private void prepareSeparateModels() {
         edibleItems.stream().filter(c -> !(c instanceof IBitable))
                 .map(c -> {
-                    var n = new ResourceLocation(MODID, "item/bitten/bitten_" + c.getRegistryName().getPath());
+                    var n = new ResourceLocation(MODID, "item/bitten/" + c.getRegistryName().getPath() + "_bitten");
                     System.out.println(c + " new one " + n);
                     return n;
                 })

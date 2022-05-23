@@ -1,17 +1,16 @@
 {
-  "parent": "minecraft:item/generated",
   "overrides": [
     {
       "predicate": {
         "dinnerplate:bites": 0.0
       },
-      "model": "dinnerplate:item/bitten/golden_apple_bitten_0"
+      "model": "dinnerplate:item/bitten/pumpkin_pie_bitten_0"
     },
     {
       "predicate": {
         "dinnerplate:bites": 0.5
       },
-      "model": "dinnerplate:item/bitten/golden_apple_bitten_1"
+      "model": "dinnerplate:item/bitten/pumpkin_pie_bitten_1"
     }
   ]
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dinnerplate:item/bitten/golden_carrot_bitten_0"
+  }
+}
