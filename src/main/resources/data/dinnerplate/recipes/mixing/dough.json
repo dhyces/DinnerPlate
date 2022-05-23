@@ -1,0 +1,17 @@
+{
+	"type": "dinnerplate:mixing",
+	"ingredients": [
+		{
+			"fluid": "minecraft:water",
+			"amount": 100
+		},
+		{
+			"fluid": "dinnerplate:wheat_flour",
+			"amount": 200
+		}
+	],
+	"result": {
+		"fluid": "dinnerplate:dough",
+    "amount": 300
+	}
+}
