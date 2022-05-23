@@ -1,6 +1,7 @@
 package dhyces.dinnerplate.registry;
 
 import dhyces.dinnerplate.DinnerPlate;
+import dhyces.dinnerplate.recipe.MixingRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -13,11 +14,7 @@ public class RecipeRegistry {
 
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, DinnerPlate.MODID);
 
-    //public static final RegistryObject<RecipeSerializer<?>> MIXING_BOWL_RECIPE;
-
-    static {
-        //MIXING_BOWL_RECIPE = register("mixing_recipe", () -> new MixingRecipe.Serializer());
-    }
+    public static final RegistryObject<RecipeSerializer<?>> MIXING_BOWL_RECIPE;
 
     public static void register(IEventBus bus) {
         RECIPE_REGISTRY.register(bus);
@@ -25,5 +22,9 @@ public class RecipeRegistry {
 
     private static RegistryObject<RecipeSerializer<?>> register(String id, Supplier<RecipeSerializer<?>> sup) {
         return RECIPE_REGISTRY.register(id, sup);
+    }
+
+    static {
+        MIXING_BOWL_RECIPE = register("mixing", () -> new MixingRecipe.Serializer());
     }
 }
