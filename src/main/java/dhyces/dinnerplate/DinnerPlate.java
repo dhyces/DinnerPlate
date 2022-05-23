@@ -1,10 +1,7 @@
 package dhyces.dinnerplate;
 
 import dhyces.dinnerplate.client.ClientInit;
-import dhyces.dinnerplate.datagen.BlockLootTableGen;
-import dhyces.dinnerplate.datagen.ModelGen;
-import dhyces.dinnerplate.datagen.StateGen;
-import dhyces.dinnerplate.datagen.TagGen;
+import dhyces.dinnerplate.datagen.*;
 import dhyces.dinnerplate.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -66,6 +63,7 @@ public class DinnerPlate {
         ItemRegistry.register(bus);
         FluidRegistry.register(bus);
         SoundRegistry.register(bus);
+        RecipeRegistry.register(bus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -73,7 +71,8 @@ public class DinnerPlate {
     }
 
     private void dataGenerators(final GatherDataEvent event) {
-        event.getGenerator().addProvider(new ModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new BlockModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new ItemModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
         var blockGen = new TagGen.BlockTag(event.getGenerator(), MODID, event.getExistingFileHelper());
         event.getGenerator().addProvider(blockGen);
