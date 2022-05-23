@@ -17,8 +17,8 @@ public abstract class StewFluid extends ForgeFlowingFluid {
     protected StewFluid(int color, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<LiquidBlock> block, Supplier<Item> bucket) {
         super(new Properties(source,
                 flowing,
-                FluidAttributes.builder(new ResourceLocation(DinnerPlate.MODID, "block/soup_still"),
-                                new ResourceLocation(DinnerPlate.MODID, "block/soup_flow"))
+                FluidAttributes.builder(DinnerPlate.modLoc("block/soup_still"),
+                                DinnerPlate.modLoc("block/soup_flow"))
                         .color(color)
                         .density(3000)
                         .viscosity(6000))
