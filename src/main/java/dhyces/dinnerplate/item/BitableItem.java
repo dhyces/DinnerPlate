@@ -76,7 +76,7 @@ public class BitableItem extends Item implements IBitableItem {
 
 	@Override
 	public int getMaxBites(ItemStack stack, LivingEntity entity) {
-		return getBitableProperties(stack, entity).getBiteSize();
+		return getBitableProperties(stack, entity).getMaxBites();
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class BitableItem extends Item implements IBitableItem {
 
 	@Override
 	public IBite getBite(ItemStack stack, LivingEntity entity, int chew) {
-		return getBitableProperties(stack, entity).getBite(getBiteCount(stack));
+		return getBitableProperties(stack, entity).traverse(getBiteCount(stack));
 	}
 
 	@Override
