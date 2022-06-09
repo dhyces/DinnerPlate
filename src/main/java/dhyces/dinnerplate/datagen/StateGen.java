@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class StateGen extends BlockStateProvider {
 
@@ -48,7 +49,7 @@ public class StateGen extends BlockStateProvider {
         getVariantBuilder(block)
                 .forAllStates(blockState -> {
                     var plates = blockState.getValue(PlateBlock.PLATES);
-                    var plateStr = block.getRegistryName().getPath();
+                    var plateStr = ForgeRegistries.BLOCKS.getKey(block).getPath();
                     var model = models().getExistingFile(modLoc(plates == 1 ? plateStr : plateStr + "_stacked_" + (plates - 1)));
                     return ConfiguredModel.builder()
                             .modelFile(model)

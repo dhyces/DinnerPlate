@@ -71,13 +71,13 @@ public class DinnerPlate {
     }
 
     private void dataGenerators(final GatherDataEvent event) {
-        event.getGenerator().addProvider(new BlockModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new ItemModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new BlockModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new ItemModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
         var blockGen = new TagGen.BlockTag(event.getGenerator(), MODID, event.getExistingFileHelper());
-        event.getGenerator().addProvider(blockGen);
-        event.getGenerator().addProvider(new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, blockGen);
+        event.getGenerator().addProvider(true, new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
     }
 }

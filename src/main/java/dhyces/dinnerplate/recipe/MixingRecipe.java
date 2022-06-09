@@ -17,7 +17,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -105,7 +104,7 @@ public class MixingRecipe implements Recipe<MixedInventory> {
         return MIXING_TYPE;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixingRecipe> {
+    public static class Serializer implements RecipeSerializer<MixingRecipe> {
 
         @Override
         public MixingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {

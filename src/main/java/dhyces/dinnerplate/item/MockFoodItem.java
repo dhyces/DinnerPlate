@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +21,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -120,7 +118,7 @@ public class MockFoodItem extends BitableItem {
 	public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents,
 			TooltipFlag pIsAdvanced) {
 		if (getCapabilityLowest(pStack).getRealStack().isEmpty() && pStack != getDefaultInstance())
-			pTooltipComponents.add(new TextComponent("You should not have this item").withStyle(ChatFormatting.RED));
+			pTooltipComponents.add(Component.literal("You should not have this item").withStyle(ChatFormatting.RED));
 	}
 
 	@Override

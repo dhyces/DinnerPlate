@@ -24,7 +24,7 @@ public interface IBitableItem extends IBitable<ItemStack> {
 		var returnStack = stack;
 		var bite = getBite(stack, player, getBiteCount(stack));
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
-		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
+		level.gameEvent(player, GameEvent.EAT, player.getEyePosition());
 		level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), getEatingSound(stack), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
 		spawnParticles(level, getPlayerLocalPos(player, new Vec3(0, -0.1, 0.3)), stack);
 		for(Pair<MobEffectInstance, Float> pair : bite.getEffects()) {

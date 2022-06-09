@@ -35,7 +35,7 @@ public class FluidStackIngredient implements Predicate<FluidStack> {
         if (ing.stacks.length == 1) {
             var stack = ing.stacks[0];
             var jsonOBJ = new JsonObject();
-            jsonOBJ.addProperty("fluid", stack.getFluid().getRegistryName().toString());
+            jsonOBJ.addProperty("fluid", ForgeRegistries.FLUIDS.getKey(stack.getFluid()).toString());
             jsonOBJ.addProperty("amount", stack.getAmount());
             if (stack.hasTag())
                 jsonOBJ.add("nbt", JsonParser.parseString(stack.getTag().getAsString()));
@@ -44,7 +44,7 @@ public class FluidStackIngredient implements Predicate<FluidStack> {
         var jsonArray = new JsonArray(ing.stacks.length);
         for (FluidStack stack : ing.stacks) {
             var jsonOBJ = new JsonObject();
-            jsonOBJ.addProperty("fluid", stack.getFluid().getRegistryName().toString());
+            jsonOBJ.addProperty("fluid", ForgeRegistries.FLUIDS.getKey(stack.getFluid()).toString());
             jsonOBJ.addProperty("amount", stack.getAmount());
             if (stack.hasTag())
                 jsonOBJ.add("nbt", JsonParser.parseString(stack.getTag().getAsString()));

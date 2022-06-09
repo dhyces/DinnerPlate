@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.model.*;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         }
         var biteCount = capability.get().getBiteCount();
         if (biteCount > 0) {
-            var itemRL = realStack.getItem().getRegistryName();
+            var itemRL = ForgeRegistries.ITEMS.getKey(realStack.getItem());
             var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath());
 
             var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
@@ -125,20 +126,18 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         return builder.build();
     }
 
-    private Resource getResource(ResourceLocation resourceRL) throws Exception {
-        try {
-            return Minecraft.getInstance().getResourceManager().getResource(resourceRL);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        throw new Exception("Resource with RL: {" + resourceRL + "} not found");
+    private Optional<Resource> getResource(ResourceLocation resourceRL) {
+        return Minecraft.getInstance().getResourceManager().getResource(resourceRL);
     }
 
     private Optional<NativeImage> tryGetStaticImage(ResourceLocation resourceRL) {
-        try {
-            return Optional.of(NativeImage.read(getResource(resourceRL).getInputStream()));
-        } catch (Exception e) {
-            e.printStackTrace();
+        var optionalResource = getResource(resourceRL);
+        if (optionalResource.isPresent()) {
+            try {
+                return Optional.of(NativeImage.read(optionalResource.get().open()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return Optional.empty();
     }
@@ -168,7 +167,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         protected VirtualSprite(TextureAtlasSprite baseSprite, NativeImage image) {
             super(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS),
                     new TextureAtlasSprite.Info(baseSprite.getName(), image.getWidth(), image.getHeight(), AnimationMetadataSection.EMPTY),
-                    Minecraft.getInstance().options.mipmapLevels,
+                    Minecraft.getInstance().options.mipmapLevels().get(),
                     (int) (baseSprite.getX() / baseSprite.getU0()),
                     (int) (baseSprite.getY() / baseSprite.getV0()),
                     baseSprite.getX(),

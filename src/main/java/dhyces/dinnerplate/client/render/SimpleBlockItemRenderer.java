@@ -70,6 +70,6 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
     }
 
     public boolean isGraphicsMode(GraphicsStatus graphicsStatus) {
-        return Minecraft.getInstance().options.graphicsMode.equals(graphicsStatus);
+        return Minecraft.getInstance().options.graphicsMode().get().equals(graphicsStatus);
     }
 }

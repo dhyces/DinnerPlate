@@ -48,7 +48,7 @@ public interface IBitable<T> extends IEdible<T> {
 		// TODO: ~~this breaks MockFood~~ Haven't noticed anything breaking, I must have fixed whatever was breaking a while ago. Left note here though, just in case.
 		var bite = getBite(bitable, player, getBiteCount(bitable));
 		player.getFoodData().eat(bite.getNutrition(), bite.getSaturationModifier());
-		level.gameEvent(player, GameEvent.EAT, player.eyeBlockPosition());
+		level.gameEvent(player, GameEvent.EAT, player.getEyePosition());
 		level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), getEatingSound(bitable), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
 		for(Pair<MobEffectInstance, Float> pair : bite.getEffects()) {
 			if (!level.isClientSide && pair.getFirst() != null && level.random.nextFloat() < pair.getSecond()) {

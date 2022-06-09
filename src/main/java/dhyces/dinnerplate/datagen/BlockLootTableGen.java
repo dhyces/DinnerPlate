@@ -28,6 +28,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -149,7 +150,7 @@ public class BlockLootTableGen implements Consumer<BiConsumer<ResourceLocation, 
             if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
                 LootTable.Builder loottable$builder = map.remove(block.getLootTable());
                 if (loottable$builder == null) {
-                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", resourcelocation, Registry.BLOCK.getKey(block)));
+                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", resourcelocation, ForgeRegistries.BLOCKS.getKey(block)));
                 }
 
                 p_124179_.accept(resourcelocation, loottable$builder);

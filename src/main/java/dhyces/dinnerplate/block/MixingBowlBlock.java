@@ -89,7 +89,7 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
             var i = bEntity.removeLastItem();
             insertInvOrSpawn(level, pos, 0.25, player.getInventory(), i);
             if (isClient)
-                Minecraft.getInstance().getItemInHandRenderer().itemUsed(hand);
+                Minecraft.getInstance().player.swing(hand);
             return InteractionResult.CONSUME;
         }
         return super.shiftRightClick(state, bEntity, level, pos, player, hand, res, isClient);
