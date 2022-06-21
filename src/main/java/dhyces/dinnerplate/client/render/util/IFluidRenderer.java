@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 public interface IFluidRenderer extends IRenderer {
@@ -38,7 +40,7 @@ public interface IFluidRenderer extends IRenderer {
         Fluid fluid = stack.getFluid();
         Level level = clientLevel();
         TextureAtlasSprite stillSprite = ForgeHooksClient.getFluidSprites(level, pos, fluid.defaultFluidState())[0];
-        int packedColor = fluid.getAttributes().getColor(level, pos);
+        int packedColor = RenderProperties.get(fluid).getColorTint(fluid.defaultFluidState(), level, pos);
         for (Direction side : faces) {
             var verts = prism.getVertices(side);
             var positive = side.getAxisDirection().equals(Direction.AxisDirection.POSITIVE);

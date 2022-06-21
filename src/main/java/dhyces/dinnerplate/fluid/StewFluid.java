@@ -1,13 +1,11 @@
 package dhyces.dinnerplate.fluid;
 
-import dhyces.dinnerplate.DinnerPlate;
-import net.minecraft.resources.ResourceLocation;
+import dhyces.dinnerplate.registry.FluidTypeRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 import java.util.function.Supplier;
@@ -15,16 +13,7 @@ import java.util.function.Supplier;
 public abstract class StewFluid extends ForgeFlowingFluid {
 
     protected StewFluid(int color, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<LiquidBlock> block, Supplier<Item> bucket) {
-        super(new Properties(source,
-                flowing,
-                FluidAttributes.builder(DinnerPlate.modLoc("block/soup_still"),
-                                DinnerPlate.modLoc("block/soup_flow"))
-                        .color(color)
-                        .density(3000)
-                        .viscosity(6000))
-                .block(block)
-                .bucket(bucket)
-                .tickRate(20));
+        super(new Properties(FluidTypeRegistry.STEW_FLUID_TYPE, source, flowing));
     }
 
     public static class Source extends StewFluid {
