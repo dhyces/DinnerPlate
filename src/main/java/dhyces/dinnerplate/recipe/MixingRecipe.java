@@ -28,7 +28,7 @@ public class MixingRecipe implements Recipe<MixedInventory> {
 
     public static final RecipeType<MixingRecipe> MIXING_TYPE = new RecipeType<>() {
         public String toString() {
-            return "mixing";
+            return "dinnerplate:mixing";
         }
     };
 
