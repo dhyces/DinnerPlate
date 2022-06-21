@@ -12,16 +12,16 @@ import java.util.function.Supplier;
 
 public class RecipeRegistry {
 
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.RECIPE_SERIALIZERS, DinnerPlate.MODID);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTER = DeferredRegister.create(ForgeRegistries.Keys.RECIPE_SERIALIZERS, DinnerPlate.MODID);
 
     public static final RegistryObject<RecipeSerializer<?>> MIXING_BOWL_RECIPE;
 
     public static void register(IEventBus bus) {
-        RECIPE_REGISTRY.register(bus);
+        RECIPE_REGISTER.register(bus);
     }
 
     private static RegistryObject<RecipeSerializer<?>> register(String id, Supplier<RecipeSerializer<?>> sup) {
-        return RECIPE_REGISTRY.register(id, sup);
+        return RECIPE_REGISTER.register(id, sup);
     }
 
     static {

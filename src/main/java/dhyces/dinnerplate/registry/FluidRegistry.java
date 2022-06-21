@@ -20,7 +20,7 @@ public class FluidRegistry {
     public static final RegistryObject<ForgeFlowingFluid> BEETROOT_SOUP_FLUID;
     public static final RegistryObject<ForgeFlowingFluid> RABBIT_STEW_FLUID_FLOWING;
     public static final RegistryObject<ForgeFlowingFluid> RABBIT_STEW_FLUID;
-    private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.FLUIDS, DinnerPlate.MODID);
+    private static final DeferredRegister<Fluid> FLUID_REGISTER = DeferredRegister.create(ForgeRegistries.Keys.FLUIDS, DinnerPlate.MODID);
 
     static {
         MUSHROOM_STEW_FLUID_FLOWING = registerFlowingFluid("flowing_mushroom_stew", () -> new StewFluid.Flowing(ARGB32.color(255, 186, 109, 74),
@@ -56,14 +56,14 @@ public class FluidRegistry {
     }
 
     public static void register(IEventBus bus) {
-        FLUID_REGISTRY.register(bus);
+        FLUID_REGISTER.register(bus);
     }
 
     private static RegistryObject<Fluid> register(String id, Supplier<Fluid> supplier) {
-        return FLUID_REGISTRY.register(id, supplier);
+        return FLUID_REGISTER.register(id, supplier);
     }
 
     private static RegistryObject<ForgeFlowingFluid> registerFlowingFluid(String id, Supplier<ForgeFlowingFluid> supplier) {
-        return FLUID_REGISTRY.register(id, supplier);
+        return FLUID_REGISTER.register(id, supplier);
     }
 }

@@ -12,7 +12,7 @@ public class SoundRegistry {
 
     public static final RegistryObject<SoundEvent> PLATE_PLACED;
     public static final RegistryObject<SoundEvent> PLATE_STEP;
-    private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.Keys.SOUND_EVENTS, DinnerPlate.MODID);
+    private static final DeferredRegister<SoundEvent> SOUND_EVENT_REGISTER = DeferredRegister.create(ForgeRegistries.Keys.SOUND_EVENTS, DinnerPlate.MODID);
 
     static {
         PLATE_PLACED = register("plate_placed");
@@ -20,10 +20,10 @@ public class SoundRegistry {
     }
 
     public static void register(IEventBus bus) {
-        SOUND_EVENTS.register(bus);
+        SOUND_EVENT_REGISTER.register(bus);
     }
 
     private static RegistryObject<SoundEvent> register(String id) {
-        return SOUND_EVENTS.register(id, () -> new SoundEvent(new ResourceLocation(DinnerPlate.MODID, id)));
+        return SOUND_EVENT_REGISTER.register(id, () -> new SoundEvent(new ResourceLocation(DinnerPlate.MODID, id)));
     }
 }
