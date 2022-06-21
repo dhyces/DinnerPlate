@@ -32,7 +32,7 @@ public class BEntityRegistry {
     public static final RegistryObject<BlockEntityType<MixingBowlBlockEntity>> MIXING_BOWL_ENTITY;
     public static final RegistryObject<BlockEntityType<MeasuringCupBlockEntity>> MEASURING_CUP_ENTITY;
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(
-            ForgeRegistries.BLOCK_ENTITIES,
+            ForgeRegistries.Keys.BLOCK_ENTITY_TYPES,
             DinnerPlate.MODID
     );
     private static final List<Pair<Supplier<BlockEntityType<BlockEntity>>, BlockEntityRendererProvider<BlockEntity>>> renderers = new LinkedList<>();

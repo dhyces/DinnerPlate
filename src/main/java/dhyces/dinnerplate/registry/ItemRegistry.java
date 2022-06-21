@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 public class ItemRegistry {
 
-	private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(Registry.ITEM_REGISTRY, DinnerPlate.MODID);
+	private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.Keys.ITEMS, DinnerPlate.MODID);
 	public static final List<Pair<Supplier<Item>, Float>> COMPOSTABLES = new LinkedList<>();
 
 	public static final RegistryObject<Item> WHITE_PLATE_ITEM;

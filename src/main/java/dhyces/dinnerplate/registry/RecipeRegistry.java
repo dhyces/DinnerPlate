@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class RecipeRegistry {
 
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, DinnerPlate.MODID);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.RECIPE_SERIALIZERS, DinnerPlate.MODID);
 
     public static final RegistryObject<RecipeSerializer<?>> MIXING_BOWL_RECIPE;
 

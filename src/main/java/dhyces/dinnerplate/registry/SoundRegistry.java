@@ -12,7 +12,7 @@ public class SoundRegistry {
 
     public static final RegistryObject<SoundEvent> PLATE_PLACED;
     public static final RegistryObject<SoundEvent> PLATE_STEP;
-    private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DinnerPlate.MODID);
+    private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.Keys.SOUND_EVENTS, DinnerPlate.MODID);
 
     static {
         PLATE_PLACED = register("plate_placed");
