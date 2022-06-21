@@ -23,7 +23,6 @@ import net.minecraftforge.items.IItemHandler;
 
 public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory, IRenderableTracker {
 
-    @OnlyIn(Dist.CLIENT)
     Interpolation renderedFluid = new Interpolation(() -> (float) getFluidAmount());
     private byte mixes = 0;
     private final MixedCapability cap = new MixedCapability(this);
