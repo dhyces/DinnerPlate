@@ -65,9 +65,9 @@ public class BlockRegistry {
         MIXING_BOWL_BLOCK = register("mixing_bowl", () -> new MixingBowlBlock(Properties.of(Material.CLAY, MaterialColor.TERRACOTTA_BROWN).strength(.2F)));
         MEASURING_CUP_BLOCK = register("measuring_cup", () -> new MeasuringCupBlock(Properties.of(Material.GLASS).strength(.2F)));
 
-        MUSHROOM_STEW_FLUID_BLOCK = registerFluid("mushroom_stew", () -> new LiquidBlock(FluidRegistry.MUSHROOM_STEW_FLUID, Properties.of(Material.WATER).noCollission().color(MaterialColor.COLOR_BROWN).strength(100)));
-        BEETROOT_SOUP_FLUID_BLOCK = registerFluid("beetroot_soup", () -> new LiquidBlock(FluidRegistry.BEETROOT_SOUP_FLUID, Properties.of(Material.WATER).noCollission().color(MaterialColor.COLOR_RED).strength(100)));
-        RABBIT_STEW_FLUID_BLOCK = registerFluid("rabbit_stew", () -> new LiquidBlock(FluidRegistry.RABBIT_STEW_FLUID, Properties.of(Material.WATER).noCollission().color(MaterialColor.COLOR_ORANGE).strength(100)));
+        MUSHROOM_STEW_FLUID_BLOCK = registerFluid("mushroom_stew", () -> new LiquidBlock(FluidRegistry.MUSHROOM_STEW_FLUID, Properties.of(Material.WATER).noCollission().noLootTable().color(MaterialColor.COLOR_BROWN).strength(100)));
+        BEETROOT_SOUP_FLUID_BLOCK = registerFluid("beetroot_soup", () -> new LiquidBlock(FluidRegistry.BEETROOT_SOUP_FLUID, Properties.of(Material.WATER).noCollission().noLootTable().color(MaterialColor.COLOR_RED).strength(100)));
+        RABBIT_STEW_FLUID_BLOCK = registerFluid("rabbit_stew", () -> new LiquidBlock(FluidRegistry.RABBIT_STEW_FLUID, Properties.of(Material.WATER).noCollission().noLootTable().color(MaterialColor.COLOR_ORANGE).strength(100)));
     }
 
     public static void register(IEventBus bus) {
