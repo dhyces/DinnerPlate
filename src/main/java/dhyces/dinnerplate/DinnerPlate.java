@@ -61,23 +61,24 @@ public class DinnerPlate {
         BlockRegistry.register(bus);
         BEntityRegistry.register(bus);
         ItemRegistry.register(bus);
+        FluidTypeRegistry.register(bus);
         FluidRegistry.register(bus);
         SoundRegistry.register(bus);
         RecipeRegistry.register(bus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-
     }
 
     private void dataGenerators(final GatherDataEvent event) {
-        event.getGenerator().addProvider(true, new BlockModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(true, new ItemModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(true, new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
+        event.getGenerator().addProvider(event.includeClient(), new BlockModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeClient(), new ItemModelGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeClient(), new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+
+        event.getGenerator().addProvider(event.includeServer(), new BlockLootTableGen.BlockLootTableProvider(event.getGenerator()));
         var blockGen = new TagGen.BlockTag(event.getGenerator(), MODID, event.getExistingFileHelper());
-        event.getGenerator().addProvider(true, blockGen);
-        event.getGenerator().addProvider(true, new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(true, new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(true, new StateGen(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), blockGen);
+        event.getGenerator().addProvider(event.includeServer(), new TagGen.ItemTag(event.getGenerator(), blockGen, MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new TagGen.FluidTag(event.getGenerator(), MODID, event.getExistingFileHelper()));
     }
 }
