@@ -38,17 +38,17 @@ import static dhyces.dinnerplate.DinnerPlate.MODID;
 
 public class ClientInit {
 
-    private List<Item> edibleItems;
+    private static List<Item> edibleItems;
 
-    public ClientInit(IEventBus bus) {
-        bus.addListener(this::clientSetup);
-        bus.addListener(this::modelRegistry);
-        bus.addListener(EventPriority.HIGHEST, this::reloadSeparateModels);
-        bus.addListener(this::entityRenders);
-        bus.addListener(this::modelBakery);
+    public static void register(IEventBus bus) {
+        bus.addListener(ClientInit::clientSetup);
+        bus.addListener(ClientInit::modelRegistry);
+        bus.addListener(EventPriority.HIGHEST, ClientInit::reloadSeparateModels);
+        bus.addListener(ClientInit::entityRenders);
+        bus.addListener(ClientInit::modelBakery);
     }
 
-    private void clientSetup(final FMLClientSetupEvent event) {
+    private static void clientSetup(final FMLClientSetupEvent event) {
         ClampedItemPropertyFunction platePropertyFunction = (stack, level, entity, seed) ->
                 (float) BlockHelper.getPropertyFromTag(PlateBlock.PLATES, BlockHelper.getBlockStateTag(stack).orElse(new CompoundTag())) / 8;
         var platePropertyRL = new ResourceLocation(DinnerPlate.MODID, "plates");
@@ -78,20 +78,20 @@ public class ClientInit {
         event.enqueueWork(() -> setRenderLayers());
     }
 
-    private void setRenderLayers() {
+    private static void setRenderLayers() {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MEASURING_CUP_BLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MUSHROOM_STEW_FLUID_BLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BEETROOT_SOUP_FLUID_BLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RABBIT_STEW_FLUID_BLOCK.get(), RenderType.translucent());
     }
 
-    private void modelRegistry(final ModelRegistryEvent event) {
+    private static void modelRegistry(final ModelRegistryEvent event) {
         edibleItems = ForgeRegistries.ITEMS.getEntries().stream().filter(c -> c.getValue().isEdible()).map(c -> c.getValue()).toList();
         prepareSeparateModels();
     }
 
     // TODO: remove the println.
-    private void prepareSeparateModels() {
+    private static void prepareSeparateModels() {
         edibleItems.stream().filter(c -> !(c instanceof IBitable))
                 .map(c -> {
                     var n = new ResourceLocation(MODID, "item/bitten/" + ForgeRegistries.ITEMS.getKey(c).getPath() + "_bitten");
@@ -101,17 +101,17 @@ public class ClientInit {
                 .forEach(ForgeModelBakery::addSpecialModel);
     }
 
-    private void reloadSeparateModels(final RegisterClientReloadListenersEvent event) {
+    private static void reloadSeparateModels(final RegisterClientReloadListenersEvent event) {
         event.registerReloadListener((pPreparationBarrier, pResourceManager, pPreparationsProfiler, pReloadProfiler, pBackgroundExecutor, pGameExecutor) -> pPreparationBarrier.wait(Unit.INSTANCE).thenRunAsync(() -> prepareSeparateModels()));
     }
 
-    private void entityRenders(final EntityRenderersEvent.RegisterRenderers event) {
+    private static void entityRenders(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BEntityRegistry.PLATE_ENTITY.get(), PlateRenderer::new);
         event.registerBlockEntityRenderer(BEntityRegistry.MIXING_BOWL_ENTITY.get(), MixingBowlRenderer::new);
         event.registerBlockEntityRenderer(BEntityRegistry.MEASURING_CUP_ENTITY.get(), MeasuringCupRenderer::new);
     }
 
-    private void modelBakery(final ModelBakeEvent e) {
+    private static void modelBakery(final ModelBakeEvent e) {
         putCustomInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId());
         putCustomInRegistry(e, ItemRegistry.MIXING_BOWL_ITEM.getId());
         putCustomInRegistry(e, ItemRegistry.MEASURING_CUP_ITEM.getId());
@@ -134,11 +134,11 @@ public class ClientInit {
         putCustomInRegistry(e, ItemRegistry.BLACK_PLATE_ITEM.getId());
     }
 
-    private BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
+    private static BakedModel getModelFromEvent(final ModelBakeEvent e, ResourceLocation resource) {
         return e.getModelManager().getModel(ResourceHelper.inventoryModel(resource));
     }
 
-    private void putCustomInRegistry(final ModelBakeEvent e, ResourceLocation resource) {
+    private static void putCustomInRegistry(final ModelBakeEvent e, ResourceLocation resource) {
         e.getModelRegistry().put(ResourceHelper.inventoryModel(resource), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, resource)));
     }
 

@@ -39,9 +39,7 @@ public class DinnerPlate {
         ForgeMod.enableMilkFluid();
 
         bus.addListener(this::setup);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            new ClientInit(bus);
-        });
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientInit.register(bus));
 
         if (FMLLoader.getLaunchHandler().isData())
             bus.addListener(this::dataGenerators);
