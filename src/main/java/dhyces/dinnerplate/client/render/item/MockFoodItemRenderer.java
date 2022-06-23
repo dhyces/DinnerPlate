@@ -52,7 +52,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         }
         var realStack = capability.get().getRealStack();
         BakedModel model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(realStack);
-        model = model.getOverrides().resolve(model, realStack, Minecraft.getInstance().level, Minecraft.getInstance().player, new Random(42).nextInt());
+        model = model.getOverrides().resolve(model, realStack, clientLevel(), clientPlayer(), new Random(42).nextInt());
         if (model.isCustomRenderer()) {
             RenderProperties.get(realStack).getItemStackRenderer().renderByItem(realStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             return;
@@ -60,12 +60,12 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         var biteCount = capability.get().getBiteCount();
         if (biteCount > 0) {
             var itemRL = ForgeRegistries.ITEMS.getKey(realStack.getItem());
-            var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, "bitten_" + itemRL.getPath());
+            var bittenModelRL = new ResourceLocation(DinnerPlate.MODID, itemRL.getPath() + "_bitten");
 
             var bittenInvRL = new ResourceLocation(bittenModelRL.getNamespace(), "item/bitten/" + bittenModelRL.getPath());
             var bittenModel = Minecraft.getInstance().getModelManager().getModel(bittenInvRL);
             if (!bittenModel.equals(Minecraft.getInstance().getModelManager().getMissingModel()) && !bittenModel.getOverrides().equals(ItemOverrides.EMPTY)) {
-                model = bittenModel.getOverrides().resolve(bittenModel, pStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 42);
+                model = bittenModel.getOverrides().resolve(bittenModel, pStack, clientLevel(), clientPlayer(), 42);
             } else if (testGen) {
                 var biteMaskRL = new ResourceLocation(DinnerPlate.MODID, biteCount == 1 ? "bite_mask_0" : "bite_mask_1");
 
