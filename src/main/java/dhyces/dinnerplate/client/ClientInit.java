@@ -69,13 +69,13 @@ public class ClientInit {
             ItemProperties.register(ItemRegistry.GREEN_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
             ItemProperties.register(ItemRegistry.RED_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
             ItemProperties.register(ItemRegistry.BLACK_PLATE_ITEM.get(), platePropertyRL, platePropertyFunction);
-        });
-        event.enqueueWork(() -> {
+
             edibleItems.stream().filter(i -> i instanceof IBitableItem).forEach(c -> {
                 ItemProperties.register(c, DinnerPlate.modLoc("bites"), (pStack, pLevel, pEntity, pSeed) -> (float) ((IBitableItem) c).getBiteCount(pStack) / (float) ((IBitableItem) c).getMaxBiteCount(pStack, pEntity));
             });
+
+            setRenderLayers();
         });
-        event.enqueueWork(() -> setRenderLayers());
     }
 
     private static void setRenderLayers() {
