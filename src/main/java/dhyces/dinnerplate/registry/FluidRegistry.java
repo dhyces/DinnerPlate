@@ -23,32 +23,32 @@ public class FluidRegistry {
     private static final DeferredRegister<Fluid> FLUID_REGISTER = DeferredRegister.create(ForgeRegistries.Keys.FLUIDS, DinnerPlate.MODID);
 
     static {
-        MUSHROOM_STEW_FLUID_FLOWING = registerFlowingFluid("flowing_mushroom_stew", () -> new StewFluid.Flowing(ARGB32.color(255, 186, 109, 74),
+        MUSHROOM_STEW_FLUID_FLOWING = registerFlowingFluid("flowing_mushroom_stew", () -> new StewFluid.Flowing(FluidTypeRegistry.MUSHROOM_STEW_FLUID_TYPE,
                 FluidRegistry.MUSHROOM_STEW_FLUID,
                 FluidRegistry.MUSHROOM_STEW_FLUID_FLOWING,
                 BlockRegistry.MUSHROOM_STEW_FLUID_BLOCK,
                 ItemRegistry.MUSHROOM_STEW_BUCKET));
-        MUSHROOM_STEW_FLUID = registerFlowingFluid("mushroom_stew", () -> new StewFluid.Source(ARGB32.color(255, 186, 109, 74),
+        MUSHROOM_STEW_FLUID = registerFlowingFluid("mushroom_stew", () -> new StewFluid.Source(FluidTypeRegistry.MUSHROOM_STEW_FLUID_TYPE,
                 FluidRegistry.MUSHROOM_STEW_FLUID,
                 FluidRegistry.MUSHROOM_STEW_FLUID_FLOWING,
                 BlockRegistry.MUSHROOM_STEW_FLUID_BLOCK,
                 ItemRegistry.MUSHROOM_STEW_BUCKET));
-        BEETROOT_SOUP_FLUID_FLOWING = registerFlowingFluid("flowing_beetroot_soup", () -> new StewFluid.Flowing(0xFFC60030,
+        BEETROOT_SOUP_FLUID_FLOWING = registerFlowingFluid("flowing_beetroot_soup", () -> new StewFluid.Flowing(FluidTypeRegistry.BEETROOT_SOUP_FLUID_TYPE,
                 FluidRegistry.BEETROOT_SOUP_FLUID,
                 FluidRegistry.BEETROOT_SOUP_FLUID_FLOWING,
                 BlockRegistry.BEETROOT_SOUP_FLUID_BLOCK,
                 ItemRegistry.BEETROOT_SOUP_BUCKET));
-        BEETROOT_SOUP_FLUID = registerFlowingFluid("beetroot_soup", () -> new StewFluid.Source(0xFFC60030,
+        BEETROOT_SOUP_FLUID = registerFlowingFluid("beetroot_soup", () -> new StewFluid.Source(FluidTypeRegistry.BEETROOT_SOUP_FLUID_TYPE,
                 FluidRegistry.BEETROOT_SOUP_FLUID,
                 FluidRegistry.BEETROOT_SOUP_FLUID_FLOWING,
                 BlockRegistry.BEETROOT_SOUP_FLUID_BLOCK,
                 ItemRegistry.BEETROOT_SOUP_BUCKET));
-        RABBIT_STEW_FLUID_FLOWING = registerFlowingFluid("flowing_rabbit_stew", () -> new StewFluid.Flowing(ARGB32.color(255, 226, 157, 74),
+        RABBIT_STEW_FLUID_FLOWING = registerFlowingFluid("flowing_rabbit_stew", () -> new StewFluid.Flowing(FluidTypeRegistry.RABBIT_STEW_FLUID_TYPE,
                 FluidRegistry.RABBIT_STEW_FLUID,
                 FluidRegistry.RABBIT_STEW_FLUID_FLOWING,
                 BlockRegistry.RABBIT_STEW_FLUID_BLOCK,
                 ItemRegistry.RABBIT_STEW_BUCKET));
-        RABBIT_STEW_FLUID = registerFlowingFluid("rabbit_stew", () -> new StewFluid.Source(ARGB32.color(255, 226, 157, 74),
+        RABBIT_STEW_FLUID = registerFlowingFluid("rabbit_stew", () -> new StewFluid.Source(FluidTypeRegistry.RABBIT_STEW_FLUID_TYPE,
                 FluidRegistry.RABBIT_STEW_FLUID,
                 FluidRegistry.RABBIT_STEW_FLUID_FLOWING,
                 BlockRegistry.RABBIT_STEW_FLUID_BLOCK,
@@ -57,10 +57,6 @@ public class FluidRegistry {
 
     public static void register(IEventBus bus) {
         FLUID_REGISTER.register(bus);
-    }
-
-    private static RegistryObject<Fluid> register(String id, Supplier<Fluid> supplier) {
-        return FLUID_REGISTER.register(id, supplier);
     }
 
     private static RegistryObject<ForgeFlowingFluid> registerFlowingFluid(String id, Supplier<ForgeFlowingFluid> supplier) {

@@ -1,25 +1,25 @@
 package dhyces.dinnerplate.fluid;
 
-import dhyces.dinnerplate.registry.FluidTypeRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 import java.util.function.Supplier;
 
 public abstract class StewFluid extends ForgeFlowingFluid {
 
-    protected StewFluid(int color, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<LiquidBlock> block, Supplier<Item> bucket) {
-        super(new Properties(FluidTypeRegistry.STEW_FLUID_TYPE, source, flowing));
+    protected StewFluid(Supplier<? extends FluidType> fluidType, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<? extends LiquidBlock> block, Supplier<? extends Item> bucket) {
+        super(new Properties(fluidType, source, flowing).block(block).bucket(bucket).tickRate(20));
     }
 
     public static class Source extends StewFluid {
 
-        public Source(int color, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<LiquidBlock> block, Supplier<Item> bucket) {
-            super(color, source, flowing, block, bucket);
+        public Source(Supplier<? extends FluidType> fluidType, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<? extends LiquidBlock> block, Supplier<? extends Item> bucket) {
+            super(fluidType, source, flowing, block, bucket);
         }
 
         @Override
@@ -35,8 +35,8 @@ public abstract class StewFluid extends ForgeFlowingFluid {
 
     public static class Flowing extends StewFluid {
 
-        public Flowing(int color, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<LiquidBlock> block, Supplier<Item> bucket) {
-            super(color, source, flowing, block, bucket);
+        public Flowing(Supplier<? extends FluidType> fluidType, Supplier<? extends Fluid> source, Supplier<? extends Fluid> flowing, Supplier<? extends LiquidBlock> block, Supplier<? extends Item> bucket) {
+            super(fluidType, source, flowing, block, bucket);
             registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
         }
 
