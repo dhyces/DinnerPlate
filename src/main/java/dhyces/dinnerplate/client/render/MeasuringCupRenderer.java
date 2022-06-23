@@ -46,6 +46,8 @@ public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBl
             return;
 
         var fluid = fluidArray(cap.resolve().get().getFluidInTank(0));
+        if (fluid[0].isEmpty())
+            return;
         var fluidHeight = ((fluid[0].getAmount() / 100) * 0.4375f);
         var prism = RectPrism.fromPixel(6, 1, 6).toPixel(10, 1.1 + fluidHeight, 10);
         pPoseStack.pushPose();
