@@ -9,10 +9,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.jetbrains.annotations.NotNull;
 
-public class StewFluidRenderer implements IFluidTypeRenderProperties {
+public class StewFluidRenderer implements IClientFluidTypeExtensions {
 
     final int color;
     private static final ResourceLocation STILL_TEXTURE = DinnerPlate.modLoc("block/soup_still");
@@ -23,7 +23,7 @@ public class StewFluidRenderer implements IFluidTypeRenderProperties {
     }
 
     @Override
-    public int getColorTint() {
+    public int getTintColor() {
         return color;
     }
 

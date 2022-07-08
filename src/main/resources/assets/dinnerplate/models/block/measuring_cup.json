@@ -1,5 +1,6 @@
 {
   "credit": "Made with Blockbench",
+  "render_type": "translucent",
   "textures": {
     "0": "dinnerplate:block/measuring_cup",
     "particle": "dinnerplate:block/measuring_cup"

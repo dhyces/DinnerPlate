@@ -20,10 +20,6 @@ public class EmptyCustomModel extends BakedModelWrapper<BakedModel> {
         return false;
     }
 
-    @Override
-    public boolean doesHandlePerspectives() {
-        return false;
-    }
 
     @Override
     public boolean isCustomRenderer() {
@@ -31,7 +27,7 @@ public class EmptyCustomModel extends BakedModelWrapper<BakedModel> {
     }
 
     @Override
-    public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack poseStack) {
+    public BakedModel applyTransform(TransformType cameraTransformType, PoseStack poseStack, boolean applyLeftHandTransform) {
         return this;
     }
 }

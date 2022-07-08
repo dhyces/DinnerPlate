@@ -3,7 +3,7 @@ package dhyces.dinnerplate.registry;
 import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.client.FluidClientInit;
 import dhyces.dinnerplate.fluid.StewFluidType;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,19 +23,19 @@ public class FluidTypeRegistry {
     static {
         MUSHROOM_STEW_FLUID_TYPE = FLUID_TYPE_REGISTER.register("mushroom_stew_fluid_type", () -> new StewFluidType() {
             @Override
-            public void initializeClient(Consumer<IFluidTypeRenderProperties> consumer) {
+            public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
                 consumer.accept(FluidClientInit.MUSHROOM_STEW_RENDERER);
             }
         });
         BEETROOT_SOUP_FLUID_TYPE = FLUID_TYPE_REGISTER.register("beetroot_soup_fluid_type", () -> new StewFluidType() {
             @Override
-            public void initializeClient(Consumer<IFluidTypeRenderProperties> consumer) {
+            public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
                 consumer.accept(FluidClientInit.BEETROOT_SOUP_RENDERER);
             }
         });
         RABBIT_STEW_FLUID_TYPE = FLUID_TYPE_REGISTER.register("rabbit_stew_fluid_type", () -> new StewFluidType() {
             @Override
-            public void initializeClient(Consumer<IFluidTypeRenderProperties> consumer) {
+            public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
                 consumer.accept(FluidClientInit.RABBIT_STEW_RENDERER);
             }
         });

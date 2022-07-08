@@ -13,8 +13,10 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBlockEntity> implements IFluidRenderer {
@@ -36,7 +38,7 @@ public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBl
         var buffer = pBuffer.getBuffer(RenderType.entityTranslucentCull(atlas()));
 
         pPoseStack.pushPose();
-        for (BakedQuad q : model.getQuads(null, null, null, null)) {
+        for (BakedQuad q : model.getQuads(null, null, RandomSource.create(42L), ModelData.EMPTY, null)) {
             buffer.putBulkData(pPoseStack.last(), q, 1f, 1f, 1f, pPackedLight, pPackedOverlay);
         }
         pPoseStack.popPose();
