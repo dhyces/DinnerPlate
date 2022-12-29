@@ -1,7 +1,7 @@
 package dhyces.dinnerplate.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
+import com.mojang.math.Axis;
 import dhyces.dinnerplate.Constants;
 import dhyces.dinnerplate.blockentity.PlateBlockEntity;
 import net.minecraft.client.Minecraft;
@@ -11,9 +11,8 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
@@ -27,7 +26,7 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
     }
 
     @Override
-    public void render(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         var model = Minecraft.getInstance().getItemRenderer().getModel(pStack, null, null, 0);
         var hasItem = pStack.getTagElement(Constants.TAG_SINGLE_ITEM) != null;
 
@@ -43,7 +42,7 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
             if (!platedItemModel.isGui3d()) {
                 pPoseStack.scale(0.5F, 0.5F, 0.5F);
                 pPoseStack.translate(1.0F, 0.15F, 1.0F);
-                pPoseStack.mulPose(new Quaternion(-90, 0, 0, true));
+                pPoseStack.mulPose(Axis.XN.rotationDegrees(90));
             } else {
                 pPoseStack.scale(0.25F, 0.25F, 0.25F);
                 pPoseStack.translate(2.0F, 0.75F, 2.0F);
@@ -62,18 +61,21 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
         var model = getResolvedItemModel(item);
         pPoseStack.pushPose();
         pPoseStack.scale(.5F, .5F, .5F);
-        pPoseStack.translate(1, 0.1563, 1);
+        var facingDir = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         if (!model.isGui3d()) {
-            pPoseStack.mulPose(new Quaternion(90, 180, -pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot(), true));
+            pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
+            pPoseStack.mulPose(Axis.ZN.rotationDegrees(facingDir.toYRot()));
         } else {
-            pPoseStack.mulPose(new Quaternion(0, -pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot(), 0, true));
-            pPoseStack.scale(0.5f, 0.5f, 0.5f);
-            pPoseStack.translate(0, .45, 0);
-            pPoseStack.mulPose(new Quaternion(0, 180, 0, true));
+            pPoseStack.mulPose(Axis.YN.rotationDegrees(facingDir.toYRot()));
+            pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+//            pPoseStack.mulPose(Axis.ZP.rotationDegrees(180));
+            var flag = facingDir == Direction.NORTH || facingDir == Direction.EAST;
+            pPoseStack.translate(1, 1, 0.15);
         }
         // TODO: possibly use the funnyLightLevel for ambient occlusion, so we avoid buried plates exposed to the sky looking odd
         //  if funnyLightLevel > pPackedLight then pPackedLight else funnyLightLevel
-        renderItem(item, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, model);
+        renderItemStack(item, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, model);
         pPoseStack.popPose();
     }
 

@@ -90,7 +90,7 @@ public class ClientInit {
         event.registerBlockEntityRenderer(BEntityRegistry.MEASURING_CUP_ENTITY.get(), MeasuringCupRenderer::new);
     }
 
-    private static void modelBakery(final ModelEvent.BakingCompleted e) {
+    private static void modelBakery(final ModelEvent.ModifyBakingResult e) {
         putCustomInRegistry(e, ItemRegistry.MOCK_FOOD_ITEM.getId());
         putCustomInRegistry(e, ItemRegistry.MIXING_BOWL_ITEM.getId());
         putCustomInRegistry(e, ItemRegistry.MEASURING_CUP_ITEM.getId());
@@ -113,11 +113,11 @@ public class ClientInit {
         putCustomInRegistry(e, ItemRegistry.BLACK_PLATE_ITEM.getId());
     }
 
-    private static BakedModel getModelFromEvent(final ModelEvent.BakingCompleted e, ResourceLocation resource) {
-        return e.getModelManager().getModel(ResourceHelper.inventoryModel(resource));
+    private static BakedModel getModelFromEvent(final ModelEvent.ModifyBakingResult e, ResourceLocation resource) {
+        return e.getModels().get(ResourceHelper.inventoryModel(resource));
     }
 
-    private static void putCustomInRegistry(final ModelEvent.BakingCompleted e, ResourceLocation resource) {
+    private static void putCustomInRegistry(final ModelEvent.ModifyBakingResult e, ResourceLocation resource) {
         e.getModels().put(ResourceHelper.inventoryModel(resource), new SimpleCustomBakedModelWrapper(getModelFromEvent(e, resource)));
     }
 

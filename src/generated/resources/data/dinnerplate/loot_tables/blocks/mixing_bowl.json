@@ -2,7 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -10,51 +9,51 @@
           "functions": [
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "Items",
-                  "target": "Items",
-                  "op": "replace"
+                  "target": "Items"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "Fluids",
-                  "target": "Fluids",
-                  "op": "replace"
+                  "target": "Fluids"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "MixState",
-                  "target": "MixState",
-                  "op": "replace"
+                  "target": "MixState"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "UsedSize",
-                  "target": "UsedSize",
-                  "op": "replace"
+                  "target": "UsedSize"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
-              "function": "minecraft:copy_state",
               "block": "dinnerplate:mixing_bowl",
+              "function": "minecraft:copy_state",
               "properties": [
                 "mix_pos"
               ]
@@ -62,7 +61,8 @@
           ],
           "name": "dinnerplate:mixing_bowl"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

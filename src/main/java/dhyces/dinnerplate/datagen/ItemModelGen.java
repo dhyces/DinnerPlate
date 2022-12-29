@@ -2,6 +2,7 @@ package dhyces.dinnerplate.datagen;
 
 import dhyces.dinnerplate.DinnerPlate;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -12,10 +13,11 @@ public class ItemModelGen extends ItemModelProvider {
 
     private final ModelFile BUILT_IN_GENERATED;
 
-    public ItemModelGen(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
-        super(generator, modid, existingFileHelper);
+    public ItemModelGen(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
+        super(output, modid, existingFileHelper);
         BUILT_IN_GENERATED = getExistingFile(mcLoc("item/generated"));
     }
+
 
     @Override
     protected void registerModels() {

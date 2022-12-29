@@ -4,6 +4,7 @@ import dhyces.dinnerplate.block.MixingBowlBlock;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.registry.BlockRegistry;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -12,8 +13,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class StateGen extends BlockStateProvider {
 
-    public StateGen(DataGenerator gen, String modid, ExistingFileHelper exFileHelper) {
-        super(gen, modid, exFileHelper);
+
+    public StateGen(PackOutput output, String modid, ExistingFileHelper exFileHelper) {
+        super(output, modid, exFileHelper);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package dhyces.dinnerplate.datagen;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
@@ -8,8 +8,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class BlockModelGen extends BlockModelProvider {
 
-    public BlockModelGen(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
-        super(generator, modid, existingFileHelper);
+    public BlockModelGen(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
+        super(output, modid, existingFileHelper);
     }
 
     @Override

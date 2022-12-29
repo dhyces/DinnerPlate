@@ -13,9 +13,11 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.model.*;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.textures.ForgeTextureMetadata;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
@@ -168,14 +171,12 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
     private class VirtualSprite extends TextureAtlasSprite {
 
         protected VirtualSprite(TextureAtlasSprite baseSprite, NativeImage image) {
-            super(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS),
-                    new TextureAtlasSprite.Info(baseSprite.getName(), image.getWidth(), image.getHeight(), AnimationMetadataSection.EMPTY),
-                    Minecraft.getInstance().options.mipmapLevels().get(),
+            super(TextureAtlas.LOCATION_BLOCKS,
+                    new SpriteContents(baseSprite.atlasLocation(), new FrameSize(image.getWidth(), image.getHeight()), image, AnimationMetadataSection.EMPTY, ForgeTextureMetadata.EMPTY),
                     (int) (baseSprite.getX() / baseSprite.getU0()),
                     (int) (baseSprite.getY() / baseSprite.getV0()),
                     baseSprite.getX(),
-                    baseSprite.getY(),
-                    image);
+                    baseSprite.getY());
         }
 
     }

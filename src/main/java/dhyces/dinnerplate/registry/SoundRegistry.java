@@ -24,6 +24,6 @@ public class SoundRegistry {
     }
 
     private static RegistryObject<SoundEvent> register(String id) {
-        return SOUND_EVENT_REGISTER.register(id, () -> new SoundEvent(new ResourceLocation(DinnerPlate.MODID, id)));
+        return SOUND_EVENT_REGISTER.register(id, () -> SoundEvent.createFixedRangeEvent(DinnerPlate.modLoc(id), 16));
     }
 }

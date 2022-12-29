@@ -9,7 +9,9 @@ import dhyces.dinnerplate.registry.BlockRegistry;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -37,43 +39,42 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BlockLootTableGen implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+public class BlockLootTableGen implements LootTableSubProvider {
 
-    Map<ResourceLocation, LootTable.Builder> map = new HashMap<>();
-
-    protected void addTables() {
+    @Override
+    public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
 //		add(BlockRegistry.MIXING_BOWL_BLOCK.get(), LootTable.lootTable()
 //														.withPool(LootPool.lootPool()
 //																		.setRolls(ConstantValue.exactly(1.0f))
 //																		.));
-        addPlateDrop(BlockRegistry.WHITE_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.ORANGE_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.MAGENTA_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.LIGHT_BLUE_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.YELLOW_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.LIME_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.PINK_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.GRAY_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.LIGHT_GRAY_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.CYAN_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.PURPLE_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.BLUE_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.BROWN_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.GREEN_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.RED_PLATE_BLOCK.get());
-        addPlateDrop(BlockRegistry.BLACK_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.WHITE_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.ORANGE_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.MAGENTA_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.LIGHT_BLUE_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.YELLOW_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.LIME_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.PINK_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.GRAY_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.LIGHT_GRAY_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.CYAN_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.PURPLE_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.BLUE_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.BROWN_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.GREEN_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.RED_PLATE_BLOCK.get());
+        addPlateDrop(consumer, BlockRegistry.BLACK_PLATE_BLOCK.get());
 
         // TODO
-        add(BlockRegistry.MIXING_BOWL_BLOCK.get(), c -> oopsItsJustFunctions(c, copyItemsFunc(),
+        add(consumer, BlockRegistry.MIXING_BOWL_BLOCK.get(), c -> oopsItsJustFunctions(c, copyItemsFunc(),
                 copyFluidsFunc(),
                 copyDataFunc("MixState"),
                 copyDataFunc("UsedSize"),
                 copyStateFunc(c, MixingBowlBlock.MIX_POSITION)));
-        add(BlockRegistry.MEASURING_CUP_BLOCK.get(), c -> oopsItsJustFunctions(c, copyFluidFunc()));
+        add(consumer, BlockRegistry.MEASURING_CUP_BLOCK.get(), c -> oopsItsJustFunctions(c, copyFluidFunc()));
     }
 
-    protected void addPlateDrop(Block plateBlock) {
-        add(plateBlock, LootTable.lootTable()
+    protected void addPlateDrop(BiConsumer<ResourceLocation, LootTable.Builder> consumer, Block plateBlock) {
+        add(consumer, plateBlock, LootTable.lootTable()
                 .withPool(singleRollPool()
                         .add(AlternativesEntry.alternatives(
                                 LootItem.lootTableItem(plateBlock.asItem())
@@ -133,49 +134,24 @@ public class BlockLootTableGen implements Consumer<BiConsumer<ResourceLocation, 
         return LootTable.lootTable();
     }
 
-    protected void add(Block block, Function<Block, LootTable.Builder> function) {
-        add(block, function.apply(block));
+    protected void add(BiConsumer<ResourceLocation, LootTable.Builder> consumer, Block block, Function<Block, LootTable.Builder> function) {
+        add(consumer, block, function.apply(block));
     }
 
-    protected void add(Block block, LootTable.Builder lootTableBuilder) {
-        map.put(block.getLootTable(), lootTableBuilder);
-    }
-
-    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> p_124179_) {
-        this.addTables();
-        Set<ResourceLocation> set = Sets.newHashSet();
-
-        for (Block block : BlockRegistry.BLOCK_REGISTER.getEntries().stream().map(c -> c.get()).toList()) {
-            ResourceLocation resourcelocation = block.getLootTable();
-            if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
-                LootTable.Builder loottable$builder = map.remove(block.getLootTable());
-                if (loottable$builder == null) {
-                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", resourcelocation, ForgeRegistries.BLOCKS.getKey(block)));
-                }
-
-                p_124179_.accept(resourcelocation, loottable$builder);
-            }
-        }
-
-        if (!this.map.isEmpty()) {
-            throw new IllegalStateException("Created block loot tables for non-blocks: " + this.map.keySet());
-        }
+    protected void add(BiConsumer<ResourceLocation, LootTable.Builder> consumer, Block block, LootTable.Builder lootTableBuilder) {
+        consumer.accept(block.getLootTable(), lootTableBuilder);
     }
 
     public static class BlockLootTableProvider extends LootTableProvider {
 
-        public BlockLootTableProvider(DataGenerator pGenerator) {
-            super(pGenerator);
+
+        public BlockLootTableProvider(PackOutput pOutput) {
+            super(pOutput, Set.of(), ImmutableList.of(new SubProviderEntry(BlockLootTableGen::new, LootContextParamSets.BLOCK)));
         }
 
-        @Override
-        protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-            return ImmutableList.of(Pair.of(BlockLootTableGen::new, LootContextParamSets.BLOCK));
-        }
-
-        @Override
-        protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationTracker) {
-            // NO_OP
-        }
+//        @Override
+//        protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationTracker) {
+//            // NO_OP
+//        }
     }
 }

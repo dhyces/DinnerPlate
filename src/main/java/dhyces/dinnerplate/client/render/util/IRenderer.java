@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-import com.mojang.math.Quaternion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -19,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Quaterniond;
+import org.joml.Quaternionf;
 
 import java.util.Random;
 
@@ -88,8 +89,23 @@ public interface IRenderer {
         return px / 16f;
     }
 
-    default Quaternion doubleQuaternion(double i, double j, double k, boolean isDegrees) {
-        return new Quaternion((float) i, (float) j, (float) k, isDegrees);
+    default Quaternionf doubleQuaternionf(double i, double j, double k, boolean isDegrees) {
+        if (isDegrees) {
+            i = Math.toRadians(i);
+            j = Math.toRadians(j);
+            k = Math.toRadians(k);
+        }
+        var f = Math.sin(0.5 * i);
+        var g = Math.cos(0.5 * i);
+        var h = Math.sin(0.5 * j);
+        var l = Math.cos(0.5 * j);
+        var n = Math.sin(0.5 * k);
+        var m = Math.cos(0.5 * k);
+        var x = f * l * m + g * h * n;
+        var y = g * h * m - f * l * n;
+        var z = f * h * m + g * l * n;
+        var w = g * l * m - f * h * n;
+        return new Quaternionf(x, y, z, w);
     }
 
     default ClientLevel clientLevel() {

@@ -1,16 +1,16 @@
 {
   "overrides": [
     {
+      "model": "dinnerplate:item/bitten/cooked_salmon_bitten_0",
       "predicate": {
         "dinnerplate:bites": 0.0
-      },
-      "model": "dinnerplate:item/bitten/cooked_salmon_bitten_0"
+      }
     },
     {
+      "model": "dinnerplate:item/bitten/cooked_salmon_bitten_1",
       "predicate": {
         "dinnerplate:bites": 0.5
-      },
-      "model": "dinnerplate:item/bitten/cooked_salmon_bitten_1"
+      }
     }
   ]
 }

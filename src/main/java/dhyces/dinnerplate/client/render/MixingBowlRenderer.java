@@ -17,9 +17,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.Random;
 
@@ -37,13 +37,13 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
     }
 
     @Override
-    public void render(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         pPoseStack.pushPose();
         renderItem(pStack, pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucentCull(atlas())), pPackedLight, pPackedOverlay);
 
         var fluidCap = FluidUtil.getFluidHandler(pStack);
         float fluidHeight = fluidCap.isPresent() ? fluidCap.map(c -> c.getTanks() * 0.4375f).get() : 0;
-        var itemCap = pStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        var itemCap = pStack.getCapability(ForgeCapabilities.ITEM_HANDLER);
 
         if (fluidCap.isPresent()) {
             var fluidHandler = fluidCap.resolve().get();
@@ -88,7 +88,7 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
             poseStack.pushPose();
             // TODO: rotations
             poseStack.translate(nd, shouldWave ? Math.sin(Blaze3D.getTime() + nd + nd1) / 16 : 0, nd1);
-            poseStack.mulPose(doubleQuaternion(nd * 50, nd * 50, nd * 50, true));
+            poseStack.mulPose(doubleQuaternionf(nd * 50, nd * 50, nd * 50, true));
             Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.NONE, false, poseStack, source, packedLight, packedOverlay, itemModel);
             poseStack.popPose();
         }

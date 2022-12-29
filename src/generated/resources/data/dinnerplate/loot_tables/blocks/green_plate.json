@@ -2,7 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -12,8 +11,8 @@
               "type": "minecraft:item",
               "conditions": [
                 {
-                  "condition": "minecraft:block_state_property",
                   "block": "dinnerplate:green_plate",
+                  "condition": "minecraft:block_state_property",
                   "properties": {
                     "plates": "1"
                   }
@@ -22,14 +21,14 @@
               "functions": [
                 {
                   "function": "minecraft:copy_nbt",
-                  "source": "block_entity",
                   "ops": [
                     {
+                      "op": "replace",
                       "source": "Item",
-                      "target": "Item",
-                      "op": "replace"
+                      "target": "Item"
                     }
-                  ]
+                  ],
+                  "source": "block_entity"
                 }
               ],
               "name": "dinnerplate:green_plate"
@@ -38,8 +37,8 @@
               "type": "minecraft:item",
               "functions": [
                 {
-                  "function": "minecraft:copy_state",
                   "block": "dinnerplate:green_plate",
+                  "function": "minecraft:copy_state",
                   "properties": [
                     "plates"
                   ]
@@ -49,7 +48,8 @@
             }
           ]
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

@@ -37,13 +37,13 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
     @Override
     public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemTransforms.TransformType pTransformType, @NotNull PoseStack pPoseStack,
                              @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        render(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        renderItem(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
     }
 
-    public abstract void render(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack,
+    public abstract void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack,
                                 MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay);
 
-    public void renderItem(ItemStack pStack, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel) {
+    public void renderItemStack(ItemStack pStack, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel) {
         Minecraft.getInstance().getItemRenderer().render(pStack, ItemTransforms.TransformType.NONE, false, pMatrixStack, pBuffer, pCombinedLight, pCombinedOverlay, pModel);
     }
 
