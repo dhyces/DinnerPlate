@@ -72,13 +72,13 @@ public class PlateBlockEntity extends AbstractDinnerBlockEntity implements IDish
 
 	@Override
 	public void read(CompoundTag pTag) {
-		this.platedItem = ItemStack.of(pTag.getCompound(Constants.TAG_SINGLE_ITEM));
+		this.platedItem = ItemStack.of(pTag.getCompound(Constants.SINGLE_ITEM_TAG));
 	}
 
 	@Override
 	public void write(CompoundTag tag) {
 		if (!platedItem.isEmpty())
-			tag.put(Constants.TAG_SINGLE_ITEM, platedItem.serializeNBT());
+			tag.put(Constants.SINGLE_ITEM_TAG, platedItem.serializeNBT());
 	}
 
 	@Override

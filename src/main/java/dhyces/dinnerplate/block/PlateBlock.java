@@ -66,7 +66,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
             if (preferredItem.getItem() instanceof PlateItem) {
                 if (canAddPlate(state, preferredItem)) {
                     if (!isClient) {
-                        var itemStateTag = preferredItem.getOrCreateTagElement(Constants.TAG_BLOCK_STATE);
+                        var itemStateTag = preferredItem.getOrCreateTagElement(Constants.BLOCK_STATE_TAG);
                         var itemPlates = getPlatesFromStack(preferredItem);
                         level.setBlock(pos, setPlates(state, Mth.clamp(levelProperty + itemPlates, MIN_LEVEL, MAX_LEVEL)), 11);
                         if (!player.getAbilities().instabuild) {
@@ -121,7 +121,7 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
     private boolean canAddPlate(BlockState pState, ItemStack stackToCheck) {
         return pState.getValue(PLATES) < MAX_LEVEL &&
                 stackToCheck.sameItem(this.asItem().getDefaultInstance()) &&
-                stackToCheck.getOrCreateTag().getCompound(Constants.TAG_SINGLE_ITEM).isEmpty();
+                stackToCheck.getOrCreateTag().getCompound(Constants.SINGLE_ITEM_TAG).isEmpty();
     }
 
     public int getPlatesFromStack(ItemStack stack) {

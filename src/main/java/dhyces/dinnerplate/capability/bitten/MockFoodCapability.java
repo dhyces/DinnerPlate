@@ -23,10 +23,10 @@ public class MockFoodCapability extends MockFoodProvider implements ICapabilityS
 	public CompoundTag serializeNBT() {
 		var tag = new CompoundTag();
 		if (!getRealStack().isEmpty()) {
-			tag.put(Constants.TAG_SINGLE_ITEM, getRealStack().serializeNBT());
-			tag.putInt(Constants.TAG_BITE_COUNT, getBiteCount());
-			tag.put(Constants.TAG_FIRST_BITE, getBite(0).serializeNBT());
-			tag.put(Constants.TAG_LAST_BITE, getBite(2).serializeNBT());
+			tag.put(Constants.SINGLE_ITEM_TAG, getRealStack().serializeNBT());
+			tag.putInt(Constants.BITE_COUNT_TAG, getBiteCount());
+			tag.put(Constants.FIRST_BITE_TAG, getBite(0).serializeNBT());
+			tag.put(Constants.LAST_BITE_TAG, getBite(2).serializeNBT());
 		}
 		var returnTag = new CompoundTag();
 		returnTag.put(CAP_ID.toString(), tag);
@@ -36,13 +36,13 @@ public class MockFoodCapability extends MockFoodProvider implements ICapabilityS
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		var tag = nbt.getCompound(CAP_ID.toString());
-		if (!tag.getCompound(Constants.TAG_SINGLE_ITEM).isEmpty()) {
-			this.stack = ItemStack.of(tag.getCompound(Constants.TAG_SINGLE_ITEM));
-			this.chewCount = tag.getInt(Constants.TAG_BITE_COUNT);
+		if (!tag.getCompound(Constants.SINGLE_ITEM_TAG).isEmpty()) {
+			this.stack = ItemStack.of(tag.getCompound(Constants.SINGLE_ITEM_TAG));
+			this.chewCount = tag.getInt(Constants.BITE_COUNT_TAG);
 			var firstBite = new Bite.Builder().build();
-			firstBite.deserializeNBT(tag.getCompound(Constants.TAG_FIRST_BITE));
+			firstBite.deserializeNBT(tag.getCompound(Constants.FIRST_BITE_TAG));
 			var lastBite = new Bite.Builder().build();
-			lastBite.deserializeNBT(tag.getCompound(Constants.TAG_LAST_BITE));
+			lastBite.deserializeNBT(tag.getCompound(Constants.LAST_BITE_TAG));
 			this.bites = Couple.coupleOf(firstBite, lastBite);
 		}
 	}

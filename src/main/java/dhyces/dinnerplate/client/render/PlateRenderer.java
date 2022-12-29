@@ -28,24 +28,25 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
     @Override
     public void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         var model = Minecraft.getInstance().getItemRenderer().getModel(pStack, null, null, 0);
-        var hasItem = pStack.getTagElement(Constants.TAG_SINGLE_ITEM) != null;
 
         var vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(pStack, true), true, pStack.hasFoil());
         pPoseStack.pushPose();
         Minecraft.getInstance().getItemRenderer().renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer);
         pPoseStack.popPose();
-        if (hasItem) {
-            var platedItem = ItemStack.of(pStack.getTagElement(Constants.TAG_SINGLE_ITEM));
+        var itemTag = pStack.getTagElement(Constants.SINGLE_ITEM_TAG);
+        if (itemTag != null) {
+            var platedItem = ItemStack.of(itemTag);
             var platedItemModel = getResolvedItemModel(platedItem);
 
             pPoseStack.pushPose();
-            if (!platedItemModel.isGui3d()) {
+            if (!platedItemModel.usesBlockLight()) {
                 pPoseStack.scale(0.5F, 0.5F, 0.5F);
                 pPoseStack.translate(1.0F, 0.15F, 1.0F);
                 pPoseStack.mulPose(Axis.XN.rotationDegrees(90));
             } else {
                 pPoseStack.scale(0.25F, 0.25F, 0.25F);
-                pPoseStack.translate(2.0F, 0.75F, 2.0F);
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
+                pPoseStack.translate(-2.0F, 0.75F, -2.0F);
             }
 
             Minecraft.getInstance().getItemRenderer().render(platedItem, ItemTransforms.TransformType.NONE, false, pPoseStack, pBuffer, pPackedLight, pPackedOverlay, platedItemModel);
@@ -62,16 +63,22 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
         pPoseStack.pushPose();
         pPoseStack.scale(.5F, .5F, .5F);
         var facingDir = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        if (!model.isGui3d()) {
-            pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
-            pPoseStack.mulPose(Axis.ZN.rotationDegrees(facingDir.toYRot()));
+        var flag = facingDir == Direction.NORTH || facingDir == Direction.EAST;
+        var flag2 = facingDir == Direction.NORTH || facingDir == Direction.WEST;
+        if (model.usesBlockLight()) {
+            pPoseStack.scale(.5F, .5F, .5F);
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(facingDir.toYRot()));
+            if (facingDir.getAxis() == Direction.Axis.X) {
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
+            }
+            pPoseStack.translate(flag ? -2 : 2, 0.75, flag2 ? -2 : 2);
         } else {
-            pPoseStack.mulPose(Axis.YN.rotationDegrees(facingDir.toYRot()));
-            pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-//            pPoseStack.mulPose(Axis.ZP.rotationDegrees(180));
-            var flag = facingDir == Direction.NORTH || facingDir == Direction.EAST;
-            pPoseStack.translate(1, 1, 0.15);
+            pPoseStack.mulPose(Axis.XN.rotationDegrees(90));
+            pPoseStack.mulPose(Axis.ZP.rotationDegrees(facingDir.toYRot()));
+            if (facingDir.getAxis() == Direction.Axis.Z) {
+                pPoseStack.mulPose(Axis.ZP.rotationDegrees(180));
+            }
+            pPoseStack.translate(flag ? 1 : -1, flag2 ? -1 : 1, 0.1563);
         }
         // TODO: possibly use the funnyLightLevel for ambient occlusion, so we avoid buried plates exposed to the sky looking odd
         //  if funnyLightLevel > pPackedLight then pPackedLight else funnyLightLevel

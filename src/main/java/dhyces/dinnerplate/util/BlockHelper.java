@@ -10,11 +10,11 @@ import java.util.Optional;
 public class BlockHelper {
 
     public static Optional<CompoundTag> getBlockStateTag(ItemStack stack) {
-        return Optional.ofNullable(stack.getTagElement(Constants.TAG_BLOCK_STATE));
+        return Optional.ofNullable(stack.getTagElement(Constants.BLOCK_STATE_TAG));
     }
 
     public static Optional<CompoundTag> getBlockEntityTag(ItemStack stack) {
-        return Optional.ofNullable(stack.getTagElement(Constants.TAG_BLOCK_ENTITY));
+        return Optional.ofNullable(stack.getTagElement(Constants.BLOCK_ENTITY_TAG));
     }
 
     public static <E extends Comparable<E>> E getPropertyFromTag(Property<E> property, CompoundTag tag) {

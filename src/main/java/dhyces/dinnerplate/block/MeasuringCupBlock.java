@@ -23,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
@@ -84,9 +84,9 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
      * Retrieves the block fluid handler and the item fluid handler, if they exist
      */
     private Optional<LoosePair<IFluidHandler, IFluidHandlerItem>> getCaps(BlockEntity blockEntity, ItemStack itemStack) {
-        var blockCap = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+        var blockCap = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
         if (blockCap.isPresent()) {
-            var itemCap = itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+            var itemCap = itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
             if (itemCap.isPresent()) {
                 return Optional.of(LoosePair.of(blockCap.resolve().get(), itemCap.resolve().get()));
             }

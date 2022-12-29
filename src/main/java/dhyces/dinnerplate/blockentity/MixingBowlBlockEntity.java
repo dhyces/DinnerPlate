@@ -12,13 +12,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements IWorkstation, IMixedInventory, IRenderableTracker {
@@ -46,13 +43,13 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
     public void write(CompoundTag tag) {
         super.write(tag);
         if (mixes > 0)
-            tag.putByte(Constants.TAG_MIX_STATE, mixes);
+            tag.putByte(Constants.MIX_STATE_TAG, mixes);
     }
 
     @Override
     public void read(CompoundTag tag) {
         super.read(tag);
-        mixes = tag.getByte(Constants.TAG_MIX_STATE);
+        mixes = tag.getByte(Constants.MIX_STATE_TAG);
     }
 
     @Override
@@ -72,10 +69,10 @@ public class MixingBowlBlockEntity extends AbstractMixedBlockEntity implements I
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+        if (cap == ForgeCapabilities.FLUID_HANDLER) {
             return lazyFluid.cast();
         }
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItem.cast();
         }
         return super.getCapability(cap, side);

@@ -17,7 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBlockEntity> implements IFluidRenderer {
 
@@ -43,7 +43,7 @@ public class MeasuringCupRenderer extends SimpleBlockItemRenderer<MeasuringCupBl
         }
         pPoseStack.popPose();
 
-        var cap = pStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+        var cap = pStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (!cap.isPresent())
             return;
 

@@ -6,33 +6,33 @@ import net.minecraft.world.item.BlockItem;
 public class Constants {
 
     // General Tags
-    public static final String TAG_SINGLE_ITEM = "Item";
-    public static final String TAG_SINGLE_FLUID = "Fluid";
-    public static final String TAG_ITEMS = "Items";
-    public static final String TAG_FLUIDS = "Fluids";
-    public static final String TAG_BLOCK_STATE = BlockItem.BLOCK_STATE_TAG;
-    public static final String TAG_BLOCK_ENTITY = "BlockEntityTag";
-    public static final String TAG_SLOT = "Slot";
-    public static final String TAG_USED_SIZE = "UsedSize";
+    public static final String SINGLE_ITEM_TAG = "Item";
+    public static final String SINGLE_FLUID_TAG = "Fluid";
+    public static final String ITEMS_TAG = "Items";
+    public static final String FLUIDS_TAG = "Fluids";
+    public static final String BLOCK_STATE_TAG = BlockItem.BLOCK_STATE_TAG;
+    public static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
+    public static final String SLOT_TAG = "Slot";
+    public static final String USED_SIZE_TAG = "UsedSize";
 
     // Bitten Tags
-    public static final String TAG_BITE_COUNT = "Chews";
+    public static final String BITE_COUNT_TAG = "Chews";
 
     // Mock Food Capability Tags
-    public static final String TAG_FIRST_BITE = "FirstBite";
-    public static final String TAG_LAST_BITE = "LastBite";
+    public static final String FIRST_BITE_TAG = "FirstBite";
+    public static final String LAST_BITE_TAG = "LastBite";
 
     // Bite Tags
-    public static final String TAG_NUTRITION = "Nutrition";
-    public static final String TAG_SATURATION_MOD = "SaturationMod";
-    public static final String TAG_EFFECT_CHANCE = "Chance";
-    public static final String TAG_EFFECTS_LIST = "Effects";
+    public static final String NUTRITION_TAG = "Nutrition";
+    public static final String SATURATION_MOD_TAG = "SaturationMod";
+    public static final String EFFECT_CHANCE_TAG = "Chance";
+    public static final String EFFECTS_LIST_TAG = "Effects";
 
     // Mock Food Constants
     public static final int MAX_ITEM_CHEW_COUNT = 2;
 
     // Mixing Bowl Tags
-    public static final String TAG_MIX_STATE = "MixState";
+    public static final String MIX_STATE_TAG = "MixState";
 
     public static ResourceLocation mcLocation(String str) {
         return new ResourceLocation(str);

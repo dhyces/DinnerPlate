@@ -13,9 +13,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -35,13 +35,13 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
         if (!tank.isEmpty()) {
             var tTag = new CompoundTag();
             tank.writeToNBT(tTag);
-            tag.put(Constants.TAG_SINGLE_FLUID, tTag);
+            tag.put(Constants.SINGLE_FLUID_TAG, tTag);
         }
     }
 
     @Override
     public void read(CompoundTag tag) {
-        tank.readFromNBT(tag.getCompound(Constants.TAG_SINGLE_FLUID));
+        tank.readFromNBT(tag.getCompound(Constants.SINGLE_FLUID_TAG));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class MeasuringCupBlockEntity extends AbstractDinnerBlockEntity implement
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if ((side == null || side.equals(Direction.UP)) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+        if ((side == null || side.equals(Direction.UP)) && cap == ForgeCapabilities.FLUID_HANDLER)
             return tankLazy.cast();
         return super.getCapability(cap, side);
     }

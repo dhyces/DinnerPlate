@@ -312,22 +312,22 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
             var slot = 0;
             for (FluidStack stack : fluidInventory) {
                 var nbt = new CompoundTag();
-                nbt.putInt(Constants.TAG_SLOT, slot++);
-                nbt.put(Constants.TAG_SINGLE_FLUID, stack.writeToNBT(new CompoundTag()));
+                nbt.putInt(Constants.SLOT_TAG, slot++);
+                nbt.put(Constants.SINGLE_FLUID_TAG, stack.writeToNBT(new CompoundTag()));
                 fluidsTag.add(nbt);
             }
-            tag.put(Constants.TAG_FLUIDS, fluidsTag);
+            tag.put(Constants.FLUIDS_TAG, fluidsTag);
         }
         if (hasItem()) {
             var itemsTag = new ListTag();
             var slot = 0;
             for (ItemStack stack : itemInventory) {
                 var nbt = new CompoundTag();
-                nbt.putInt(Constants.TAG_SLOT, slot++);
-                nbt.put(Constants.TAG_SINGLE_ITEM, stack.serializeNBT());
+                nbt.putInt(Constants.SLOT_TAG, slot++);
+                nbt.put(Constants.SINGLE_ITEM_TAG, stack.serializeNBT());
                 itemsTag.add(nbt);
             }
-            tag.put(Constants.TAG_ITEMS, itemsTag);
+            tag.put(Constants.ITEMS_TAG, itemsTag);
         }
         return tag;
     }
@@ -335,22 +335,22 @@ public class MixedInventory implements IMixedInventory, INBTSerializable<Compoun
     @Override
     public void deserializeNBT(CompoundTag tag) {
         clearContent();
-        var fluidsTag = tag.getList(Constants.TAG_FLUIDS, Tag.TAG_COMPOUND);
+        var fluidsTag = tag.getList(Constants.FLUIDS_TAG, Tag.TAG_COMPOUND);
         if (!fluidsTag.isEmpty()) {
             for (Tag compoundTag : fluidsTag) {
-                var slot = ((CompoundTag) compoundTag).getInt(Constants.TAG_SLOT);
-                var fluid = FluidStack.loadFluidStackFromNBT(((CompoundTag) compoundTag).getCompound(Constants.TAG_SINGLE_FLUID));
+                var slot = ((CompoundTag) compoundTag).getInt(Constants.SLOT_TAG);
+                var fluid = FluidStack.loadFluidStackFromNBT(((CompoundTag) compoundTag).getCompound(Constants.SINGLE_FLUID_TAG));
                 if (fluidInventory.size() <= slot)
                     fluidInventory.push(fluid);
                 else
                     fluidInventory.set(slot, fluid);
             }
         }
-        var itemsTag = tag.getList(Constants.TAG_ITEMS, Tag.TAG_COMPOUND);
+        var itemsTag = tag.getList(Constants.ITEMS_TAG, Tag.TAG_COMPOUND);
         if (!itemsTag.isEmpty()) {
             for (Tag compoundTag : itemsTag) {
-                var slot = ((CompoundTag) compoundTag).getInt(Constants.TAG_SLOT);
-                var item = ItemStack.of(((CompoundTag) compoundTag).getCompound(Constants.TAG_SINGLE_ITEM));
+                var slot = ((CompoundTag) compoundTag).getInt(Constants.SLOT_TAG);
+                var item = ItemStack.of(((CompoundTag) compoundTag).getCompound(Constants.SINGLE_ITEM_TAG));
                 if (itemInventory.size() <= slot)
                     itemInventory.push(item);
                 else

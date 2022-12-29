@@ -2,6 +2,7 @@ package dhyces.dinnerplate.client.render;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
 import dhyces.dinnerplate.client.render.util.IFluidRenderer;
 import dhyces.dinnerplate.client.render.util.RectPrism;
@@ -88,7 +89,9 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
             poseStack.pushPose();
             // TODO: rotations
             poseStack.translate(nd, shouldWave ? Math.sin(Blaze3D.getTime() + nd + nd1) / 16 : 0, nd1);
-            poseStack.mulPose(doubleQuaternionf(nd * 50, nd * 50, nd * 50, true));
+            poseStack.mulPose(Axis.XP.rotationDegrees((float) nd * 50));
+            poseStack.mulPose(Axis.YP.rotationDegrees((float) nd * 50));
+            poseStack.mulPose(Axis.ZP.rotationDegrees((float) nd * 50));
             Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.NONE, false, poseStack, source, packedLight, packedOverlay, itemModel);
             poseStack.popPose();
         }

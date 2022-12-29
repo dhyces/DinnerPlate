@@ -2,14 +2,12 @@ package dhyces.dinnerplate.bite;
 
 import com.mojang.datafixers.util.Pair;
 import dhyces.dinnerplate.Constants;
-import dhyces.dinnerplate.util.Couple;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -56,28 +54,28 @@ public class Bite implements IBite {
 	@Override
 	public CompoundTag serializeNBT() {
 		var tag = new CompoundTag();
-		tag.putInt(Constants.TAG_NUTRITION, nutrition);
-		tag.putFloat(Constants.TAG_SATURATION_MOD, saturationMod);
+		tag.putInt(Constants.NUTRITION_TAG, nutrition);
+		tag.putFloat(Constants.SATURATION_MOD_TAG, saturationMod);
 		ListTag effectsTag = new ListTag();
 		effectsList.forEach(c -> effectsTag.add(combineEffectAndChance(c.getFirst(), c.getSecond())));
-		tag.put(Constants.TAG_EFFECTS_LIST, effectsTag);
+		tag.put(Constants.EFFECTS_LIST_TAG, effectsTag);
 		return tag;
 	}
 
 	private CompoundTag combineEffectAndChance(MobEffectInstance effect, float chance) {
 		var tag = effect.save(new CompoundTag());
-		tag.putFloat(Constants.TAG_EFFECT_CHANCE, chance);
+		tag.putFloat(Constants.EFFECT_CHANCE_TAG, chance);
 		return tag;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		this.nutrition = nbt.getInt(Constants.TAG_NUTRITION);
-		this.saturationMod = nbt.getFloat(Constants.TAG_SATURATION_MOD);
-		var effectsTag = nbt.getList(Constants.TAG_EFFECTS_LIST, Tag.TAG_COMPOUND);
+		this.nutrition = nbt.getInt(Constants.NUTRITION_TAG);
+		this.saturationMod = nbt.getFloat(Constants.SATURATION_MOD_TAG);
+		var effectsTag = nbt.getList(Constants.EFFECTS_LIST_TAG, Tag.TAG_COMPOUND);
 		effectsTag.forEach(c -> {
 			CompoundTag castedTag = (CompoundTag) c;
-			effectsList.add(Pair.of(MobEffectInstance.load(castedTag), castedTag.getFloat(Constants.TAG_EFFECT_CHANCE)));
+			effectsList.add(Pair.of(MobEffectInstance.load(castedTag), castedTag.getFloat(Constants.EFFECT_CHANCE_TAG)));
 		});
 	}
 

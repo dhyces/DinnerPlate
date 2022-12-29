@@ -12,12 +12,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class BitableItem extends Item implements IBitableItem {
@@ -64,14 +62,14 @@ public class BitableItem extends Item implements IBitableItem {
 	@Override
 	public void setBiteCount(ItemStack stack, LivingEntity entity, int count) {
 		if (count == 0)
-			stack.getOrCreateTag().remove(Constants.TAG_BITE_COUNT);
+			stack.getOrCreateTag().remove(Constants.BITE_COUNT_TAG);
 		else
-			stack.getOrCreateTag().putInt(Constants.TAG_BITE_COUNT, count);
+			stack.getOrCreateTag().putInt(Constants.BITE_COUNT_TAG, count);
 	}
 
 	@Override
 	public int getBiteCount(ItemStack stack) {
-		return stack.getOrCreateTag().getInt(Constants.TAG_BITE_COUNT);
+		return stack.getOrCreateTag().getInt(Constants.BITE_COUNT_TAG);
 	}
 
 	@Override

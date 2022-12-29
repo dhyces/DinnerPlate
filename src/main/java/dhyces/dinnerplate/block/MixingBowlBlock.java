@@ -20,8 +20,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> {
@@ -43,7 +43,7 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
             var lazyItemFluidHandler = FluidUtil.getFluidHandler(preferredStack);
             if (lazyItemFluidHandler.isPresent()) {
                 var itemHandler = lazyItemFluidHandler.resolve().get();
-                var lazyBlockHandler = bEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+                var lazyBlockHandler = bEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
                 if (lazyBlockHandler.isPresent()) {
                     var blockHandler = lazyBlockHandler.resolve().get();
                     var fill = FluidHelper.fill(blockHandler, itemHandler, FluidHelper.clientAction(isClient));
@@ -78,9 +78,9 @@ public class MixingBowlBlock extends AbstractDinnerBlock<MixingBowlBlockEntity> 
                                              BlockPos pos, Player player, InteractionHand hand, BlockHitResult res, boolean isClient) {
         if (InteractionHand.OFF_HAND.equals(hand))
             return InteractionResult.FAIL;
-        var playerHandCap = player.getItemInHand(hand).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+        var playerHandCap = player.getItemInHand(hand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (playerHandCap.isPresent()) {
-            var bEntityCap = bEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+            var bEntityCap = bEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
             var fill = FluidHelper.fill(playerHandCap.resolve().get(), bEntityCap.resolve().get(), FluidHelper.clientAction(isClient));
             if (fill > 0)
                 return InteractionResult.sidedSuccess(isClient);

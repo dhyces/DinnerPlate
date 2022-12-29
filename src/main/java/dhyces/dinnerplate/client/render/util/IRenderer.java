@@ -14,6 +14,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -77,7 +78,7 @@ public interface IRenderer {
 
     default BakedModel getResolvedItemModel(ItemStack stack) {
         var base = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(stack);
-        return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), new Random(42L).nextInt());
+        return base.getOverrides().resolve(base, stack, clientLevel(), clientPlayer(), RandomSource.create(42L).nextInt());
     }
 
     default void renderItem(ItemStack stack, PoseStack poseStack, VertexConsumer consumer, int packedLight, int packedOverlay) {
