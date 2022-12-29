@@ -7,7 +7,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
-@OnlyIn(Dist.CLIENT)
 public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel> {
 
     public SimpleCustomBakedModelWrapper(BakedModel originalModel) {

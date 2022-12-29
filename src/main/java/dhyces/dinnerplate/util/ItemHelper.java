@@ -34,7 +34,7 @@ public class ItemHelper {
      */
     public static ItemStack returnedItem(ItemStack stack) {
         var compItem = stack.getItem();
-        var container = getContainerItem(stack);
+        var container = getRemainingItem(stack);
         if (container.isPresent())
             return container.get();
         if (compItem instanceof BowlFoodItem) {
@@ -45,9 +45,9 @@ public class ItemHelper {
         return ItemStack.EMPTY;
     }
 
-    private static Optional<ItemStack> getContainerItem(ItemStack stack) {
-        if (stack.hasContainerItem())
-            return Optional.of(stack.getContainerItem());
+    private static Optional<ItemStack> getRemainingItem(ItemStack stack) {
+        if (stack.hasCraftingRemainingItem())
+            return Optional.of(stack.getCraftingRemainingItem());
         return Optional.empty();
     }
 

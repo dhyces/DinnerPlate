@@ -158,8 +158,8 @@ public class MockFoodItem extends BitableItem {
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack stack) {
-		return getCapabilityLowest(stack).getRealStack().getContainerItem();
+	public ItemStack getCraftingRemainingItem(ItemStack stack) {
+		return getCapabilityLowest(stack).getRealStack().getCraftingRemainingItem();
 	}
 
 	@Override

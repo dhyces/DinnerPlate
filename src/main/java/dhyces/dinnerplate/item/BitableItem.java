@@ -48,7 +48,7 @@ public class BitableItem extends Item implements IBitableItem {
 
 	@Override
 	public ItemStack finish(ItemStack stack, Level level, LivingEntity livingEntity) {
-		return getContainerItem(stack);
+		return getCraftingRemainingItem(stack);
 	}
 
 	@Override

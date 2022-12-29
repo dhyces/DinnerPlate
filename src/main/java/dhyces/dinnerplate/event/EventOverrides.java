@@ -14,10 +14,10 @@ public class EventOverrides {
 
     @SubscribeEvent
     public static void shiftLeftClick(final PlayerInteractEvent.LeftClickBlock e) {
-        var blockState = e.getWorld().getBlockState(e.getPos());
-        if (e.getPlayer().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract base) {
-            if (e.getWorld().getBlockEntity(e.getPos()) instanceof AbstractDinnerBlockEntity bEntity) {
-                var result = base.shiftLeftClick(blockState, bEntity, e.getWorld(), e.getPos(), e.getPlayer(), e.getSide().isClient());
+        var blockState = e.getLevel().getBlockState(e.getPos());
+        if (e.getEntity().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract base) {
+            if (e.getLevel().getBlockEntity(e.getPos()) instanceof AbstractDinnerBlockEntity bEntity) {
+                var result = base.shiftLeftClick(blockState, bEntity, e.getLevel(), e.getPos(), e.getEntity(), e.getSide().isClient());
                 if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
                     return;
                 }
@@ -28,8 +28,8 @@ public class EventOverrides {
 
     @SubscribeEvent
     public static void shiftRightClick(final PlayerInteractEvent.RightClickBlock e) {
-        var blockState = e.getWorld().getBlockState(e.getPos());
-        if (e.getPlayer().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract) {
+        var blockState = e.getLevel().getBlockState(e.getPos());
+        if (e.getEntity().isShiftKeyDown() && blockState.getBlock() instanceof IForkedInteract) {
             e.setUseBlock(Result.ALLOW);
         }
     }

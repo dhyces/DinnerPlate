@@ -65,7 +65,7 @@ public class MockFoodProvider implements IMockFoodProvider {
 			stackCopy.setCount(1);
 			p.getAbilities().instabuild = ability;
 			p.getFoodData().readAdditionalSaveData(tempStorage);
-			return ret.equals(stackCopy) ? this.stack.getContainerItem() : ret;
+			return ret.equals(stackCopy) ? this.stack.getCraftingRemainingItem() : ret;
 		}
 		return stack;
 	}
