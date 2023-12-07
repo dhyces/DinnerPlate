@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -26,7 +27,7 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
     }
 
     @Override
-    public void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void renderItem(ItemStack pStack, ItemDisplayContext displayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         var model = Minecraft.getInstance().getItemRenderer().getModel(pStack, null, null, 0);
 
         var vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, ItemBlockRenderTypes.getRenderType(pStack, true), true, pStack.hasFoil());
@@ -49,7 +50,7 @@ public class PlateRenderer extends SimpleBlockItemRenderer<PlateBlockEntity> {
                 pPoseStack.translate(-2.0F, 0.75F, -2.0F);
             }
 
-            Minecraft.getInstance().getItemRenderer().render(platedItem, ItemTransforms.TransformType.NONE, false, pPoseStack, pBuffer, pPackedLight, pPackedOverlay, platedItemModel);
+            Minecraft.getInstance().getItemRenderer().render(platedItem, ItemDisplayContext.NONE, false, pPoseStack, pBuffer, pPackedLight, pPackedOverlay, platedItemModel);
             pPoseStack.popPose();
         }
     }

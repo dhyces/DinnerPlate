@@ -15,7 +15,7 @@ public class MeasuredFluidCapability extends FluidHandlerItemStack {
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        var drain = maxDrain > drainFillPreferred ? drainFillPreferred : maxDrain;
+        var drain = Math.min(maxDrain, drainFillPreferred);
         return super.drain(drain, action);
     }
 
@@ -26,7 +26,7 @@ public class MeasuredFluidCapability extends FluidHandlerItemStack {
         }
 
         FluidStack contained = getFluid();
-        int preferred = resource.getAmount() > drainFillPreferred ? drainFillPreferred : resource.getAmount();
+        int preferred = Math.min(resource.getAmount(), drainFillPreferred);
 
         if (contained.isEmpty()) {
             int fillAmount = Math.min(capacity, preferred);

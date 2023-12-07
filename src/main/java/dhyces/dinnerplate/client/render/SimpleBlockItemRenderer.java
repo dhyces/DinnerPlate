@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -35,16 +36,16 @@ public abstract class SimpleBlockItemRenderer<T extends BlockEntity> extends Blo
     }
 
     @Override
-    public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemTransforms.TransformType pTransformType, @NotNull PoseStack pPoseStack,
+    public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemDisplayContext displayContext, @NotNull PoseStack pPoseStack,
                              @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        renderItem(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        renderItem(pStack, displayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
     }
 
-    public abstract void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack,
+    public abstract void renderItem(ItemStack pStack, ItemDisplayContext displayContext, PoseStack pPoseStack,
                                 MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay);
 
     public void renderItemStack(ItemStack pStack, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel) {
-        Minecraft.getInstance().getItemRenderer().render(pStack, ItemTransforms.TransformType.NONE, false, pMatrixStack, pBuffer, pCombinedLight, pCombinedOverlay, pModel);
+        Minecraft.getInstance().getItemRenderer().render(pStack, ItemDisplayContext.NONE, false, pMatrixStack, pBuffer, pCombinedLight, pCombinedOverlay, pModel);
     }
 
     public boolean shouldRenderItems(T pBlockEntity, Vec3 pPlayerEyePos) {

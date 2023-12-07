@@ -16,7 +16,7 @@ public class Interpolation {
     }
 
     public Interpolation(float from, Supplier<Float> goal) {
-        this(from, goal, (c, p, v) -> Mth.lerp(c, p, v));
+        this(from, goal, Mth::lerp);
     }
 
     public Interpolation(float from, Supplier<Float> goal, Chaser chaser) {

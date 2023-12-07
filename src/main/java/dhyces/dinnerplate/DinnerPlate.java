@@ -7,23 +7,17 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
-import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Mod(DinnerPlate.MODID)
 public class DinnerPlate {
@@ -54,7 +48,7 @@ public class DinnerPlate {
     }
 
     private void registerRegistries(final IEventBus bus) {
-        BlockRegistry.register(bus);
+        BlockRegistry.init(bus);
         BEntityRegistry.register(bus);
         ItemRegistry.register(bus);
         FluidTypeRegistry.register(bus);
@@ -63,11 +57,11 @@ public class DinnerPlate {
         RecipeRegistry.register(bus);
     }
 
-    private void registerCreativeTab(CreativeModeTabEvent.Register event) {
-        event.registerCreativeModeTab(modLoc("main"), builder -> builder
+    private void registerCreativeTab(final CreativeModeTabEvent.Register event) {
+        TAB = event.registerCreativeModeTab(modLoc("main"), builder -> builder
                 .icon(() -> ItemRegistry.WHITE_PLATE_ITEM.get().getDefaultInstance().copy())
                 .title(Component.translatable("tabs.dinnerplate.main"))
-                .displayItems((pEnabledFeatures, pOutput, pDisplayOperatorCreativeTab) -> {
+                .displayItems((displayParameters, pOutput) -> {
                     pOutput.accept(ItemRegistry.WHITE_PLATE_ITEM.get());
                     pOutput.accept(ItemRegistry.ORANGE_PLATE_ITEM.get());
                     pOutput.accept(ItemRegistry.MAGENTA_PLATE_ITEM.get());
@@ -108,10 +102,10 @@ public class DinnerPlate {
         addClientProvider.accept(new StateGen(packOutput, MODID, fileHelper));
         addClientProvider.accept(new LangGen(packOutput, MODID, "en_us"));
 
-        addServerProvider.accept(new BlockLootTableGen.BlockLootTableProvider(packOutput));
+        addServerProvider.accept(new BlockLootTableGen.LootTableGen(packOutput));
         var blockGen = new TagGen.BlockTag(packOutput, lookupProvider, MODID, fileHelper);
         addServerProvider.accept(blockGen);
-        addServerProvider.accept(new TagGen.ItemTag(packOutput, lookupProvider, blockGen, MODID, fileHelper));
+        addServerProvider.accept(new TagGen.ItemTag(packOutput, lookupProvider, blockGen.contentsGetter(), fileHelper));
         addServerProvider.accept(new TagGen.FluidTag(packOutput, lookupProvider, MODID, fileHelper));
     }
 }

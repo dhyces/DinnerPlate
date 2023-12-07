@@ -1,5 +1,6 @@
 package dhyces.dinnerplate.datagen;
 
+import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.registry.BlockRegistry;
 import dhyces.dinnerplate.registry.FluidRegistry;
 import dhyces.dinnerplate.registry.ItemRegistry;
@@ -49,8 +50,9 @@ public class TagGen {
 
     public static class ItemTag extends ItemTagsProvider {
 
-        public ItemTag(PackOutput p_255871_, CompletableFuture<HolderLookup.Provider> p_256035_, TagsProvider<Block> p_256467_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
-            super(p_255871_, p_256035_, p_256467_, modId, existingFileHelper);
+
+        public ItemTag(PackOutput p_275343_, CompletableFuture<HolderLookup.Provider> p_275729_, CompletableFuture<TagLookup<Block>> p_275322_, @Nullable ExistingFileHelper existingFileHelper) {
+            super(p_275343_, p_275729_, p_275322_, DinnerPlate.MODID, existingFileHelper);
         }
 
         @Override

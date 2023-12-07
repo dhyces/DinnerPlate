@@ -7,7 +7,6 @@ import dhyces.dinnerplate.item.PlateItem;
 import dhyces.dinnerplate.registry.SoundRegistry;
 import dhyces.dinnerplate.sound.DinnerSoundTypes;
 import dhyces.dinnerplate.util.BlockHelper;
-import dhyces.dinnerplate.util.MathHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -59,18 +58,18 @@ public class PlateBlock extends AbstractDinnerBlock<PlateBlockEntity> {
                 return InteractionResult.sidedSuccess(isClient);
             }
         } else {
-            var preferredItem = getPreferredItemOtherwise(player, InteractionHand.OFF_HAND);
+            ItemStack preferredItem = getPreferredItemOtherwise(player, InteractionHand.OFF_HAND);
             if (preferredItem.isEmpty() || player.getMainHandItem().is(Items.DEBUG_STICK))
                 return InteractionResult.PASS;
-            var levelProperty = state.getValue(PLATES);
+            int levelProperty = state.getValue(PLATES);
             if (preferredItem.getItem() instanceof PlateItem) {
                 if (canAddPlate(state, preferredItem)) {
                     if (!isClient) {
-                        var itemStateTag = preferredItem.getOrCreateTagElement(Constants.BLOCK_STATE_TAG);
-                        var itemPlates = getPlatesFromStack(preferredItem);
+                        CompoundTag itemStateTag = preferredItem.getOrCreateTagElement(Constants.BLOCK_STATE_TAG);
+                        int itemPlates = getPlatesFromStack(preferredItem);
                         level.setBlock(pos, setPlates(state, Mth.clamp(levelProperty + itemPlates, MIN_LEVEL, MAX_LEVEL)), 11);
                         if (!player.getAbilities().instabuild) {
-                            var overflowedPlates = MathHelper.additionOverflow(levelProperty + itemPlates, MAX_LEVEL);
+                            int overflowedPlates = Math.max((levelProperty + itemPlates) - MAX_LEVEL, 0);
                             if (overflowedPlates == 0)
                                 preferredItem.shrink(1);
                             else

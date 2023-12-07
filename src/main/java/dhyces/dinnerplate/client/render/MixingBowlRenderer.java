@@ -15,12 +15,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.Random;
 
@@ -38,20 +42,20 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
     }
 
     @Override
-    public void renderItem(ItemStack pStack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void renderItem(ItemStack pStack, ItemDisplayContext displayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         pPoseStack.pushPose();
         renderItem(pStack, pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucentCull(atlas())), pPackedLight, pPackedOverlay);
 
-        var fluidCap = FluidUtil.getFluidHandler(pStack);
+        LazyOptional<IFluidHandlerItem> fluidCap = FluidUtil.getFluidHandler(pStack);
         float fluidHeight = fluidCap.isPresent() ? fluidCap.map(c -> c.getTanks() * 0.4375f).get() : 0;
-        var itemCap = pStack.getCapability(ForgeCapabilities.ITEM_HANDLER);
+        LazyOptional<IItemHandler> itemCap = pStack.getCapability(ForgeCapabilities.ITEM_HANDLER);
 
         if (fluidCap.isPresent()) {
-            var fluidHandler = fluidCap.resolve().get();
+            IFluidHandlerItem fluidHandler = fluidCap.resolve().get();
             renderFluids(BlockPos.ZERO, pBuffer, pPoseStack, fluidHeight, pPackedOverlay, pPackedLight, Util.streamOf(fluidHandler::getFluidInTank, fluidHandler.getTanks()).toArray(FluidStack[]::new));
         }
         if (itemCap.isPresent()) {
-            var itemHandler = itemCap.resolve().get();
+            IItemHandler itemHandler = itemCap.resolve().get();
             renderItems(pPoseStack, pBuffer, fluidHeight, pPackedLight, pPackedOverlay, false, Util.streamOf(itemHandler::getStackInSlot, itemHandler.getSlots()).toArray(ItemStack[]::new));
         }
         pPoseStack.popPose();
@@ -61,12 +65,12 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
     public void render(MixingBowlBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         if (!pBlockEntity.hasLevel() || pBlockEntity.getBlockPos() == null)
             return;
-        var fluidHeight = ((pBlockEntity.updateRenderable("", pPartialTick / 10) / 100) * 0.4375f);
+        float fluidHeight = ((pBlockEntity.updateRenderable("", pPartialTick / 10) / 100) * 0.4375f);
         if (pBlockEntity.hasFluid() && shouldRenderFluids(pBlockEntity, clientPlayer().getEyePosition()))
             renderFluids(pBlockEntity.getBlockPos(), pBufferSource, pPoseStack, fluidHeight, pPartialTick, pPackedLight, pBlockEntity.getFluids().toArray(FluidStack[]::new));
         if (pBlockEntity.hasItem() && shouldRenderItems(pBlockEntity, clientPlayer().getEyePosition())) {
             // TODO: I want to do more work on when the wave is enabled
-            var flag = !Mth.equal(fluidHeight, 0) && playerCloserThan(pBlockEntity, 24);
+            boolean flag = !Mth.equal(fluidHeight, 0) && playerCloserThan(pBlockEntity, 24);
             renderItems(pPoseStack, pBufferSource, fluidHeight, pPackedLight, pPackedOverlay, flag, pBlockEntity.getItems().toArray(ItemStack[]::new));
         }
     }
@@ -92,7 +96,7 @@ public class MixingBowlRenderer extends SimpleBlockItemRenderer<MixingBowlBlockE
             poseStack.mulPose(Axis.XP.rotationDegrees((float) nd * 50));
             poseStack.mulPose(Axis.YP.rotationDegrees((float) nd * 50));
             poseStack.mulPose(Axis.ZP.rotationDegrees((float) nd * 50));
-            Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.NONE, false, poseStack, source, packedLight, packedOverlay, itemModel);
+            Minecraft.getInstance().getItemRenderer().render(item, ItemDisplayContext.NONE, false, poseStack, source, packedLight, packedOverlay, itemModel);
             poseStack.popPose();
         }
         poseStack.popPose();

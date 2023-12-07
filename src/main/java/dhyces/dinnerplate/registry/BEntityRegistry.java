@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
-@EventBusSubscriber(modid = DinnerPlate.MODID, bus = Bus.MOD)
 public class BEntityRegistry {
 
     public static final RegistryObject<BlockEntityType<PlateBlockEntity>> PLATE_ENTITY;
@@ -55,8 +54,8 @@ public class BEntityRegistry {
                 BlockRegistry.GREEN_PLATE_BLOCK,
                 BlockRegistry.RED_PLATE_BLOCK,
                 BlockRegistry.BLACK_PLATE_BLOCK));
-        MIXING_BOWL_ENTITY = register("mixing_bowl", () -> BlockEntityType.Builder.of(MixingBowlBlockEntity::new, BlockRegistry.MIXING_BOWL_BLOCK.get()).build(null));
-        MEASURING_CUP_ENTITY = register("measuring_cup", () -> BlockEntityType.Builder.of(MeasuringCupBlockEntity::new, BlockRegistry.MEASURING_CUP_BLOCK.get()).build(null));
+        MIXING_BOWL_ENTITY = BLOCK_ENTITY_REGISTER.register("mixing_bowl", () -> BlockEntityType.Builder.of(MixingBowlBlockEntity::new, BlockRegistry.MIXING_BOWL_BLOCK.get()).build(null));
+        MEASURING_CUP_ENTITY = BLOCK_ENTITY_REGISTER.register("measuring_cup", () -> BlockEntityType.Builder.of(MeasuringCupBlockEntity::new, BlockRegistry.MEASURING_CUP_BLOCK.get()).build(null));
     }
 
     public static void register(IEventBus bus) {
@@ -68,17 +67,6 @@ public class BEntityRegistry {
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> commonType(BlockEntitySupplier<T> supplier, Supplier<Block>... blocks) {
-        return BlockEntityType.Builder.of(supplier, Arrays.stream(blocks).map(c -> c.get()).toArray(Block[]::new)).build(null);
-    }
-
-    private static RegistryObject<BlockEntityType<BlockEntity>> customRendered(String id, Supplier<BlockEntityType<BlockEntity>> supplier, BlockEntityRendererProvider<BlockEntity> provider) {
-        var registered = register(id, supplier);
-        renderers.add(Pair.of(registered, provider));
-        return registered;
-    }
-
-    @SubscribeEvent
-    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        renderers.forEach(pair -> event.registerBlockEntityRenderer(pair.getFirst().get(), pair.getSecond()));
+        return BlockEntityType.Builder.of(supplier, Arrays.stream(blocks).map(Supplier::get).toArray(Block[]::new)).build(null);
     }
 }

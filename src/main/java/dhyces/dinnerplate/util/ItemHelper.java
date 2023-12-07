@@ -10,15 +10,13 @@ import java.util.Optional;
 
 public class ItemHelper {
 
-    // The first stack is the one that is merged into and otherStack is the stack that is returned with the amount left over;
+    // The first stack is the one that is merged into and otherStack is the stack that is returned with the amount left over
     public static ItemStack mergeStacks(ItemStack stack, ItemStack otherStack) {
         if (!ItemStack.isSame(stack, otherStack))
             return otherStack;
-        var count1 = stack.getCount();
-        var count2 = otherStack.getCount();
-        var finalCount = count1 + count2;
-        var overFlow = MathHelper.additionOverflow(finalCount, stack.getMaxStackSize());
-        stack.setCount(finalCount - overFlow);
+        var combinedCount = stack.getCount() + otherStack.getCount();
+        var overFlow = Math.max(combinedCount - stack.getMaxStackSize(), 0);
+        stack.setCount(combinedCount - overFlow);
         otherStack.setCount(overFlow);
         return otherStack;
     }

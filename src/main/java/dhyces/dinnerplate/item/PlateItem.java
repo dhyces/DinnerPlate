@@ -1,10 +1,8 @@
 package dhyces.dinnerplate.item;
 
 import dhyces.dinnerplate.client.render.PlateRenderer;
-import dhyces.dinnerplate.sound.DinnerSoundTypes;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,10 +34,5 @@ public class PlateItem extends CapabilityNBTBlockItem {
                 return new PlateRenderer();
             }
         });
-    }
-
-    @Override
-    public SoundEvent getEquipSound() {
-        return DinnerSoundTypes.PLATE_SOUND_TYPE.getPlaceSound();
     }
 }

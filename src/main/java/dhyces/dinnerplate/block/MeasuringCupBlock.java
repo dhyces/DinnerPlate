@@ -1,9 +1,9 @@
 package dhyces.dinnerplate.block;
 
+import com.mojang.datafixers.util.Pair;
 import dhyces.dinnerplate.block.api.AbstractDinnerBlock;
 import dhyces.dinnerplate.blockentity.MeasuringCupBlockEntity;
 import dhyces.dinnerplate.util.FluidHelper;
-import dhyces.dinnerplate.util.LoosePair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -44,8 +44,8 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
         var item = player.getItemInHand(hand);
         var caps = getCaps(bEntity, item);
         if (caps.isPresent()) {
-            var blockHandler = caps.get().first;
-            var itemHandler = caps.get().second;
+            var blockHandler = caps.get().getFirst();
+            var itemHandler = caps.get().getSecond();
             var filled = FluidHelper.fill(blockHandler, itemHandler, FluidHelper.clientAction(isClient), FluidHelper.clientAction(player.getAbilities().instabuild));
             if (filled > 0) {
                 if (!isClient) {
@@ -65,8 +65,8 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
         var item = player.getItemInHand(hand);
         var caps = getCaps(bEntity, item);
         if (!item.isEmpty() && caps.isPresent()) {
-            var blockHandler = caps.get().first;
-            var itemHandler = caps.get().second;
+            var blockHandler = caps.get().getFirst();
+            var itemHandler = caps.get().getSecond();
             var filled = FluidHelper.fill(itemHandler, blockHandler, FluidHelper.clientAction(isClient));
             if (filled > 0) {
                 if (!isClient) {
@@ -83,12 +83,12 @@ public class MeasuringCupBlock extends AbstractDinnerBlock<MeasuringCupBlockEnti
     /**
      * Retrieves the block fluid handler and the item fluid handler, if they exist
      */
-    private Optional<LoosePair<IFluidHandler, IFluidHandlerItem>> getCaps(BlockEntity blockEntity, ItemStack itemStack) {
+    private Optional<Pair<IFluidHandler, IFluidHandlerItem>> getCaps(BlockEntity blockEntity, ItemStack itemStack) {
         var blockCap = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
         if (blockCap.isPresent()) {
             var itemCap = itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
             if (itemCap.isPresent()) {
-                return Optional.of(LoosePair.of(blockCap.resolve().get(), itemCap.resolve().get()));
+                return Optional.of(Pair.of(blockCap.resolve().get(), itemCap.resolve().get()));
             }
         }
         return Optional.empty();

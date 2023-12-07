@@ -146,7 +146,7 @@ public class MockFoodItem extends BitableItem {
 			if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
 				var hand = pContext.getItemInHand();
 				var realCopy = getCapabilityLowest(hand).getRealStack().copy();
-				ComposterBlock.insertItem(blockState, serverLevel, realCopy, pos);
+				ComposterBlock.insertItem(pContext.getPlayer(), blockState, serverLevel, realCopy, pos);
 				if (realCopy.isEmpty()) {
 					hand.shrink(1);
 					level.playSound((Player)null, pos, SoundEvents.COMPOSTER_FILL_SUCCESS, SoundSource.BLOCKS, 0.7f, 0.5f);

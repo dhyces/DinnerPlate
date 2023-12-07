@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -23,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -48,7 +48,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
 
     @SuppressWarnings({"resource", "deprecation"})
     @Override
-    public void render(ItemStack pStack, TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer,
+    public void render(ItemStack pStack, ItemDisplayContext displayContext, PoseStack pPoseStack, MultiBufferSource pBuffer,
                        int pPackedLight, int pPackedOverlay) {
         var capability = pStack.getCapability(CapabilityEventSubscriber.MOCK_FOOD_CAPABILITY).resolve();
         if (capability.isEmpty()) {
@@ -58,7 +58,7 @@ public class MockFoodItemRenderer extends SimpleItemRenderer {
         BakedModel model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(realStack);
         model = model.getOverrides().resolve(model, realStack, clientLevel(), clientPlayer(), new Random(42).nextInt());
         if (model.isCustomRenderer()) {
-            IClientItemExtensions.of(realStack).getCustomRenderer().renderByItem(realStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+            IClientItemExtensions.of(realStack).getCustomRenderer().renderByItem(realStack, displayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             return;
         }
         var biteCount = capability.get().getBiteCount();

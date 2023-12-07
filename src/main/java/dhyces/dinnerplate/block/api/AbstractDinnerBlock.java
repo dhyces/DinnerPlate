@@ -35,8 +35,8 @@ public abstract class AbstractDinnerBlock<T extends AbstractDinnerBlockEntity> e
     public InteractionResult shiftLeftClick(BlockState state, T bEntity, Level level, BlockPos pos,
                                             Player player, boolean isClient) {
 
-        if (!isClient) {
-            var stack = getDrops(state, (ServerLevel) level, pos, bEntity).get(0);
+        if (level instanceof ServerLevel serverLevel) {
+            var stack = getDrops(state, serverLevel, pos, bEntity).get(0);
             insertInvOrSpawn(level, pos, 0, player.getInventory(), stack);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }

@@ -1,10 +1,8 @@
 package dhyces.dinnerplate.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
 public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel> {
@@ -19,8 +17,8 @@ public class SimpleCustomBakedModelWrapper extends BakedModelWrapper<BakedModel>
     }
 
     @Override
-    public BakedModel applyTransform(TransformType cameraTransformType, PoseStack poseStack, boolean applyLeftHandTransform) {
-        super.applyTransform(cameraTransformType, poseStack, applyLeftHandTransform);
+    public BakedModel applyTransform(ItemDisplayContext displayContext, PoseStack poseStack, boolean applyLeftHandTransform) {
+        super.applyTransform(displayContext, poseStack, applyLeftHandTransform);
         return this;
     }
 }

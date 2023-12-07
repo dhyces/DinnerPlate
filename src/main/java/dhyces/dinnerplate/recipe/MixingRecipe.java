@@ -2,11 +2,13 @@ package dhyces.dinnerplate.recipe;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dhyces.dinnerplate.DinnerPlate;
 import dhyces.dinnerplate.blockentity.MixingBowlBlockEntity;
 import dhyces.dinnerplate.fluid.crafting.FluidStackIngredient;
 import dhyces.dinnerplate.inventory.MixedInventory;
 import dhyces.dinnerplate.registry.RecipeRegistry;
 import dhyces.dinnerplate.util.FlutemStack;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -26,11 +28,7 @@ import java.util.function.Predicate;
 
 public class MixingRecipe implements Recipe<MixedInventory> {
 
-    public static final RecipeType<MixingRecipe> MIXING_TYPE = new RecipeType<>() {
-        public String toString() {
-            return "dinnerplate:mixing";
-        }
-    };
+    public static final RecipeType<MixingRecipe> MIXING_TYPE = RecipeType.simple(DinnerPlate.modLoc("mixing"));
 
     final ResourceLocation resourceLocation;
     final Predicate<Object>[] ingredients;
@@ -47,7 +45,7 @@ public class MixingRecipe implements Recipe<MixedInventory> {
     @Override
     public boolean matches(MixedInventory pContainer, Level pLevel) {
         List<FlutemStack> mixed = pContainer.mixedStream().toList();
-        List<Predicate<Object>> ingredients = Arrays.asList(this.ingredients).stream().collect(ArrayList::new, ArrayList::add, (predicates, predicates2) -> predicates.addAll(predicates2));
+        List<Predicate<Object>> ingredients = Arrays.asList(this.ingredients).stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         for (int i = 0; i < ingredients.size();) {
             var finalI = i;
             var matched = mixed.stream().anyMatch(c -> {
@@ -67,7 +65,7 @@ public class MixingRecipe implements Recipe<MixedInventory> {
     }
 
     @Override
-    public ItemStack assemble(MixedInventory pContainer) {
+    public ItemStack assemble(MixedInventory pContainer, RegistryAccess registryAccess) {
         return result.getItemStack().copy();
     }
 
@@ -81,7 +79,7 @@ public class MixingRecipe implements Recipe<MixedInventory> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return result.getItemStackSafe().copy();
     }
 

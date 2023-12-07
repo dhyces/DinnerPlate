@@ -1,43 +1,33 @@
 package dhyces.dinnerplate.datagen;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
-import com.mojang.datafixers.util.Pair;
 import dhyces.dinnerplate.block.MixingBowlBlock;
 import dhyces.dinnerplate.block.PlateBlock;
 import dhyces.dinnerplate.registry.BlockRegistry;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyBlockState;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class BlockLootTableGen implements LootTableSubProvider {
 
@@ -142,16 +132,10 @@ public class BlockLootTableGen implements LootTableSubProvider {
         consumer.accept(block.getLootTable(), lootTableBuilder);
     }
 
-    public static class BlockLootTableProvider extends LootTableProvider {
+    public static class LootTableGen extends LootTableProvider {
 
-
-        public BlockLootTableProvider(PackOutput pOutput) {
+        public LootTableGen(PackOutput pOutput) {
             super(pOutput, Set.of(), ImmutableList.of(new SubProviderEntry(BlockLootTableGen::new, LootContextParamSets.BLOCK)));
         }
-
-//        @Override
-//        protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationTracker) {
-//            // NO_OP
-//        }
     }
 }
